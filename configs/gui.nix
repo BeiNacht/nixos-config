@@ -16,7 +16,7 @@
     baobab
     lutris
     insomnia
-    jellyfin-web
+    jellyfin-mpv-shim
     kdenlive
     nextcloud-client
     barrier
@@ -69,6 +69,8 @@
       "fploionmjgeclbkemipmkogoaohcdbig" # Page load time
       "egnjhciaieeiiohknchakcodbpgjnchh" # Tab Wrangler
       "fnaicdffflnofjppbagibeoednhnbjhg" # Floccus bookmarks
+      "mmpokgfcmbkfdeibafoafkiijdbfblfg" # Merge Windows
+      "gppongmhjkpfnbhagpmjfkannfbllamg" # Wappalyzer
     ];
     extraOpts = {
       "BrowserSignin" = 0;

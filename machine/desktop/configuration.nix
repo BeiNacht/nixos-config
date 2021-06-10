@@ -61,6 +61,9 @@ in
         rocm-opencl-runtime
         amdvlk
       ];
+      extraPackages32 = with pkgs; [
+        driversi686Linux.amdvlk
+      ];
     };
 
     fancontrol = {
