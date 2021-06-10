@@ -20,6 +20,7 @@ in
       ../../configs/gui.nix
       ../../configs/virtualisation.nix
       ../../configs/common.nix
+      ../../configs/user.nix
     ];
 
   # boot.initrd.luks.devices = {
@@ -39,9 +40,8 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.gfxmodeEfi = "1024x768";
 
-  boot.tmpOnTmpfs = true;
   #boot.plymouth.enable = true;
-  
+
   environment.etc."issue.d/ip.issue".text = "\\4\n";
 
   networking.hostName = "thinkpad"; # Define your hostname.
@@ -55,10 +55,6 @@ in
   networking.useDHCP = false;
   networking.interfaces.enp0s31f6.useDHCP = true;
   networking.interfaces.wlp0s20f3.useDHCP = true;
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
@@ -142,7 +138,7 @@ in
     dina-font
     proggyfonts
   ];
- 
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -174,16 +170,6 @@ in
     ];
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users = {
-    defaultUserShell = pkgs.zsh;
-
-    users.alex = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "networkmanager" ];
-    };
-  };
-  
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
@@ -279,4 +265,3 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "21.05"; # Did you read the comment?
 }
-

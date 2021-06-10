@@ -7,16 +7,16 @@ in
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-#      ./vscode.nix
       ../../configs/gui.nix
       ../../configs/virtualisation.nix
       ../../configs/common.nix
+      ../../configs/user.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
   fileSystems."/".options = [ "noatime" "discard" ];
   fileSystems."/boot".options = [ "noatime" "discard" ];
-  fileSystems."/mnt/second" = { 
+  fileSystems."/mnt/second" = {
     device = "/dev/disk/by-uuid/49c04c91-752d-4dff-b4d9-40a0b9a7bf7c";
     fsType = "ext4";
     options = [ "noatime" "discard" ];
@@ -32,7 +32,6 @@ in
   boot.plymouth.enable = true;
   boot.extraModulePackages = with pkgs.linuxPackages; [ it87 ];
   boot.kernelModules = [ "it87" ];
-  boot.tmpOnTmpfs = true;
 
   networking.hostName = "desktop"; # Define your hostname.
 
@@ -50,39 +49,47 @@ in
      font = "latarcyrheb-sun32";
      keyMap = "us";
   };
-  
-  hardware.fancontrol.enable = true;
-  hardware.fancontrol.config = ''
-    INTERVAL=10
-    DEVPATH=hwmon2=devices/platform/it87.656
-    DEVNAME=hwmon2=it8665
-    FCTEMPS=hwmon2/pwm3=hwmon2/temp1_input hwmon2/pwm2=hwmon2/temp1_input hwmon2/pwm1=hwmon2/temp1_input
-    FCFANS=hwmon2/pwm3=hwmon2/fan2_input hwmon2/pwm2=hwmon2/fan1_input hwmon2/pwm1=
-    MINTEMP=hwmon2/pwm3=60 hwmon2/pwm2=60 hwmon2/pwm1=60
-    MAXTEMP=hwmon2/pwm3=75 hwmon2/pwm2=75 hwmon2/pwm1=75
-    MINSTART=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
-    MINSTOP=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
-    MINPWM=hwmon2/pwm1=51 hwmon2/pwm2=51 hwmon2/pwm3=51
-    MAXPWM=hwmon2/pwm3=127 hwmon2/pwm2=204
-  '';
 
+  hardware = {
+    cpu.amd.updateMicrocode = true;
 
-  hardware.cpu.amd.updateMicrocode = true;  
-  hardware.opengl.extraPackages = with pkgs; [
-    rocm-opencl-icd
-    rocm-opencl-runtime
-    amdvlk
-  ];
+    opengl = {
+      driSupport = true;
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        rocm-opencl-icd
+        rocm-opencl-runtime
+        amdvlk
+      ];
+    };
 
-  hardware.opengl = {
-    driSupport = true;
-    driSupport32Bit = true;
+    fancontrol = {
+      enable = true;
+      config = ''
+        INTERVAL=10
+        DEVPATH=hwmon2=devices/platform/it87.656
+        DEVNAME=hwmon2=it8665
+        FCTEMPS=hwmon2/pwm3=hwmon2/temp1_input hwmon2/pwm2=hwmon2/temp1_input hwmon2/pwm1=hwmon2/temp1_input
+        FCFANS=hwmon2/pwm3=hwmon2/fan2_input hwmon2/pwm2=hwmon2/fan1_input hwmon2/pwm1=
+        MINTEMP=hwmon2/pwm3=60 hwmon2/pwm2=60 hwmon2/pwm1=60
+        MAXTEMP=hwmon2/pwm3=75 hwmon2/pwm2=75 hwmon2/pwm1=75
+        MINSTART=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
+        MINSTOP=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
+        MINPWM=hwmon2/pwm1=51 hwmon2/pwm2=51 hwmon2/pwm3=51
+        MAXPWM=hwmon2/pwm3=127 hwmon2/pwm2=204
+      '';
+    };
+
+    pulseaudio = {
+      enable = true;
+      support32Bit = true;
+    };
   };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.desktopManager.pantheon.enable = true;
-  services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];  
+  services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   fonts.fonts = with pkgs; [
@@ -104,52 +111,6 @@ in
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users = {
-    defaultUserShell = pkgs.zsh;
-
-    users.alex = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "networkmanager" "libvirtd" ];
-    };
-  };
-
-  nixpkgs.config.chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
-  programs.chromium = {
-    enable = true;
-    extensions = [
-      "cbnipbdpgcncaghphljjicfgmkonflee" # Axel Springer Blocker
-      "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-      "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
-      "hjdoplcnndgiblooccencgcggcoihigg" # Terms of Service; Didn’t Read
-      "gcbommkclmclpchllfjekcdonpmejbdp" # HTTPS Everywhere
-      "oboonakemofpalcgghocfoadofidjkkk" # KeePassXC-Browser
-      "fploionmjgeclbkemipmkogoaohcdbig" # Page load time
-      "egnjhciaieeiiohknchakcodbpgjnchh" # Tab Wrangler
-      "fnaicdffflnofjppbagibeoednhnbjhg" # Floccus bookmarks
-    ];
-    extraOpts = {
-      "BrowserSignin" = 0;
-      "SyncDisabled" = true;
-      "PasswordManagerEnabled" = false;
-      "AutofillAddressEnabled" = true;
-      "AutofillCreditCardEnabled" = false;
-      "BuiltInDnsClientEnabled" = false;
-      "MetricsReportingEnabled" = true;
-      "SearchSuggestEnabled" = false;
-      "AlternateErrorPagesEnabled" = false;
-      "UrlKeyedAnonymizedDataCollectionEnabled" = false;
-      "SpellcheckEnabled" = true;
-      "SpellcheckLanguage" = [
-                               "de"
-                               "en-US"
-                             ];
-      "CloudPrintSubmitEnabled" = false;
-    };
-  };
 
   programs.zsh = {
     enable = true;
@@ -203,4 +164,3 @@ in
   system.stateVersion = "21.05"; # Did you read the comment?
 
 }
-
