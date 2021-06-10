@@ -5,26 +5,28 @@
   environment.systemPackages = with pkgs; [
     ack
     atop
-    dfc
-    git
-    lsof
-    glances
-    home-manager
-    htop
-    ncdu
-    zsh
-    ruby
-    pstree
-    pciutils
     borgbackup
     bpytop
     broot
+    btrfs-progs
     bwm_ng
+    dfc
+    git
+    glances
+    home-manager
+    htop
+    iotop
+    lm_sensors
+    lsof
+    ncdu
     nodejs
+    pciutils
+    pstree
+    ruby
     sshfs
     tealdeer
     tree
-    lm_sensors
+    zsh
   ];
 
   documentation.enable = false;
