@@ -23,7 +23,8 @@
 
     dconf.enable = true;
     dconf.settings = with lib.hm.gvariant; {
-      "org/gnome/desktop/wm/preferences".button-layout = "close:maximize";
+      #"org/gnome/desktop/wm/preferences".button-layout = "close:maximize";
+      "org/gnome/desktop/wm/preferences".titlebar-font = "Liberation Sans Bold 9";
       #   visual-bell = false;
       #   titlebar-font = "Liberation Sans Bold 9";
       # };
@@ -39,7 +40,18 @@
     programs = {
       ssh = {
         enable = true;
+        compression = true;
         serverAliveInterval = 60;
+
+        matchBlocks."homeserver" = {
+          hostname = "192.168.1.100";
+          remoteForwards = [ {
+            bind.address = "127.0.0.1";
+            bind.port = 52698;
+            host.address = "127.0.0.1";
+            host.port = 52698;
+          } ];
+        };
       };
 
       git = {
