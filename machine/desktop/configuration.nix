@@ -95,6 +95,8 @@ in
   services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];
   services.xserver.videoDrivers = [ "amdgpu" ];
 
+  services.hardware.xow.enable = true;
+
   fonts.fonts = with pkgs; [
     open-sans
     roboto-mono
