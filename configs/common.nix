@@ -15,6 +15,7 @@
     glances
     home-manager
     htop
+    inxi
     iotop
     lm_sensors
     lsof
@@ -26,6 +27,7 @@
     sshfs
     tealdeer
     tree
+    manpages
     zsh
   ];
 

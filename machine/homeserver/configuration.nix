@@ -44,8 +44,6 @@
         "systemd"
         "wd"
         "kubectl"
-#        "zsh-autosuggestions"
-#        "zsh-syntax-highlightin"
         "git"
       ];
     };
@@ -68,6 +66,7 @@
     samba
     openssl
     hdparm
+    smartmontools
     docker-compose
   ];
 
@@ -101,6 +100,25 @@
     ${pkgs.hdparm}/sbin/hdparm -Y /dev/sdc
     ${pkgs.hdparm}/sbin/hdparm -Y /dev/sdf
   '';
+
+  systemd.services.snapraid-sync = {
+    #enable = true;
+    description = "Snapraid Sync and Diff";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "alex";
+      ExecStart="/home/alex/snapraid-sync";
+    };
+  };
+
+  systemd.timers.snapraid-sync = {
+    #enable = true;
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "Mon-Sun, 23:00";
+      # Unit = "snapraid-sync.service";
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
