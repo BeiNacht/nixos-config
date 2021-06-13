@@ -56,6 +56,8 @@
 
   programs.dconf.enable = true;
 
+  programs.steam.enable = true;
+
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
   programs.chromium = {
     enable = true;

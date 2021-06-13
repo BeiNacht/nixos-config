@@ -170,41 +170,6 @@ in
     ];
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  nixpkgs.config.chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
-  programs.chromium = {
-    enable = true;
-    extensions = [
-      "cbnipbdpgcncaghphljjicfgmkonflee" # Axel Springer Blocker
-      "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-      "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
-      "gcbommkclmclpchllfjekcdonpmejbdp" # HTTPS Everywhere
-      "oboonakemofpalcgghocfoadofidjkkk" # KeePassXC-Browser
-      "fploionmjgeclbkemipmkogoaohcdbig" # Page load time
-      "egnjhciaieeiiohknchakcodbpgjnchh" # Tab Wrangler
-      "fnaicdffflnofjppbagibeoednhnbjhg" # Floccus bookmarks
-    ];
-    extraOpts = {
-      "BrowserSignin" = 0;
-      "SyncDisabled" = true;
-      "PasswordManagerEnabled" = false;
-      "AutofillAddressEnabled" = true;
-      "AutofillCreditCardEnabled" = false;
-      "BuiltInDnsClientEnabled" = false;
-      "MetricsReportingEnabled" = true;
-      "SearchSuggestEnabled" = false;
-      "AlternateErrorPagesEnabled" = false;
-      "UrlKeyedAnonymizedDataCollectionEnabled" = false;
-      "SpellcheckEnabled" = true;
-      "SpellcheckLanguage" = [
-                               "de"
-                               "en-US"
-                             ];
-      "CloudPrintSubmitEnabled" = false;
-    };
-  };
-
   programs.zsh = {
     enable = true;
 
