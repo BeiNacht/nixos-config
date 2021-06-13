@@ -36,4 +36,12 @@
   #documentation.man.enable = false;
   documentation.info.enable = false;
   documentation.doc.enable = false;
+
+  nix.autoOptimiseStore = true;
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 }
