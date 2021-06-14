@@ -8,7 +8,7 @@
 
     users.alex = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "networkmanager" "libvirtd" ];
+      extraGroups = [ "wheel" "docker" "networkmanager" "libvirtd" "lp"];
     };
   };
 
@@ -81,6 +81,38 @@
         #   "workbench.colorTheme" = "Hyper Term Black";
         #   "window.titleBarStyle" = "custom";
         # };
+      };
+
+      rofi = {
+        enable = true;
+        lines = 10;
+        borderWidth = 0;
+        scrollbar = false;
+        padding = 50;
+        font = "Roboto 20";
+        separator = "solid";
+        colors = {
+          window = {
+            background = "#dd000000";
+            border = "#a6a6a6";
+            separator = "#a6a6a6";
+          };
+          rows = {
+            normal = {
+              background = "#00000000";
+              foreground = "#a6a6a6";
+              backgroundAlt = "#000000";
+              highlight = {
+                background = "#a6a6a6";
+                foreground = "#000000";
+              };
+            };
+          };
+        };
+        extraConfig = {
+          modi = "drun,window";
+          show-icons = true;
+        };
       };
 
       mpv = {

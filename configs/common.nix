@@ -19,6 +19,7 @@
     iotop
     lm_sensors
     lsof
+    manpages
     ncdu
     nodejs
     pciutils
@@ -27,7 +28,7 @@
     sshfs
     tealdeer
     tree
-    manpages
+    usbutils
     zsh
   ];
 
