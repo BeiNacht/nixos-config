@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports =
@@ -118,11 +118,48 @@
     };
   };
 
+  services.fail2ban = {
+    enable = true;
+
+    jails.DEFAULT =
+    ''
+      bantime  = 7d
+    '';
+
+    jails.sshd =
+    ''
+      filter = sshd
+      maxretry = 4
+      action   = iptables[name=ssh, port=ssh, protocol=tcp]
+      enabled  = true
+    '';
+
+    jails.sshd-ddos =
+    ''
+      filter = sshd-ddos
+      maxretry = 2
+      action   = iptables[name=ssh, port=ssh, protocol=tcp]
+      enabled  = true
+    '';
+  };
+
+  environment.etc."fail2ban/filter.d/sshd-ddos.conf" = {
+    enable = true;
+    text = ''
+      [Definition]
+      failregex = sshd(?:\[\d+\])?: Did not receive identification string from <HOST>$
+      ignoreregex =
+    '';
+  };
+
+  # Limit stack size to reduce memory usage
+  systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
+
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedUDPPorts = [ 22 80 443 ];
   # Or disable the firewall altogether.
-  networking.firewall.enable = false;
+  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
