@@ -19,7 +19,7 @@
   time.timeZone = "Europe/Berlin";
 
   networking.useDHCP = false;
-  networking.interfaces.enp2s0.useDHCP = true;
+  networking.interfaces.enp3s0.useDHCP = true;
 
   programs.zsh = {
     enable = true;
@@ -91,14 +91,14 @@
   ];
 
   powerManagement.powerUpCommands = ''
-    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/sda
-    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/sdb
-    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/sdc
-    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/sdf
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/sda
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/sdb
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/sdc
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/sdf
+    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/0301db98-264f-4b18-9423-15691063f73d
+    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b
+    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/3e1731d7-f17e-4f6d-9197-84e0492bf4ee
+    ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/6cce037c-d2d4-4940-bb69-6d2b84fd41aa
+    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/0301db98-264f-4b18-9423-15691063f73d
+    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b
+    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/3e1731d7-f17e-4f6d-9197-84e0492bf4ee
+    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/6cce037c-d2d4-4940-bb69-6d2b84fd41aa
   '';
 
   systemd.services.snapraid-sync = {
