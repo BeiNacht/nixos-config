@@ -79,6 +79,7 @@
     enable = true;
     permitRootLogin = "no";
     passwordAuthentication = false;
+    openFirewall = true;
   };
 
   security.acme.email = "webmaster@szczepan.ski";
@@ -156,8 +157,8 @@
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
-  networking.firewall.allowedUDPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedUDPPorts = [ 80 443 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
