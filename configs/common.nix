@@ -30,6 +30,16 @@
     tree
     usbutils
     zsh
+    # yajl
+    # gcc
+    # gnumake
+    # file
+    # glib
+    # cmake
+    # gtkmm3
+    # mm-common
+    # autoconf
+    # automake
   ];
 
   documentation.enable = false;

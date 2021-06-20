@@ -12,7 +12,6 @@
     mpv
     brave
     firefox
-    alacritty
     baobab
     lutris
     insomnia
@@ -25,6 +24,8 @@
     vulkan-tools
     gnome.eog
     virtmanager
+    prusa-slicer
+    cura
   ];
 
   fonts = {
