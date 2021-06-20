@@ -22,9 +22,32 @@
     ];
 
     dconf.enable = true;
-    dconf.settings = with lib.hm.gvariant; {
-      #"org/gnome/desktop/wm/preferences".button-layout = "close:maximize";
+    dconf.settings = {
       "org/gnome/desktop/wm/preferences".titlebar-font = "Liberation Sans Bold 9";
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+        binding = "<Super>Return";
+        command = "kitty";
+        name = "kitty";
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+        binding = "<Shift><Super>Return";
+        command = "rofi -show drun";
+        name = "rofi -show drun";
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+        binding = "<Super>Tab";
+        command = "rofi -show window";
+        name = "rofi -show window";
+      };
+
+      "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+      ];
+
       #   visual-bell = false;
       #   titlebar-font = "Liberation Sans Bold 9";
       # };
@@ -42,6 +65,17 @@
         enable = true;
         compression = true;
         serverAliveInterval = 60;
+        forwardAgent = true;
+
+        matchBlocks."szczepan.ski" = {
+          hostname = "szczepan.ski";
+          # remoteForwards = [ {
+          #   bind.address = "127.0.0.1";
+          #   bind.port = 52698;
+          #   host.address = "127.0.0.1";
+          #   host.port = 52698;
+          # } ];
+        };
 
         matchBlocks."homeserver" = {
           hostname = "192.168.1.100";
@@ -86,10 +120,10 @@
       rofi = {
         enable = true;
         lines = 10;
-        borderWidth = 0;
+        borderWidth = 2;
         scrollbar = false;
         padding = 50;
-        font = "Roboto 20";
+        font = "Liberation Sans Regular 20";
         separator = "solid";
         colors = {
           window = {
@@ -101,7 +135,7 @@
             normal = {
               background = "#00000000";
               foreground = "#a6a6a6";
-              backgroundAlt = "#000000";
+              backgroundAlt = "#00000000";
               highlight = {
                 background = "#a6a6a6";
                 foreground = "#000000";
