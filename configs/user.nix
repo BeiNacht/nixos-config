@@ -8,7 +8,7 @@
 
     users.alex = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "networkmanager" "libvirtd" "lp"];
+      extraGroups = [ "wheel" "docker" "networkmanager" "libvirtd" "lp" "scanner" ];
     };
   };
 
