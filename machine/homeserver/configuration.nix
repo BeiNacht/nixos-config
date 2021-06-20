@@ -31,7 +31,6 @@
     ohMyZsh = {
       enable = true;
       theme = "agnoster";
-#      theme = "powerlevel10k/powerlevel10k";
       customPkgs = [
         pkgs.zsh-autosuggestions
         pkgs.zsh-syntax-highlighting
@@ -54,7 +53,7 @@
     defaultUserShell = pkgs.zsh;
     users.alex = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+      extraGroups = [ "wheel" "docker" "render" ]; # Enable ‘sudo’ for the user.
     };
   };
 
@@ -95,10 +94,10 @@
     ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b
     ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/3e1731d7-f17e-4f6d-9197-84e0492bf4ee
     ${pkgs.hdparm}/sbin/hdparm -S 241 /dev/disk/by-uuid/6cce037c-d2d4-4940-bb69-6d2b84fd41aa
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/0301db98-264f-4b18-9423-15691063f73d
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/3e1731d7-f17e-4f6d-9197-84e0492bf4ee
-    ${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-uuid/6cce037c-d2d4-4940-bb69-6d2b84fd41aa
+    ${pkgs.hdparm}/sbin/hdparm -y /dev/disk/by-uuid/0301db98-264f-4b18-9423-15691063f73d
+    ${pkgs.hdparm}/sbin/hdparm -y /dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b
+    ${pkgs.hdparm}/sbin/hdparm -y /dev/disk/by-uuid/3e1731d7-f17e-4f6d-9197-84e0492bf4ee
+    ${pkgs.hdparm}/sbin/hdparm -y /dev/disk/by-uuid/6cce037c-d2d4-4940-bb69-6d2b84fd41aa
   '';
 
   systemd.services.snapraid-sync = {
@@ -107,8 +106,13 @@
     serviceConfig = {
       Type = "oneshot";
       User = "alex";
-      ExecStart="/home/alex/snapraid-sync";
+      # ExecStart="/home/alex/snapraid-sync";
     };
+    path = [pkgs.bash pkgs.snapraid pkgs.curl pkgs.smartmontools pkgs.hdparm];
+
+    script = ''
+      /home/alex/snapraid-sync
+    '';
   };
 
   systemd.timers.snapraid-sync = {
@@ -118,6 +122,19 @@
       OnCalendar = "Mon-Sun, 23:00";
       # Unit = "snapraid-sync.service";
     };
+  };
+
+  nixpkgs.config.packageOverrides = pkgs: {
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+  };
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      #intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
   };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -137,7 +154,11 @@
 
   services.netdata.enable = true;
 
-  services.jellyfin.enable = true;
+  services.jellyfin = {
+    enable = true;
+    user = "alex";
+    group = "users";
+  };
 
   services.samba = {
     enable = true;
@@ -159,10 +180,34 @@
         "read only" = "no";
         "guest ok" = "no";
         "create mask" = "0644";
-        "directory mask" = "0755";    };
+        "directory mask" = "0755";
+      };
+
+      ssdstorage = {
+        path = "/mnt/ssdstorage";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+      };
     };
   };
-   
+
+  security.sudo.extraRules = [ {
+    users = [ "alex" ];
+    commands = [ {
+      command = "${pkgs.hdparm}/bin/hdparm";
+      options = [ "SETENV" "NOPASSWD" ];
+    } ];
+  } {
+    users = [ "alex" ];
+    commands = [ {
+      command = "${pkgs.snapraid}/bin/snapraid";
+      options = [ "SETENV" "NOPASSWD" ];
+    } ];
+  }];
+
   # Open ports in the firewall.
   # networking.firewall.enable = true;
   # networking.firewall.allowPing = true;
