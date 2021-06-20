@@ -146,6 +146,7 @@ in
   sound.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.support32Bit = true;
+  hardware.sane.enable = true;
 
   #thinkfan
   services.thinkfan = {
@@ -199,8 +200,7 @@ in
     nvidia-offload
     xorg.xf86videointel
     intel-gpu-tools
-    steam
-    vscode
+    gnome.simple-scan
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
