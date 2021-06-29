@@ -13,6 +13,7 @@
     dfc
     git
     glances
+    gocryptfs
     home-manager
     htop
     inxi
@@ -29,18 +30,8 @@
     tealdeer
     tree
     usbutils
+    wget
     zsh
-    gocryptfs
-    # yajl
-    # gcc
-    # gnumake
-    # file
-    # glib
-    # cmake
-    # gtkmm3
-    # mm-common
-    # autoconf
-    # automake
   ];
   documentation.enable = false;
   documentation.nixos.enable = false;
