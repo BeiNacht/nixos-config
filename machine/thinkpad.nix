@@ -17,10 +17,10 @@ in
     [ # Include the results of the hardware scan.
       <nixos-hardware/lenovo/thinkpad/x1-extreme>
       /etc/nixos/hardware-configuration.nix
-      ../../configs/gui.nix
-      ../../configs/virtualisation.nix
-      ../../configs/common.nix
-      ../../configs/user.nix
+      ../configs/gui.nix
+      ../configs/virtualisation.nix
+      ../configs/common.nix
+      ../configs/user.nix
     ];
 
   # boot.initrd.luks.devices = {
