@@ -54,7 +54,6 @@
     };
   };
 
-
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
     docker-compose
@@ -66,7 +65,7 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
+  programs.mtr.enable = true;
   # programs.gnupg.agent = {
   #   enable = true;
   #   enableSSHSupport = true;
@@ -91,6 +90,7 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+    clientMaxBodySize = "0";
 
     virtualHosts = {
       "szczepan.ski" = {
@@ -133,23 +133,6 @@
       maxretry = 4
       action   = iptables[name=ssh, port=ssh, protocol=tcp]
       enabled  = true
-    '';
-
-    jails.sshd-ddos =
-    ''
-      filter = sshd-ddos
-      maxretry = 2
-      action   = iptables[name=ssh, port=ssh, protocol=tcp]
-      enabled  = true
-    '';
-  };
-
-  environment.etc."fail2ban/filter.d/sshd-ddos.conf" = {
-    enable = true;
-    text = ''
-      [Definition]
-      failregex = sshd(?:\[\d+\])?: Did not receive identification string from <HOST>$
-      ignoreregex =
     '';
   };
 
