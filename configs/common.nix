@@ -30,6 +30,7 @@
     tree
     usbutils
     zsh
+    gocryptfs
     # yajl
     # gcc
     # gnumake
@@ -41,7 +42,6 @@
     # autoconf
     # automake
   ];
-
   documentation.enable = false;
   documentation.nixos.enable = false;
   #documentation.man.enable = false;
