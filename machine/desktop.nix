@@ -7,10 +7,10 @@ in
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      ../../configs/gui.nix
-      ../../configs/virtualisation.nix
-      ../../configs/common.nix
-      ../../configs/user.nix
+      ../configs/gui.nix
+      ../configs/virtualisation.nix
+      ../configs/common.nix
+      ../configs/user.nix
     ];
 
   # Use the systemd-boot EFI boot loader.

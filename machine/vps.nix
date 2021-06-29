@@ -4,8 +4,8 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      ../../configs/common.nix
-      ../../configs/virtualisation.nix
+      ../configs/common.nix
+      ../configs/virtualisation.nix
       (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
     ];
 

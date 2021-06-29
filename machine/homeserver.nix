@@ -4,8 +4,8 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      ../../configs/common.nix
-      ../../configs/virtualisation.nix
+      ../configs/common.nix
+      ../configs/virtualisation.nix
       (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
     ];
 
@@ -71,7 +71,7 @@
 
   systemd.mounts = [
     {
-      requires = [ 
+      requires = [
         "mnt-disk1.mount"
         "mnt-disk2.mount"
         "mnt-disk3.mount"
@@ -171,7 +171,7 @@
       guest account = nobody
       map to guest = bad user
       logging = systemd
-      max log size = 50      
+      max log size = 50
     '';
     shares = {
       storage = {
