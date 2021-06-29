@@ -26,6 +26,7 @@
     virtmanager
     prusa-slicer
     cura
+    fslint
   ];
 
   fonts = {
@@ -66,8 +67,6 @@
       "cbnipbdpgcncaghphljjicfgmkonflee" # Axel Springer Blocker
       "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
       "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
-      "hjdoplcnndgiblooccencgcggcoihigg" # Terms of Service; Didn’t Read
-      "gcbommkclmclpchllfjekcdonpmejbdp" # HTTPS Everywhere
       "oboonakemofpalcgghocfoadofidjkkk" # KeePassXC-Browser
       "fploionmjgeclbkemipmkogoaohcdbig" # Page load time
       "egnjhciaieeiiohknchakcodbpgjnchh" # Tab Wrangler

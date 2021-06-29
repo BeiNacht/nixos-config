@@ -89,27 +89,36 @@ in
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    elementary-xfce-icon-theme
+    gnomeExtensions.appindicator
+  ];
+
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.xserver.desktopManager.pantheon.enable = true;
-  services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];
+  # services.xserver.desktopManager.pantheon.enable = true;
+  # services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   services.hardware.xow.enable = true;
 
-  fonts.fonts = with pkgs; [
-    open-sans
-    roboto-mono
-    noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
-    liberation_ttf
-    fira-code
-    fira-code-symbols
-    mplus-outline-fonts
-    dina-font
-    proggyfonts
-  ];
+  # fonts.fonts = with pkgs; [
+  #   open-sans
+  #   roboto-mono
+  #   noto-fonts
+  #   noto-fonts-cjk
+  #   noto-fonts-emoji
+  #   liberation_ttf
+  #   fira-code
+  #   fira-code-symbols
+  #   mplus-outline-fonts
+  #   dina-font
+  #   proggyfonts
+  # ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
