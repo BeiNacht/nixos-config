@@ -27,6 +27,8 @@
     prusa-slicer
     cura
     fslint
+    transmission-gtk
+    bitwarden
   ];
 
   fonts = {
@@ -73,6 +75,10 @@
       "fnaicdffflnofjppbagibeoednhnbjhg" # Floccus bookmarks
       "mmpokgfcmbkfdeibafoafkiijdbfblfg" # Merge Windows
       "gppongmhjkpfnbhagpmjfkannfbllamg" # Wappalyzer
+      "nljkibfhlpcnanjgbnlnbjecgicbjkge" # DownThemAll!
+      "lckanjgmijmafbedllaakclkaicjfmnk" # Clearurls
+      "njdfdhgcmkocbgbhcioffdbicglldapd" # LocalCDN
+      "jinjaccalgkegednnccohejagnlnfdag" # Violentmonkey
     ];
     extraOpts = {
       "BrowserSignin" = 0;
