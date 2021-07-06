@@ -6,7 +6,6 @@
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/virtualisation.nix
-      (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -20,33 +19,6 @@
 
   networking.useDHCP = false;
   networking.interfaces.enp3s0.useDHCP = true;
-
-  programs.zsh = {
-    enable = true;
-
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      enable = true;
-      theme = "agnoster";
-      customPkgs = [
-        pkgs.zsh-autosuggestions
-        pkgs.zsh-syntax-highlighting
-        pkgs.zsh-powerlevel10k
-      ];
-      plugins = [
-        "cp"
-        "common-aliases"
-        "docker "
-        "systemd"
-        "wd"
-        "kubectl"
-        "git"
-      ];
-    };
-  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -146,10 +118,6 @@
   # };
 
   # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.vscode-server.enable = true;
-
   services.openssh.enable = true;
 
   services.netdata.enable = true;

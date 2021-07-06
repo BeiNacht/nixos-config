@@ -6,7 +6,6 @@
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/virtualisation.nix
-      (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
     ];
 
   # Use the GRUB 2 boot loader.
@@ -20,7 +19,6 @@
   time.timeZone = "Europe/Berlin";
   networking.useDHCP = false;
   networking.interfaces.ens3.useDHCP = true;
-  services.vscode-server.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -29,28 +27,6 @@
     users.alex = {
      isNormalUser = true;
      extraGroups = [ "wheel" "docker" ];
-    };
-  };
-
-  programs.zsh = {
-    enable = true;
-
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      enable = true;
-      theme = "agnoster";
-      plugins = [
-        "cp"
-        "common-aliases"
-        "docker "
-        "systemd"
-        "wd"
-        "kubectl"
-        "git"
-      ];
     };
   };
 

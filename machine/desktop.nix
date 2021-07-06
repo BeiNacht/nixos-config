@@ -112,28 +112,6 @@ in
   # Enable sound.
   sound.enable = true;
 
-  programs.zsh = {
-    enable = true;
-
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      enable = true;
-      theme = "agnoster";
-      plugins = [
-        "cp"
-        "common-aliases"
-        "docker "
-        "systemd"
-        "wd"
-        "kubectl"
-        "git"
-      ];
-    };
-  };
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

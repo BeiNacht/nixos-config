@@ -164,30 +164,6 @@ in
     ];
   };
 
-  programs.zsh = {
-    enable = true;
-
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      enable = true;
-      theme = "agnoster";
-      plugins = [
-        "cp"
-        "common-aliases"
-        "docker "
-        "systemd"
-        "wd"
-        "kubectl"
-#        "zsh-autosuggestions"
-#        "zsh-syntax-highlightin"
-        "git"
-      ];
-    };
-  };
-
   environment.systemPackages = with pkgs; [
     nvidia-offload
     xorg.xf86videointel
