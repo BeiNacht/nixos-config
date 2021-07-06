@@ -188,7 +188,6 @@ in
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
     nvidia-offload
     xorg.xf86videointel
