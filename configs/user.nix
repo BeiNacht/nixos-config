@@ -69,22 +69,27 @@
 
         matchBlocks."szczepan.ski" = {
           hostname = "szczepan.ski";
+        };
+
+        matchBlocks."router" = {
+          hostname = "192.168.1.1";
+          user = "root";
+          localForwards = [ {
+            bind.address = "127.0.0.1";
+            bind.port = 1337;
+            host.address = "127.0.0.1";
+            host.port = 80;
+          } ];
+        };
+
+        matchBlocks."homeserver" = {
+          hostname = "192.168.1.100";
           # remoteForwards = [ {
           #   bind.address = "127.0.0.1";
           #   bind.port = 52698;
           #   host.address = "127.0.0.1";
           #   host.port = 52698;
           # } ];
-        };
-
-        matchBlocks."homeserver" = {
-          hostname = "192.168.1.100";
-          remoteForwards = [ {
-            bind.address = "127.0.0.1";
-            bind.port = 52698;
-            host.address = "127.0.0.1";
-            host.port = 52698;
-          } ];
         };
       };
 
