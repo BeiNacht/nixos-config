@@ -1,6 +1,42 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports =
+    [
+      (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
+    ];
+
+  services.vscode-server.enable = true;
+
+  programs.zsh = {
+    enable = true;
+
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+
+    ohMyZsh = {
+      enable = true;
+      theme = "agnoster";
+      customPkgs = [
+        pkgs.zsh-autosuggestions
+        pkgs.zsh-syntax-highlighting
+        pkgs.zsh-powerlevel10k
+      ];
+      plugins = [
+        "cp"
+        "common-aliases"
+        "docker "
+        "systemd"
+        "wd"
+        "kubectl"
+        "git"
+        # "zsh-autosuggestions"
+        # "zsh-syntax-highlightin"
+      ];
+    };
+  };
+
   boot.tmpOnTmpfs = true;
   environment.systemPackages = with pkgs; [
     ack
@@ -33,6 +69,7 @@
     wget
     zsh
   ];
+
   documentation.enable = false;
   documentation.nixos.enable = false;
   #documentation.man.enable = false;
