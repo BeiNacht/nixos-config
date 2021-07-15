@@ -31,6 +31,7 @@
     fslint
     transmission-gtk
     bitwarden
+    libreoffice
   ];
 
   fonts = {

@@ -59,6 +59,10 @@
           hostname = "szczepan.ski";
         };
 
+        matchBlocks."nixos-vm" = {
+          hostname = "192.168.122.33";
+        };
+
         matchBlocks."router" = {
           hostname = "192.168.1.1";
           user = "root";

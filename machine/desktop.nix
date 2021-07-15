@@ -92,6 +92,12 @@ in
   environment.systemPackages = with pkgs; [
     elementary-xfce-icon-theme
     gnomeExtensions.appindicator
+    cpu-x
+    hwinfo
+    zenmonitor
+    hardinfo
+    phoronix-test-suite
+    fswatch
   ];
 
   services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];

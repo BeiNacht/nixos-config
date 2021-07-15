@@ -155,15 +155,6 @@ in
     ];
   };
 
-  #nextdns
-  services.nextdns = {
-    enable = true;
-    arguments = [
-      "-config"
-      "aaa56c"
-    ];
-  };
-
   environment.systemPackages = with pkgs; [
     nvidia-offload
     xorg.xf86videointel
