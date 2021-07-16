@@ -41,7 +41,6 @@
       # xset -dpms
       # xset s off
       # xset s noblank
-      # sxhkd &
       # node ~/.config/bspwm/window.js &
 
       bspc config border_width              4
@@ -191,4 +190,4 @@
       updateDbusEnvironment = true;
     };
   };
-};
+}
