@@ -20,34 +20,6 @@
       pkgs.cryfs
     ];
 
-    # dconf.enable = true;
-    # dconf.settings = {
-    #   "org/gnome/desktop/wm/preferences".titlebar-font = "Liberation Sans Bold 9";
-    #   "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-    #     binding = "<Super>Return";
-    #     command = "kitty";
-    #     name = "kitty";
-    #   };
-
-    #   "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-    #     binding = "<Shift><Super>Return";
-    #     command = "rofi -show drun";
-    #     name = "rofi -show drun";
-    #   };
-
-    #   "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
-    #     binding = "<Super>Tab";
-    #     command = "rofi -show window";
-    #     name = "rofi -show window";
-    #   };
-
-    #   "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = [
-    #     "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-    #     "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-    #     "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
-    #   ];
-    # };
-
     programs = {
       ssh = {
         enable = true;
