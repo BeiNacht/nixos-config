@@ -47,16 +47,6 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh = {
-    enable = true;
-    permitRootLogin = "no";
-    passwordAuthentication = false;
-    openFirewall = true;
-  };
-
   security.acme.email = "webmaster@szczepan.ski";
   security.acme.acceptTerms = true;
   services.nginx = {

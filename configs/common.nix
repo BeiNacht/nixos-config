@@ -6,8 +6,6 @@
       (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
     ];
 
-  services.vscode-server.enable = true;
-
   programs.zsh = {
     enable = true;
 
@@ -37,18 +35,26 @@
     };
   };
 
-  #nextdns
-  services.nextdns = {
-    enable = true;
-    arguments = [
-      "-config"
-      "aaa56c"
-      "-cache-size"
-      "10MB"
-      "-listen"
-      "127.0.0.1:53"
-      "-report-client-info"
-    ];
+  services = {
+    vscode-server.enable = true;
+    openssh = {
+      enable = true;
+      permitRootLogin = "no";
+      passwordAuthentication = false;
+      openFirewall = true;
+    };
+    nextdns = {
+      enable = true;
+      arguments = [
+        "-config"
+        "aaa56c"
+        "-cache-size"
+        "10MB"
+        "-listen"
+        "127.0.0.1:53"
+        "-report-client-info"
+      ];
+    };
   };
 
   networking = {
@@ -94,10 +100,6 @@
   ];
 
   documentation.enable = false;
-  documentation.nixos.enable = false;
-  #documentation.man.enable = false;
-  documentation.info.enable = false;
-  documentation.doc.enable = false;
 
   nix.autoOptimiseStore = true;
 
