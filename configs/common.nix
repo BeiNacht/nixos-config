@@ -55,6 +55,7 @@
         "-report-client-info"
       ];
     };
+    fwupd.enable = true;
   };
 
   networking = {
@@ -97,6 +98,7 @@
     zsh
     neofetch
     cargo
+    youtube-dl
   ];
 
   documentation.enable = false;
