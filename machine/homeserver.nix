@@ -5,7 +5,8 @@
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
-      ../configs/virtualisation.nix
+      ../configs/docker.nix
+      ../configs/libvirt.nix
       ../configs/user.nix
     ];
 

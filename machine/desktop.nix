@@ -8,7 +8,8 @@ in
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ../configs/gui.nix
-      ../configs/virtualisation.nix
+      ../configs/docker.nix
+      ../configs/libvirt.nix
       ../configs/common.nix
       ../configs/user-gui.nix
       ../configs/user.nix
