@@ -3,7 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     elementary-xfce-icon-theme
-    gnomeExtensions.appindicator
     sxhkd
     bspwm
     polybar
@@ -16,14 +15,14 @@
     text = ''
       #!/usr/bin/env bash
       # spread desktops
-      # desktops=5
-      # count=$(xrandr -q | grep -c ' connected')
-      # i=1
-      # for m in $(xrandr -q | grep ' connected' | awk '{print $1}'); do
-      #   sequence=$(seq -s ' ' $(((1+(i-1)*desktops/count))) $((i*desktops/count)))
-      #   bspc monitor "$m" -d $(echo ''${sequence//10/0})
-      #   i=$((i+1))
-      # done
+      desktops=10
+      count=$(xrandr -q | grep -c ' connected')
+      i=1
+      for m in $(xrandr -q | grep ' connected' | awk '{print $1}'); do
+        sequence=$(seq -s ' ' $(((1+(i-1)*desktops/count))) $((i*desktops/count)))
+        bspc monitor "$m" -d $(echo ''${sequence//10/0})
+        i=$((i+1))
+      done
       # if [ -e "/etc/X11/Xresources" ]; then
       #   xrdb /etc/X11/Xresources
       # fi

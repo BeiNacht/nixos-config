@@ -13,6 +13,7 @@ in
       ../configs/common.nix
       ../configs/user-gui.nix
       ../configs/user.nix
+      ../configs/desktop.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -92,32 +93,17 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    elementary-xfce-icon-theme
-    gnomeExtensions.appindicator
     cpu-x
     hwinfo
-    zenmonitor
     hardinfo
     phoronix-test-suite
     fswatch
   ];
 
-  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  # services.xserver.desktopManager.pantheon.enable = true;
-  # services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
-
   services.hardware.xow.enable = true;
-
-  # Enable CUPS to print documents.
   services.printing.enable = true;
-
-  # Enable sound.
   sound.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -127,12 +113,6 @@ in
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   system.stateVersion = "21.05";
 }
