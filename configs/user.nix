@@ -16,6 +16,7 @@
   home-manager.useGlobalPkgs = true;
 
   home-manager.users.alex = { pkgs, ... }: {
+    home.enableNixpkgsReleaseCheck = false;
     home.packages = [
       pkgs.cryfs
     ];
@@ -52,12 +53,6 @@
 
         matchBlocks."homeserver" = {
           hostname = "192.168.1.100";
-          # remoteForwards = [ {
-          #   bind.address = "127.0.0.1";
-          #   bind.port = 52698;
-          #   host.address = "127.0.0.1";
-          #   host.port = 52698;
-          # } ];
         };
       };
 
