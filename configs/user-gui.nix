@@ -109,6 +109,15 @@
       };
     };
 
+    services = {
+      picom = {
+        enable = true;
+        blur = false;
+        shadow = true;
+        vSync = true;
+      };
+    };
+
     # manuals not needed
     manual.html.enable = false;
     manual.json.enable = false;
