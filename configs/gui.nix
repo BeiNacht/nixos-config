@@ -3,6 +3,7 @@
 {
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowBroken = true;
   environment.systemPackages = with pkgs; [
     kitty
     signal-desktop
@@ -32,7 +33,12 @@
     transmission-gtk
     bitwarden
     libreoffice
+    etcher
+    mangohud
+    minecraft
   ];
+
+  programs.steam.enable = true;
 
   fonts = {
     enableDefaultFonts = true;
@@ -62,8 +68,6 @@
   };
 
   programs.dconf.enable = true;
-
-  programs.steam.enable = true;
 
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
   programs.chromium = {

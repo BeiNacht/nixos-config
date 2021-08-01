@@ -35,6 +35,10 @@
           hostname = "192.168.122.33";
         };
 
+        matchBlocks."mini" = {
+          hostname = "192.168.0.87";
+        };
+
         matchBlocks."router" = {
           hostname = "192.168.1.1";
           user = "root";
