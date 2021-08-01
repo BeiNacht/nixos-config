@@ -6,6 +6,7 @@
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/virtualisation.nix
+      ../configs/user.nix
     ];
 
   # Use the GRUB 2 boot loader.
@@ -19,16 +20,6 @@
   time.timeZone = "Europe/Berlin";
   networking.useDHCP = false;
   networking.interfaces.ens3.useDHCP = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users = {
-    defaultUserShell = pkgs.zsh;
-
-    users.alex = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" "docker" ];
-    };
-  };
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
@@ -105,19 +96,9 @@
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
 
-  # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 80 443 ];
   networking.firewall.allowedUDPPorts = [ 80 443 ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
-
+  system.stateVersion = "21.05";
 }
 

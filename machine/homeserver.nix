@@ -6,6 +6,7 @@
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/virtualisation.nix
+      ../configs/user.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -19,15 +20,6 @@
 
   networking.useDHCP = false;
   networking.interfaces.enp3s0.useDHCP = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users = {
-    defaultUserShell = pkgs.zsh;
-    users.alex = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "render" ]; # Enable ‘sudo’ for the user.
-    };
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -174,20 +166,7 @@
     } ];
   }];
 
-  # Open ports in the firewall.
-  # networking.firewall.enable = true;
-  # networking.firewall.allowPing = true;
-  # networking.firewall.allowedTCPPorts = [ 445 139 19999 ];
-  # networking.firewall.allowedUDPPorts = [ 137 138 19999 ];
-  # Or disable the firewall altogether.
   networking.firewall.enable = false;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
-
+  system.stateVersion = "21.05";
 }
