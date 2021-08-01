@@ -4,7 +4,7 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      ../configs/virtualisation.nix
+      ../configs/docker.nix
       ../configs/common.nix
       ../configs/user.nix
     ];
