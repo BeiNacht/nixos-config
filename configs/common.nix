@@ -6,6 +6,8 @@
       (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
     ];
 
+  environment.shells = with pkgs; [ bashInteractive zsh ];
+
   services = {
     vscode-server.enable = true;
     openssh = {
