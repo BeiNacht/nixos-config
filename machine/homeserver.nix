@@ -2,7 +2,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      <nixos-hardware/common/cpu/intel>
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/docker.nix
