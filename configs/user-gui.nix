@@ -116,6 +116,68 @@
         shadow = true;
         vSync = true;
       };
+
+      dunst = {
+        enable = true;
+        settings = {
+          global = {
+            font = "SF Pro Display Regular 12";
+            markup = "yes";
+            format = "%s %p\n%b";
+            sort = "yes";
+            indicate_hidden = "no";
+            alignment = "center";
+            bounce_freq = 0;
+            show_age_threshold = 60;
+            word_wrap = "yes";
+            ignore_newline = "no";
+            geometry = "300x0-5-5";
+            shrink = "yes";
+            transparency = 0;
+            idle_threshold = 120;
+            monitor = 0;
+            follow = "mouse";
+            sticky_history = "yes";
+            history_length = 20;
+            show_indicators = "no";
+            line_height = 0;
+            separator_height = 1;
+            stack_duplicates = "no";
+            padding = 8;
+            horizontal_padding = 8;
+            separator_color = "frame";
+            startup_notification = true;
+            # dmenu = /usr/bin/dmenu -p dunst;
+            # browser = /usr/bin/firefox -new-tab;
+            icon_position = "left";
+            icon_path = "/usr/share/icons/Arc";
+            max_icon_size = 64;
+          };
+
+          frame = {
+            width = 1;
+            color = "#A6A6A6";
+          };
+
+          urgency_low = {
+            background = "#000000";
+            foreground = "#A6A6A6";
+            timeout = 4;
+          };
+
+          urgency_normal = {
+            background = "#000000";
+            foreground = "#A6A6A6";
+            timeout = 4;
+          };
+
+          urgency_critical = {
+            background = "#900000";
+            foreground = "#ffffff";
+            timeout = 16;
+          };
+        };
+      };
     };
 
     # manuals not needed
