@@ -152,6 +152,14 @@ in
       [7 93 32767]
     ];
   };
+  services.power-profiles-daemon.enable = false;
+  services.tlp = {
+    enable = true;
+    extraConfig = ''
+      START_CHARGE_THRESH_BAT0=80
+      STOP_CHARGE_THRESH_BAT0=90
+    '';
+  };
 
   environment.systemPackages = with pkgs; [
     nvidia-offload
