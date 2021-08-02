@@ -44,14 +44,17 @@
     fontDir.enable = true;
 
     fonts = with pkgs; [
-      fira-mono
-      libertine
       open-sans
       twemoji-color-font
       liberation_ttf
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
+      corefonts
+      meslo-lg
+      google-fonts
+      font-awesome
+      stix-two
     ];
 
     fontconfig = {
