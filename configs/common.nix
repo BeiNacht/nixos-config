@@ -68,10 +68,14 @@
     tree
     usbutils
     wget
+    unzip
     zsh
     neofetch
     cargo
     youtube-dl
+    git-secrets
+    gnupg
+    nmap
   ];
 
   documentation.enable = false;

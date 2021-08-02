@@ -42,9 +42,9 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.gfxmodeEfi = "1024x768";
 
-  #boot.plymouth.enable = true;
+  # boot.plymouth.enable = true;
 
-  environment.etc."issue.d/ip.issue".text = "\\4\n";
+  # environment.etc."issue.d/ip.issue".text = "\\4\n";
 
   networking.hostName = "thinkpad"; # Define your hostname.
 
@@ -67,9 +67,8 @@ in
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.xserver.desktopManager.pantheon.enable = true;
-  services.xserver.desktopManager.pantheon.extraWingpanelIndicators = [ pkgs.pantheon.wingpanel-indicator-nightlight ];
-  #services.xserver.dpi = 144;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   services.xserver = {
     videoDrivers = [ "nvidia" ];
@@ -123,9 +122,6 @@ in
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.printing.drivers = [ pkgs.brlaser ];
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio = {
