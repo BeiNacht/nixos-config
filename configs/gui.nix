@@ -31,10 +31,16 @@
     fslint
     transmission-gtk
     bitwarden
+    gnome.gnome-tweaks
+    juno-theme
+    elementary-xfce-icon-theme
     libreoffice
     etcher
     mangohud
     minecraft
+    jellyfin-mpv-shim
+    jellyfin-media-player
+    teams
   ];
 
   programs.steam.enable = true;
@@ -70,6 +76,10 @@
   };
 
   programs.dconf.enable = true;
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.brlaser ];
 
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
   programs.chromium = {
