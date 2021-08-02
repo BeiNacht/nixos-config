@@ -74,13 +74,12 @@
           plugins = [
             "cp"
             "common-aliases"
-            "docker "
+            "docker"
             "systemd"
             "wd"
             "kubectl"
             "git"
           ];
-          theme = "agnoster";
         };
         plugins = [
           {
@@ -95,15 +94,15 @@
           }
         ];
         localVariables = {
-          EDITOR = "vim";
+          SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
         };
         shellAliases = {
-          lw = "lorri watch --once";
-          mff = "git merge --ff-only";
-          vi = "vim";
+          active-services = "systemctl --no-page --no-legend --plain -t service --state=running";
+          autofanspeed = "echo level auto | sudo tee /proc/acpi/ibm/fan";
+          maxfanspeed = "echo level full-speed | sudo tee /proc/acpi/ibm/fan";
         };
         initExtra = ''
-          unset LESS
+          eval $(/run/wrappers/bin/gnome-keyring-daemon --start --components=ssh)
         '';
       };
     };

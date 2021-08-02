@@ -2,13 +2,169 @@
 
 {
   environment.systemPackages = with pkgs; [
-    elementary-xfce-icon-theme
+    pantheon.elementary-gtk-theme
+    pantheon.elementary-icon-theme
     sxhkd
     bspwm
     polybar
     lightlocker
     dunst
+    libnotify
+    mojave-gtk-theme
+    font-manager
+    pulseaudio-ctl
   ];
+
+  environment.etc."polybar.conf" = {
+    text = ''
+      [colors]
+      foreground = #666
+      foreground-alt = #FFF
+      background = #000
+      background-alt = #ABC
+      accent = #333
+      info = #689eca
+      warn = #d08292
+
+      [bar/default]
+      monitor = ''${env:MONITOR:VGA-1}
+      width = 100%
+      height = 32
+      offset-x = 0
+      offset-y = 0
+      ;radius = 8.0
+      fixed-center = true
+      ; Put the bar at the bottom of the screen
+      ;bottom = true
+
+      background = ''${colors.background}
+      foreground = ''${colors.foreground}
+
+      border-size = 1
+      border-color = ''${colors.background-alt}
+
+      padding-left = 3
+      padding-right = 1
+
+      module-margin-left = 0
+      module-margin-right = 1
+
+      font-0 = Liberation Sans Regular:size=16;4
+      font-1 = Font Awesome 5 Free Solid:size=14;3
+      font-2 = Noto Emoji:size=14;4
+      font-3 = DejaVu Sans:size=14;2
+      font-4 = Font Awesome 5 Free Regular:size=14;3
+
+      modules-left = xwindow
+      modules-center =
+      modules-right = temperature clock bspwm
+
+      tray-position = center
+      tray-padding = 2
+      tray-maxsize = 24
+
+      wm-restack = bspwm
+      override-redirect = false
+
+      scroll-up = bspwm-desknext
+      scroll-down = bspwm-deskprev
+
+      cursor-click = default
+      cursor-scroll = default
+      enable-ipc = true
+
+      [module/onboard]
+      type = custom/script
+      exec-if = test -x /usr/bin/onboard
+      exec = echo 
+      click-left = onboard &
+      interval = 3600
+      format-foreground = ''${colors.foreground-alt}
+
+      [module/clock]
+      type = custom/script
+      exec = date '+ %a %_d %b %_H:%M ' | sed 's/  / /g'
+      interval = 30
+      format-foreground = ''${colors.foreground}
+      label-font = 1
+
+      [module/xwindow]
+      type = internal/xwindow
+      label = %title:0:92:…%
+      label-font = 1
+      label-empty =
+      label-empty-font = 3
+      label-empty-foreground = ''${colors.accent}
+
+      [module/bspwm]
+      type = internal/bspwm
+
+      format = <label-mode><label-state>
+      format-foreground = ''${colors.foreground}
+
+      label-focused = " "
+      label-focused-foreground = ''${colors.accent}
+      label-focused-padding = 0
+      label-focused-font = 2
+
+      label-occupied = " "
+      label-occupied-padding = 0
+      label-occupied-foreground = ''${colors.foreground-alt}
+      label-occupied-font = 5
+
+      label-urgent = " "
+      label-urgent-foreground = ''${colors.info}
+      label-urgent-padding = 0
+      label-urgent-font = 2
+
+      label-empty = " "
+      label-empty-foreground = ''${colors.background-alt}
+      label-empty-padding = 0
+      label-empty-font = 5
+
+      label-dimmed-focused = " "
+      label-dimmed-focused-foreground = ''${colors.foreground-alt}
+      label-dimmed-font = 2
+
+      label-floating = "  "
+      label-pseudotiled = "  "
+      label-floating-foreground = ''${colors.foreground-alt}
+      label-pseudotiled-foreground = ''${colors.foreground-alt}
+
+      [module/temperature]
+      type = internal/temperature
+      thermal-zone = 2
+      warn-temperature = 75
+      interval = 5
+
+      format =
+      format-underline =
+      format-warn = <ramp> <label-warn>
+
+      label = %temperature-c%
+      label-font = 1
+      label-warn = %temperature-c%
+      label-warn-foreground = ''${colors.warn}
+      label-warn-font = 1
+
+      ramp-0 = 
+      ramp-1 = 
+      ramp-2 = 
+      ramp-foreground = ''${colors.warn}
+
+      [settings]
+      screenchange-reload = true
+      compositing-overline = source
+      compositing-underline = source
+      compositing-background = source
+      compositing-foreground = source
+      compositing-border = source
+
+      [global/wm]
+      margin-top = 0
+      margin-bottom = 0
+    '';
+  };
 
   environment.etc.bspwmrc = {
     mode = "0645";
@@ -136,13 +292,12 @@
           bspc node @/ --circulate forward
       #super + shift + x
       #    bspc wm -d > "$BSPWM_STATE" && bspc quit
-      super + {q,w,e,r,t,y,u,i,o,p}
-          bspc desktop -f '{I,II,III,IV,V,VI,VII,VIII,IX,X}' && notify-send `bspc query -D -d --names`
-      super + shift + {q,w,e,r,t,y,u,i,o,p}
-          bspc node -d '{I,II,III,IV,V,VI,VII,VIII,IX,X}'
+      super + {1-9,0}
+          bspc desktop -f '{1-9,0}' && notify-send `bspc query -D -d --names`
+      super + shift + {1-9,0}
+          bspc node -d '{1-9,0}'
     '';
   };
-
 
   services = {
     udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
@@ -150,20 +305,14 @@
     xserver = {
       enable = true;
       displayManager = {
-        # autoLogin = {
-        #   enable = true;
-        #   user = "starlight";
-        # };
         lightdm = {
           enable = true;
-          # autoLogin = {
-          #   relogin = false;
-          # };
+          background = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
+          greeters.gtk.theme = {
+            package = pkgs.mojave-gtk-theme;
+            name = "Mojave-dark";
+          };
         };
-        # setupCommands = ''
-        #   xset -dpms
-        #   xset s off
-        # '';
         defaultSession = "bspwm";
         session = [{
           manage = "desktop";
