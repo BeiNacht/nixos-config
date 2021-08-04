@@ -299,6 +299,10 @@
     '';
   };
 
+  networking.networkmanager = {
+    enable = true;
+  };
+
   services = {
     udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
     gnome.gnome-keyring.enable = true;

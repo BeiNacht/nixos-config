@@ -14,7 +14,7 @@ let
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       <nixos-hardware/lenovo/thinkpad/x1-extreme>
       /etc/nixos/hardware-configuration.nix
       ../configs/gui.nix
@@ -23,6 +23,7 @@ in
       ../configs/common.nix
       ../configs/user.nix
       ../configs/user-gui.nix
+      ../configs/desktop.nix
     ];
 
   # boot.initrd.luks.devices = {
@@ -55,8 +56,6 @@ in
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.enp0s31f6.useDHCP = true;
-  networking.interfaces.wlp0s20f3.useDHCP = true;
 
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
@@ -64,11 +63,6 @@ in
      font = "latarcyrheb-sun32";
      keyMap = "us";
   };
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
 
   services.xserver = {
     videoDrivers = [ "nvidia" ];
@@ -155,10 +149,10 @@ in
   services.power-profiles-daemon.enable = false;
   services.tlp = {
     enable = true;
-    extraConfig = ''
-      START_CHARGE_THRESH_BAT0=80
-      STOP_CHARGE_THRESH_BAT0=90
-    '';
+    settings = {
+      START_CHARGE_THRESH_BAT0 = 80;
+      STOP_CHARGE_THRESH_BAT0 = 90;
+    };
   };
 
   environment.systemPackages = with pkgs; [
