@@ -45,9 +45,6 @@ in
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.networkmanager = {
-    enable = true;
-  };
 
   console = {
      font = "latarcyrheb-sun32";

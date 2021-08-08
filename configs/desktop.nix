@@ -1,20 +1,6 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    pantheon.elementary-gtk-theme
-    pantheon.elementary-icon-theme
-    sxhkd
-    bspwm
-    polybar
-    lightlocker
-    dunst
-    libnotify
-    mojave-gtk-theme
-    font-manager
-    pulseaudio-ctl
-  ];
-
   environment.etc."polybar.conf" = {
     text = ''
       [colors]
@@ -293,53 +279,9 @@
       #super + shift + x
       #    bspc wm -d > "$BSPWM_STATE" && bspc quit
       super + {1-9,0}
-          bspc desktop -f '{1-9,0}' && notify-send `bspc query -D -d --names`
+          bspc desktop -f '{I,II,III,IV,V,VI,VII,VIII,IX,X}' && notify-send `bspc query -D -d --names`
       super + shift + {1-9,0}
-          bspc node -d '{1-9,0}'
+          bspc node -d '{I,II,III,IV,V,VI,VII,VIII,IX,X}'
     '';
-  };
-
-  networking.networkmanager = {
-    enable = true;
-  };
-
-  services = {
-    udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-    gnome.gnome-keyring.enable = true;
-    xserver = {
-      enable = true;
-      displayManager = {
-        lightdm = {
-          enable = true;
-          background = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
-          greeters.gtk.theme = {
-            package = pkgs.mojave-gtk-theme;
-            name = "Mojave-dark";
-          };
-        };
-        defaultSession = "bspwm";
-        session = [{
-          manage = "desktop";
-          name = "bspwm";
-          start = ''
-            ${pkgs.sxhkd}/bin/sxhkd -c /etc/sxhkdrc &
-            ${pkgs.bspwm}/bin/bspwm -c /etc/bspwmrc &
-            ${pkgs.xfce.xfce4-session}/bin/xfce4-session
-          '';
-        }];
-      };
-
-      desktopManager = {
-        xfce = {
-          enable = true;
-          noDesktop = true;
-          enableXfwm = true;
-        };
-      };
-      layout = "us";
-      # Enable touchpad support.
-      libinput.enable = true;
-      updateDbusEnvironment = true;
-    };
   };
 }
