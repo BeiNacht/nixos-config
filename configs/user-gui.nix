@@ -178,6 +178,43 @@
           };
         };
       };
+
+      nextcloud-client = {
+        enable = true;
+        startInBackground = true;
+      };
+
+      sxhkd = {
+        enable = true;
+        keybindings = {
+          "super + z" = "notify-send Time $(date '+%H:%M')";
+          "super + x" = "notify-send Battery $(cat /sys/class/power_supply/BAT0/capacity)%";
+          "alt + Tab" = "rofi -show window";
+          "super + Return" = "kitty";
+          "super + shift + Return" = "rofi -show drun";
+          "super + Escape" = "pkill -USR1 -x sxhkd";
+          "super {_,shift + }Tab" = "bspc node -f {next,prev}";
+          "super + shift + c" = "bspc node -c";
+          "super + a" = "bspc node @/ --flip vertical";
+          "super + d" = "layer=normal; bspc query -N -n 'focused.$\{layer\}' && layer=below; bspc node -l '$layer'";
+          "super + {s,f,k}" = "state={floating,fullscreen,pseudo_tiled}; bspc query -N -n 'focused.$\{state\}' && state=tiled; bspc node -t '$state'";
+          "super + alt + {Left,Down,Up,Right}" = "bspc node -p {west,south,north,east}";
+          "super + ctrl + {Left,Right,Up,Down}" = "xdo move {-x -50,-x +50,-y -50,-y +50}";
+          "super + ctrl + alt + {Left,Right,Up,Down}" = "xdo resize {-w -50,-w +50,-h -50,-h +50}";
+          "super + {_,shift + }{Left,Down,Up,Right}" = "bspc node -{f,s} {west,south,north,east}";
+          "super + m" = "bspc node -s biggest";
+          "super + l" = "~/.bin/lock";
+          "super + ctrl + space" = "bspc node -p cancel";
+          "super + apostrophe" = "bspc node -s last";
+          "super + ctrl + comma" = "bspc node @/ --rotate 90";
+          "super + shift + comma" = "bspc node @/ --circulate forward";
+          "super + {1-9,0}" = "bspc desktop -f '{I,II,III,IV,V,VI,VII,VIII,IX,X}' && notify-send `bspc query -D -d --names`";
+          "super + shift + {1-9,0}" = "bspc node -d '{I,II,III,IV,V,VI,VII,VIII,IX,X}'";
+          "XF86AudioMute" = "pulseaudio-ctl mute";
+          "XF86AudioLowerVolume" = "pulseaudio-ctl down";
+          "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
+        };
+      };
     };
 
     # manuals not needed
