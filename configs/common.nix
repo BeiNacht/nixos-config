@@ -47,18 +47,27 @@
     broot
     btrfs-progs
     bwm_ng
+    cargo
     dfc
+    exa
+    ffmpeg
     git
+    git-secrets
     glances
+    gnupg
     gocryptfs
     home-manager
     htop
     inxi
     iotop
+    kubectl
     lm_sensors
+    lsd
     lsof
     manpages
     ncdu
+    neofetch
+    nmap
     nodejs
     pciutils
     pstree
@@ -66,16 +75,11 @@
     sshfs
     tealdeer
     tree
+    unzip
     usbutils
     wget
-    unzip
-    zsh
-    neofetch
-    cargo
     youtube-dl
-    git-secrets
-    gnupg
-    nmap
+    zsh
   ];
 
   documentation.enable = false;
