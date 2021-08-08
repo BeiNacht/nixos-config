@@ -215,6 +215,11 @@
           "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
         };
       };
+
+      gnome-keyring = {
+        enable = true;
+        components =  [ "pkcs11" "secrets" "ssh" ];
+      };
     };
 
     # manuals not needed

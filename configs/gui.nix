@@ -67,7 +67,7 @@
   programs = {
     steam.enable = true;
     dconf.enable = true;
-    ssh.startAgent = true;
+    #ssh.startAgent = true;
     chromium = {
       enable = true;
       extensions = [
