@@ -67,22 +67,7 @@
       kitty = {
         enable = true;
         extraConfig = ''
-            enabled_layouts splits:split_axis=vertical
             enable_audio_bell false
-
-            map F5 launch --location=hsplit
-            map F6 launch --location=vsplit
-            map F7 layout_action rotate
-
-            map shift+up move_window up
-            map shift+left move_window left
-            map shift+right move_window right
-            map shift+down move_window down
-
-            map ctrl+left neighboring_window left
-            map ctrl+right neighboring_window right
-            map ctrl+up neighboring_window up
-            map ctrl+down neighboring_window down
 
             background            #000000
             foreground            #e9e9e9
@@ -216,10 +201,10 @@
         };
       };
 
-      gnome-keyring = {
-        enable = true;
-        components =  [ "pkcs11" "secrets" "ssh" ];
-      };
+      # gnome-keyring = {
+      #   enable = true;
+      #   components =  [ "pkcs11" "secrets" "ssh" ];
+      # };
     };
 
     # manuals not needed
