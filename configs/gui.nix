@@ -32,6 +32,7 @@
     gnome.eog
     gnome.gnome-calculator
     gnome.gnome-tweaks
+    gnome.seahorse
     gparted
     insomnia
     jellyfin-media-player
@@ -54,6 +55,7 @@
     polybar
     prusa-slicer
     pulseaudio-ctl
+    pinta
     signal-desktop
     solaar
     spotify

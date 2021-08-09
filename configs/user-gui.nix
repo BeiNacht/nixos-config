@@ -92,6 +92,12 @@
             selection_foreground #000000
         '';
       };
+
+      zsh = {
+        sessionVariables = {
+          SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
+        };
+      };
     };
 
     services = {
@@ -200,11 +206,6 @@
           "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
         };
       };
-
-      # gnome-keyring = {
-      #   enable = true;
-      #   components =  [ "pkcs11" "secrets" "ssh" ];
-      # };
     };
 
     # manuals not needed

@@ -101,7 +101,6 @@
         ];
         localVariables = {
           SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
-
         };
         shellAliases = {
           active-services = "systemctl --no-page --no-legend --plain -t service --state=running";
