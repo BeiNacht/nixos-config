@@ -111,8 +111,6 @@
           "-g C" = "| wc -l";
           "-g G" = "| grep --ignore-case";
           bat = "upower -i /org/freedesktop/UPower/devices/battery_BAT0";
-          # activate-smb="sc-start smb && sc-start nmb"
-          # stop-smb="sc-stop smb && sc-stop nmb"
           brightness-max = "echo 4794 | sudo tee /sys/class/backlight/intel_backlight/brightness";
           brightness-power-save = "echo 2300 | sudo tee /sys/class/backlight/intel_backlight/brightness";
           ff = "find . -type f -iname";
