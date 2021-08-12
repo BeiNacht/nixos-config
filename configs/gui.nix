@@ -8,9 +8,18 @@
     chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
   };
 
-  networking.networkmanager = {
-    enable = true;
+  networking = {
+    firewall.enable = false;
+    networkmanager = {
+      enable = true;
+    };
   };
+
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  #   pinentryFlavor = "gtk2";
+  # };
 
   environment.systemPackages = with pkgs; [
     baobab
@@ -64,6 +73,13 @@
     transmission-gtk
     virtmanager
     vulkan-tools
+    openconnect
+    networkmanager-openconnect
+    cypress
+    gnome.cheese
+    megapixels
+    obs-studio
+    fswebcam
   ];
 
   programs = {

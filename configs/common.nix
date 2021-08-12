@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-
+let
+  secrets = import ./secrets.nix;
+in
 {
   imports =
     [
@@ -19,12 +21,9 @@
     nextdns = {
       enable = true;
       arguments = [
-        "-config"
-        "aaa56c"
-        "-cache-size"
-        "10MB"
-        "-listen"
-        "127.0.0.1:53"
+        "-config" secrets.nextdnshash
+        "-cache-size" "10MB"
+        "-listen" "127.0.0.1:53"
         "-report-client-info"
       ];
     };
@@ -37,6 +36,11 @@
     dhcpcd.extraConfig = "nohook resolv.conf";
     # If using NetworkManager:
     networkmanager.dns = "none";
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryFlavor = "curses";
   };
 
   environment.systemPackages = with pkgs; [
@@ -52,7 +56,7 @@
     exa
     ffmpeg
     git
-    git-secrets
+    git-secret
     glances
     gnupg
     gocryptfs

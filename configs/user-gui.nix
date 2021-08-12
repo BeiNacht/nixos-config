@@ -103,7 +103,7 @@
     services = {
       picom = {
         enable = true;
-        blur = false;
+        blur = true;
         shadow = true;
         vSync = true;
       };
