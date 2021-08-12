@@ -99,9 +99,6 @@
             file = "p10k.zsh";
           }
         ];
-        localVariables = {
-          SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
-        };
         shellAliases = {
           active-services = "systemctl --no-page --no-legend --plain -t service --state=running";
           autofanspeed = "echo level auto | sudo tee /proc/acpi/ibm/fan";
