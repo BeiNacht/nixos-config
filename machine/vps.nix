@@ -60,7 +60,7 @@
         enableACME = true;
         locations = {
           "/" = {
-            proxyPass = "http://localhost:8080/";
+            proxyPass = "http://127.0.0.1:8080/";
             extraConfig = ''
               add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
             '';
