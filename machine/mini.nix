@@ -17,6 +17,9 @@
   networking.hostName = "mini";
   networking.useDHCP = false;
   networking.interfaces.enp3s0.useDHCP = true;
+  networking.firewall.allowedTCPPorts = [ 6443 ];
+  services.k3s.enable = true;
+  services.k3s.role = "server";
 
   networking.firewall.enable = false;
 
