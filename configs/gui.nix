@@ -22,6 +22,7 @@
   # };
 
   environment.systemPackages = with pkgs; [
+    libsecret
     baobab
     barrier
     bitwarden
@@ -157,6 +158,8 @@
 
   hardware.bluetooth.enable = true;
 
+  programs.adb.enable = true;
+
   services = {
     blueman.enable = true;
     udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
@@ -193,6 +196,7 @@
           enable = true;
           noDesktop = true;
           enableXfwm = true;
+          thunarPlugins = [ pkgs.xfce.thunar-archive-plugin ];
         };
       };
       layout = "us";
