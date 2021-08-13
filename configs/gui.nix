@@ -41,8 +41,8 @@
     glxinfo
     gnome.eog
     gnome.gnome-calculator
-    gnome.gnome-tweaks
     gnome.seahorse
+    gnome.file-roller
     gparted
     insomnia
     jellyfin-media-player
