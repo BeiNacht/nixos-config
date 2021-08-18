@@ -22,8 +22,12 @@
 
   home-manager.users.alex = { pkgs, ... }: {
     home.enableNixpkgsReleaseCheck = false;
-    # home.packages =  with pkgs; [
-    # ];
+
+    services = {
+      syncthing = {
+        enable = true;
+      };
+    };
 
     programs = {
       ssh = {
