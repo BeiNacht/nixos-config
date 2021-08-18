@@ -3,8 +3,10 @@
   imports = [ <home-manager/nixos> ];
 
   home-manager.users.bernd = { pkgs, ... }: {
-    home.packages = [
-      pkgs.cryfs
+    home.packages =  with pkgs; [
+      spotify
+      signal-desktop
+      bitwarden
     ];
 
     programs = {

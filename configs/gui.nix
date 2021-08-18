@@ -25,7 +25,6 @@
     libsecret
     baobab
     barrier
-    bitwarden
     blueberry
     brave
     bspwm
@@ -62,13 +61,12 @@
     nextcloud-client
     pantheon.elementary-gtk-theme
     pantheon.elementary-icon-theme
+    vimix-gtk-themes
     polybar
     prusa-slicer
     pulseaudio-ctl
     pinta
-    signal-desktop
     solaar
-    spotify
     sxhkd
     teams
     transmission-gtk
