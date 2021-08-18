@@ -43,7 +43,12 @@
             bind.port = 8386;
             host.address = "127.0.0.1";
             host.port = 8384;
-          } ];
+          } {
+            bind.address = "127.0.0.1";
+            bind.port = 9092;
+            host.address = "127.0.0.1";
+            host.port = 9091;
+          }];
         };
 
         matchBlocks."nixos-vm" = {

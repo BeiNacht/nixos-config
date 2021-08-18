@@ -11,6 +11,7 @@ in
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
   services = {
+    vnstat.enable = true;
     tuptime.enable = true;
     vscode-server.enable = true;
     openssh = {
