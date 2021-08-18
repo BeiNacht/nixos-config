@@ -38,6 +38,12 @@
 
         matchBlocks."szczepan.ski" = {
           hostname = "szczepan.ski";
+          localForwards = [ {
+            bind.address = "127.0.0.1";
+            bind.port = 8386;
+            host.address = "127.0.0.1";
+            host.port = 8384;
+          } ];
         };
 
         matchBlocks."nixos-vm" = {
@@ -61,6 +67,12 @@
 
         matchBlocks."homeserver" = {
           hostname = "192.168.1.100";
+          localForwards = [ {
+            bind.address = "127.0.0.1";
+            bind.port = 8385;
+            host.address = "127.0.0.1";
+            host.port = 8384;
+          } ];
         };
       };
 
