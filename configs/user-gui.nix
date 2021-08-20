@@ -208,6 +208,12 @@
           "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
         };
       };
+
+      redshift = {
+        enable = true;
+        duskTime = "21:00-22:00";
+        dawnTime = "06:30-07:00";
+      };
     };
 
     # manuals not needed
