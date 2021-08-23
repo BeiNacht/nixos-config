@@ -15,18 +15,11 @@
     };
   };
 
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  #   pinentryFlavor = "gtk2";
-  # };
-
   environment.systemPackages = with pkgs; [
     libsecret
     baobab
     barrier
     blueberry
-    brave
     bspwm
     chromium
     cura
@@ -42,6 +35,7 @@
     gnome.gnome-calculator
     gnome.seahorse
     gnome.file-roller
+    gnome.gnome-boxes
     gparted
     insomnia
     jellyfin-media-player

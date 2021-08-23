@@ -52,7 +52,7 @@
         };
 
         matchBlocks."nixos-vm" = {
-          hostname = "192.168.122.33";
+          hostname = "192.168.122.43";
         };
 
         matchBlocks."mini" = {
