@@ -88,6 +88,9 @@
         extraConfig = {
           push = { default = "current"; };
           pull = { rebase = true; };
+          credential.helper = "${
+            pkgs.git.override { withLibsecret = true; }
+          }/bin/git-credential-libsecret";
         };
       };
 
