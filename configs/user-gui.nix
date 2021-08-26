@@ -15,9 +15,9 @@
         package = pkgs.vscode;
         extensions = with pkgs.vscode-extensions; [
           bbenoist.Nix
-          justusadam.language-haskell
           editorconfig.editorconfig
           ms-azuretools.vscode-docker
+          ms-vsliveshare.vsliveshare
           #hsnazar.hyper-term-theme
           #rafaelmaiolla.remote-vscode
           eamodio.gitlens

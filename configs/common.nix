@@ -87,6 +87,8 @@ in
     wget
     youtube-dl
     zsh
+    unixtools.xxd
+    ranger
   ];
 
   documentation.enable = false;

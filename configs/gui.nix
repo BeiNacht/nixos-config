@@ -50,7 +50,6 @@
     mangohud
     meld
     minecraft
-    mojave-gtk-theme
     mpv
     nextcloud-client
     pantheon.elementary-gtk-theme
@@ -73,6 +72,8 @@
     megapixels
     obs-studio
     fswebcam
+    python39Packages.python-miio
+    python39Packages.pyyaml
   ];
 
   programs = {
