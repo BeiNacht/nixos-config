@@ -16,6 +16,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    ponymix
     libsecret
     baobab
     barrier

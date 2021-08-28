@@ -3,11 +3,28 @@
   imports = [ <home-manager/nixos> ];
 
   home-manager.users.alex = { pkgs, ... }: {
-    home.packages =  with pkgs; [
-      spotify
-      signal-desktop
-      bitwarden
-    ];
+    home = {
+      file = {
+        ".bin/rofi-default-sink.sh" = {
+          executable = true;
+          source = ./.bin/rofi-default-sink.sh;
+        };
+      };
+      packages =  with pkgs; [
+        spotify
+        signal-desktop
+        bitwarden
+        teams
+      ];
+    };
+
+    xdg.desktopEntries = {
+      defaultSink = {
+        name = "Default Sink";
+        exec = "/home/alex/.bin/rofi-default-sink.sh";
+        terminal = false;
+      };
+    };
 
     programs = {
       vscode = {
@@ -180,8 +197,8 @@
       sxhkd = {
         enable = true;
         keybindings = {
-          "super + z" = "notify-send Time $(date '+%H:%M')";
-          "super + x" = "notify-send Battery $(cat /sys/class/power_supply/BAT0/capacity)%";
+          "super + x" = "notify-send Time $(date '+%H:%M')";
+          "super + z" = "notify-send Battery $(cat /sys/class/power_supply/BAT0/capacity)%";
           "alt + Tab" = "rofi -show window";
           "super + Return" = "kitty";
           "super + shift + Return" = "rofi -show drun";
@@ -214,6 +231,8 @@
         duskTime = "21:00-22:00";
         dawnTime = "06:30-07:00";
       };
+
+      flameshot.enable = true;
     };
 
     # manuals not needed
