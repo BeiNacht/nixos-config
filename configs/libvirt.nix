@@ -8,4 +8,6 @@
     };
     spiceUSBRedirection.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [ proot ];
 }

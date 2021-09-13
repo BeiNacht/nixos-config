@@ -56,7 +56,11 @@
         };
 
         matchBlocks."mini" = {
-          hostname = "192.168.0.87";
+          hostname = "192.168.0.101";
+        };
+
+        matchBlocks."pi" = {
+          hostname = "192.168.1.143";
         };
 
         matchBlocks."router" = {
@@ -71,7 +75,7 @@
         };
 
         matchBlocks."homeserver" = {
-          hostname = "192.168.1.100";
+          hostname = "192.168.0.100";
           localForwards = [ {
             bind.address = "127.0.0.1";
             bind.port = 8385;

@@ -74,21 +74,24 @@ in
     manpages
     ncdu
     neofetch
+    nix-du
     nmap
     nodejs
     pciutils
     pstree
+    ranger
     ruby
     sshfs
     tealdeer
     tree
+    unixtools.xxd
     unzip
     usbutils
     wget
     youtube-dl
     zsh
-    unixtools.xxd
-    ranger
+    graphviz
+    nix-tree
   ];
 
   documentation.enable = false;

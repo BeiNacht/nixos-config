@@ -16,65 +16,48 @@
   };
 
   environment.systemPackages = with pkgs; [
-    ponymix
-    libsecret
-    baobab
     barrier
-    blueberry
     bspwm
     chromium
     cura
+    cypress
     dunst
-    elementary-xfce-icon-theme
     etcher
     evince
     firefox
     font-manager
     fslint
+    fswebcam
     glxinfo
-    gnome.eog
-    gnome.gnome-calculator
-    gnome.seahorse
-    gnome.file-roller
-    gnome.gnome-boxes
     gparted
     insomnia
     jellyfin-media-player
     jellyfin-mpv-shim
-    juno-theme
     kdenlive
     keepassxc
     libnotify
     libreoffice
+    libsecret
     lightlocker
-    lutris
     mangohud
     meld
-    minecraft
     mpv
+    networkmanager-openconnect
     nextcloud-client
+    openconnect
     pantheon.elementary-gtk-theme
     pantheon.elementary-icon-theme
-    vimix-gtk-themes
-    polybar
+    pinta
+    ponymix
     prusa-slicer
     pulseaudio-ctl
-    pinta
-    solaar
-    sxhkd
-    teams
-    transmission-gtk
-    virtmanager
-    vulkan-tools
-    openconnect
-    networkmanager-openconnect
-    cypress
-    gnome.cheese
-    megapixels
-    obs-studio
-    fswebcam
     python39Packages.python-miio
     python39Packages.pyyaml
+    solaar
+    sxhkd
+    virtmanager
+    vulkan-tools
+    winetricks
   ];
 
   programs = {
@@ -173,7 +156,7 @@
             name = "Mojave-dark";
           };
         };
-        defaultSession = "bspwm";
+        defaultSession = "xsession";
         session = [{
           manage = "desktop";
           name = "bspwm";
@@ -182,6 +165,10 @@
             ${pkgs.sxhkd}/bin/sxhkd -c /etc/sxhkdrc &
             ${pkgs.xfce.xfce4-session}/bin/xfce4-session
           '';
+        } {
+           manage = "desktop";
+           name = "xsession";
+           start = ''exec $HOME/.xsession'';
         }];
       };
 
