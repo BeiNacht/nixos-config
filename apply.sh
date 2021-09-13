@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 sudo rsync -ah --delete --progress `pwd`/ /root/nixos/
 sudo rm /etc/nixos/configuration.nix

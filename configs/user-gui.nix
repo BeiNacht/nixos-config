@@ -11,10 +11,26 @@
         };
       };
       packages =  with pkgs; [
-        spotify
-        signal-desktop
         bitwarden
+        gnome.eog
+        gnome.file-roller
+        gnome.gnome-calculator
+        gnome.seahorse
+        gnome.cheese
+        homebank
+        rpi-imager
+        signal-desktop
+        spotify
+        steam
         teams
+        unrar
+        wine
+        baobab
+        steam-tui
+        blueberry
+        lutris
+        teams
+        arandr
       ];
     };
 
@@ -23,6 +39,55 @@
         name = "Default Sink";
         exec = "/home/alex/.bin/rofi-default-sink.sh";
         terminal = false;
+      };
+    };
+
+    gtk = {
+      enable = true;
+      font = {
+        name = "Liberation Sans Regular";
+        size = 12;
+      };
+      gtk3 = {
+        bookmarks = [
+          "file:///home/alex/Downloads"
+          "file:///home/alex/Nextcloud"
+          "file:///mnt/second"
+          "smb://192.168.0.100/storage/"
+          "file:///home/alex/Workspace"
+          "file:///home/alex/3D%20Print"
+          "file:///home/alex/Sync"
+        ];
+        extraConfig = {
+          gtk-application-prefer-dark-theme = 1;
+        };
+        extraCss = ''
+        decoration
+        {
+            border-radius: 0px 0px 0 0;
+            border-width: 0px;
+            /*box-shadow: 1px 12px 12px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.18);*/
+            box-shadow: none;
+            margin: 0px;
+        }
+
+        decoration:backdrop
+        {
+            border-radius: 0px 0px 0 0;
+            border-width: 0px;
+            /*box-shadow: 1px 12px 12px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.18);*/
+            box-shadow: none;
+            margin: 0px;
+        }
+        '';
+      };
+      iconTheme = {
+        package = pkgs.pantheon.elementary-icon-theme;
+        name = "elementary";
+      };
+      theme = {
+        package = pkgs.pantheon.elementary-gtk-theme;
+        name = "elementary";
       };
     };
 
@@ -112,10 +177,16 @@
         '';
       };
 
-      zsh = {
-        sessionVariables = {
-          SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
-        };
+      # zsh = {
+      #   sessionVariables = {
+      #     SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
+      #   };
+      # };
+
+      keychain = {
+        enable = true;
+        enableXsessionIntegration = true;
+        enableZshIntegration = true;
       };
     };
 
@@ -206,8 +277,13 @@
           "super {_,shift + }Tab" = "bspc node -f {next,prev}";
           "super + shift + c" = "bspc node -c";
           "super + a" = "bspc node @/ --flip vertical";
-          "super + d" = "layer=normal; bspc query -N -n 'focused.$\{layer\}' && layer=below; bspc node -l '$layer'";
-          "super + {s,f,k}" = "state={floating,fullscreen,pseudo_tiled}; bspc query -N -n 'focused.$\{state\}' && state=tiled; bspc node -t '$state'";
+          "super + d" = ''layer=normal; \
+            bspc query -N -n "focused.$\{layer\}" && layer=below; \
+            bspc node -l "$layer"'';
+          "super + {s,f,k}" =
+          ''state={floating,fullscreen,pseudo_tiled}; \
+            bspc query -N -n "focused.$\{state\}" && state=tiled; \
+            bspc node -t "$state" '';
           "super + alt + {Left,Down,Up,Right}" = "bspc node -p {west,south,north,east}";
           "super + ctrl + {Left,Right,Up,Down}" = "xdo move {-x -50,-x +50,-y -50,-y +50}";
           "super + ctrl + alt + {Left,Right,Up,Down}" = "xdo resize {-w -50,-w +50,-h -50,-h +50}";
@@ -223,6 +299,7 @@
           "XF86AudioMute" = "pulseaudio-ctl mute";
           "XF86AudioLowerVolume" = "pulseaudio-ctl down";
           "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
+          "Print" = "flameshot gui";
         };
       };
 
@@ -232,7 +309,60 @@
         dawnTime = "06:30-07:00";
       };
 
+      screen-locker = {
+        enable = true;
+        enableDetectSleep = true;
+        inactiveInterval = 30;
+        lockCmd = "light-locker-command -l";
+      };
       flameshot.enable = true;
+    };
+
+    xresources.properties = {
+      "Xft.dpi" = 120;
+    };
+
+    xsession = {
+      enable = true;
+      pointerCursor = {
+        defaultCursor = "left_ptr";
+        name = "elementary";
+        package = pkgs.pantheon.elementary-icon-theme;
+      };
+      windowManager = {
+        bspwm = {
+          enable = true;
+          extraConfig = ''
+            bspc wm --adopt-orphans
+
+            bspc subscribe monitor_add monitor_remove| while read -r a event; do
+              node /home/alex/Sync/windows.js
+            done &
+          '';
+          settings = {
+            border_width = 4;
+            window_gap = 5;
+            top_padding = 0;
+            left_padding = 0;
+            right_padding = 0;
+            bottom_padding = 0;
+            split_ratio = 0.50;
+            borderless_monocle = true;
+            single_monocle = true;
+            gapless_monocle = true;
+            focus_follows_pointer = true;
+            pointer_follows_monitor = true;
+            pointer_follows_focus = false;
+            center_pseudo_tiled = true;
+            automatic_scheme = "alternate";
+            remove_unplugged_monitors = true;
+            remove_disabled_monitors = true;
+            normal_border_color = "#333333";
+            focused_border_color = "#666666";
+            presel_feedback_color = "#000000";
+          };
+        };
+      };
     };
 
     # manuals not needed
