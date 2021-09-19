@@ -51,7 +51,6 @@
     ponymix
     prusa-slicer
     pulseaudio-ctl
-    python39Packages.python-miio
     python39Packages.pyyaml
     solaar
     sxhkd

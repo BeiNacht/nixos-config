@@ -13,7 +13,6 @@ in
       ../configs/common.nix
       ../configs/user-gui.nix
       ../configs/user.nix
-      ../configs/desktop.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
