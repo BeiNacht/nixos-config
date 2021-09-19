@@ -48,48 +48,32 @@ in
 
   environment.systemPackages = with pkgs; [
     ack
-    atop
     borgbackup
-    bpytop
     broot
     btrfs-progs
     bwm_ng
     cargo
-    dfc
     exa
     ffmpeg
-    git
-    git-secret
-    glances
     gnupg
     gocryptfs
     home-manager
-    htop
     inxi
     iotop
-    kubectl
     lm_sensors
     lsd
     lsof
     manpages
-    ncdu
-    neofetch
     nix-du
     nmap
     nodejs
     pciutils
-    pstree
-    ranger
     ruby
-    sshfs
     tealdeer
-    tree
     unixtools.xxd
     unzip
     usbutils
     wget
-    youtube-dl
-    zsh
     graphviz
     nix-tree
   ];

@@ -23,7 +23,6 @@ in
       ../configs/common.nix
       ../configs/user.nix
       ../configs/user-gui.nix
-      ../configs/desktop.nix
     ];
 
   # boot.initrd.luks.devices = {

@@ -11,7 +11,6 @@ in
       ../configs/common.nix
       ../configs/user.nix
       ../configs/user-gui.nix
-      ../configs/desktop.nix
     ];
 
   # Use the GRUB 2 boot loader.

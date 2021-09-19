@@ -21,7 +21,27 @@
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.alex = { pkgs, ... }: {
-    home.enableNixpkgsReleaseCheck = false;
+
+
+    home = {
+      enableNixpkgsReleaseCheck = false;
+      packages =  with pkgs; [
+        atop
+        bpytop
+        dfc
+        git-secret
+        glances
+        htop
+        kubectl
+        ncdu
+        neofetch
+        pstree
+        ranger
+        sshfs
+        tree
+        youtube-dl
+      ];
+    };
 
     services = {
       syncthing = {
@@ -90,6 +110,8 @@
         userName  = "Alexander Szczepanski";
         userEmail = "alexander@szczepan.ski";
         extraConfig = {
+          core = { autocrlf = false; };
+          color = { ui = "auto"; };
           push = { default = "current"; };
           pull = { rebase = true; };
           credential.helper = "${

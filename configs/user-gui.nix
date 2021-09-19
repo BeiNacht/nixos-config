@@ -11,26 +11,26 @@
         };
       };
       packages =  with pkgs; [
+        arandr
+        baobab
         bitwarden
+        blueberry
+        gnome.cheese
         gnome.eog
         gnome.file-roller
         gnome.gnome-calculator
         gnome.seahorse
-        gnome.cheese
         homebank
+        lutris
         rpi-imager
         signal-desktop
         spotify
         steam
+        discord
+        lxrandr
         teams
         unrar
         wine
-        baobab
-        steam-tui
-        blueberry
-        lutris
-        teams
-        arandr
       ];
     };
 
@@ -101,7 +101,6 @@
           ms-azuretools.vscode-docker
           ms-vsliveshare.vsliveshare
           #hsnazar.hyper-term-theme
-          #rafaelmaiolla.remote-vscode
           eamodio.gitlens
         ];
         # userSettings = {
@@ -145,6 +144,11 @@
 
       mpv = {
         enable = true;
+        config = {
+          hwdec = "auto-safe";
+          vo = "gpu";
+          profile = "gpu-hq";
+        };
       };
 
 
@@ -296,9 +300,9 @@
           "super + shift + comma" = "bspc node @/ --circulate forward";
           "super + {1-9,0}" = "bspc desktop -f '{I,II,III,IV,V,VI,VII,VIII,IX,X}' && notify-send `bspc query -D -d --names`";
           "super + shift + {1-9,0}" = "bspc node -d '{I,II,III,IV,V,VI,VII,VIII,IX,X}'";
-          "XF86AudioMute" = "pulseaudio-ctl mute";
-          "XF86AudioLowerVolume" = "pulseaudio-ctl down";
-          "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
+          # "XF86AudioMute" = "pulseaudio-ctl mute";
+          # "XF86AudioLowerVolume" = "pulseaudio-ctl down";
+          # "XF86AudioRaiseVolume" = "pulseaudio-ctl up";
           "Print" = "flameshot gui";
         };
       };
@@ -330,6 +334,10 @@
         package = pkgs.pantheon.elementary-icon-theme;
       };
       windowManager = {
+        command = pkgs.lib.mkForce ''
+          ${pkgs.bspwm}/bin/bspwm -c ~/.config/bspwm/bspwmrc &
+          ${pkgs.xfce.xfce4-session}/bin/xfce4-session
+        '';
         bspwm = {
           enable = true;
           extraConfig = ''
