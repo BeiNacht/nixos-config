@@ -16,47 +16,19 @@
   };
 
   environment.systemPackages = with pkgs; [
-    barrier
-    bspwm
     chromium
-    cura
-    cypress
-    dunst
-    etcher
-    evince
-    firefox
-    font-manager
-    fslint
     fswebcam
     glxinfo
     gparted
-    insomnia
-    jellyfin-media-player
-    jellyfin-mpv-shim
-    kdenlive
-    keepassxc
-    libnotify
-    libreoffice
     libsecret
     lightlocker
-    mangohud
-    meld
-    mpv
     networkmanager-openconnect
-    nextcloud-client
     openconnect
     pantheon.elementary-gtk-theme
     pantheon.elementary-icon-theme
-    pinta
     ponymix
-    prusa-slicer
     pulseaudio-ctl
     python39Packages.pyyaml
-    solaar
-    sxhkd
-    virtmanager
-    vulkan-tools
-    winetricks
   ];
 
   programs = {
@@ -157,14 +129,6 @@
         };
         defaultSession = "xsession";
         session = [{
-          manage = "desktop";
-          name = "bspwm";
-          start = ''
-            ${pkgs.bspwm}/bin/bspwm -c /etc/bspwmrc &
-            ${pkgs.sxhkd}/bin/sxhkd -c /etc/sxhkdrc &
-            ${pkgs.xfce.xfce4-session}/bin/xfce4-session
-          '';
-        } {
            manage = "desktop";
            name = "xsession";
            start = ''exec $HOME/.xsession'';

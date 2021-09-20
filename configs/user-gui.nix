@@ -1,4 +1,8 @@
 { config, pkgs, lib, ... }:
+
+let
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+in
 {
   imports = [ <home-manager/nixos> ];
 
@@ -10,27 +14,51 @@
           source = ./.bin/rofi-default-sink.sh;
         };
       };
-      packages =  with pkgs; [
+      packages =  with unstable.pkgs; [
         arandr
         baobab
+        barrier
         bitwarden
         blueberry
+        cura
+        cypress
+        discord
+        etcher
+        evince
+        firefox
+        font-manager
+        fslint
         gnome.cheese
         gnome.eog
         gnome.file-roller
         gnome.gnome-calculator
         gnome.seahorse
         homebank
+        insomnia
+        jellyfin-media-player
+        jellyfin-mpv-shim
+        kdenlive
+        keepassxc
+        libnotify
+        libreoffice
         lutris
+        lxrandr
+        mangohud
+        meld
+        nextcloud-client
+        pinta
+        prusa-slicer
         rpi-imager
         signal-desktop
+        solaar
         spotify
         steam
-        discord
-        lxrandr
         teams
         unrar
+        virtmanager
+        vulkan-tools
         wine
+        winetricks
       ];
     };
 
@@ -94,14 +122,17 @@
     programs = {
       vscode = {
         enable = true;
-        package = pkgs.vscode;
-        extensions = with pkgs.vscode-extensions; [
-          bbenoist.Nix
+        package = unstable.pkgs.vscode;
+        extensions = with unstable.pkgs.vscode-extensions; [
+          bbenoist.nix
+          eamodio.gitlens
           editorconfig.editorconfig
           ms-azuretools.vscode-docker
           ms-vsliveshare.vsliveshare
-          #hsnazar.hyper-term-theme
-          eamodio.gitlens
+          ms-vscode.cpptools
+          mskelton.one-dark-theme
+          ms-kubernetes-tools.vscode-kubernetes-tools
+          ryu1kn.partial-diff
         ];
         # userSettings = {
         #   #"terminal.integrated.fontFamily" = "Hack";
@@ -262,6 +293,10 @@
             timeout = 16;
           };
         };
+      };
+
+      barrier.client = {
+        enable = true;
       };
 
       nextcloud-client = {

@@ -23,6 +23,7 @@ in
       ../configs/common.nix
       ../configs/user.nix
       ../configs/user-gui.nix
+      <home-manager/nixos>
     ];
 
   # boot.initrd.luks.devices = {
@@ -152,6 +153,12 @@ in
       START_CHARGE_THRESH_BAT0 = 80;
       STOP_CHARGE_THRESH_BAT0 = 90;
     };
+  };
+
+  home-manager.users.alex.services.barrier.client = {
+    enable = true;
+    name = "thinkpad";
+    server = "192.168.0.150:24800"
   };
 
   environment.systemPackages = with pkgs; [

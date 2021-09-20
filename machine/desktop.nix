@@ -97,7 +97,6 @@ in
     fswatch
   ];
 
-
   services.xserver.videoDrivers = [ "amdgpu" ];
   services.hardware.xow.enable = true;
   services.printing.enable = true;
