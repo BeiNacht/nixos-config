@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  secrets = import ./secrets.nix;
+  secrets = import ../configs/secrets.nix;
 in
 {
   imports =
@@ -24,21 +24,22 @@ in
     useDHCP = false;
     interfaces.ens3.useDHCP = true;
     wireguard.interfaces = {
-    wg0 = {
-      ips = [ "10.100.0.1/24" ];
-      listenPort = 51820;
-      postSetup = ''
-        ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o ens3 -j MASQUERADE
-      '';
-      postShutdown = ''
-        ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o ens3 -j MASQUERADE
-      '';
-      privateKey = secrets.wireguard-vps-private;
-      peers = [{
-        publicKey = secrets.wireguard-desktop-public;
-        presharedKey = secrets.wireguard-preshared;
-        allowedIPs = [ "10.100.0.2/32" ];
-      }];
+      wg0 = {
+        ips = [ "10.100.0.1/24" ];
+        listenPort = 51820;
+        postSetup = ''
+          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o ens3 -j MASQUERADE
+        '';
+        postShutdown = ''
+          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o ens3 -j MASQUERADE
+        '';
+        privateKey = secrets.wireguard-vps-private;
+        peers = [{
+          publicKey = secrets.wireguard-desktop-public;
+          presharedKey = secrets.wireguard-preshared;
+          allowedIPs = [ "10.100.0.2/32" ];
+        }];
+      };
     };
 
     nat = {
@@ -127,4 +128,3 @@ in
 
   system.stateVersion = "21.05";
 }
-
