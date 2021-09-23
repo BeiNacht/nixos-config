@@ -24,6 +24,22 @@
       # allowedTCPPorts = [ 6443 ];
     };
     networkmanager.enable = true;
+    wireguard.interfaces = {
+      wg0 = {
+        ips = [ "10.100.0.3/24" ];
+        privateKey = secrets.wireguard-mini-private;
+
+        peers = [
+          {
+            publicKey = secrets.wireguard-vps-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.0/24" ];
+            endpoint = "szczepan.ski:51820";
+            persistentKeepalive = 25;
+          }
+        ];
+      };
+    };
   };
 
   services.k3s.enable = true;

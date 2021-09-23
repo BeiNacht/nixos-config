@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  secrets = import ../configs/secrets.nix;
 in
 {
   imports =
@@ -36,6 +36,22 @@ in
   boot.kernelModules = [ "it87" "v4l2loopback" ];
 
   networking.hostName = "desktop"; # Define your hostname.
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [ "10.100.0.2/24" ];
+      privateKey = secrets.wireguard-desktop-private;
+
+      peers = [
+        {
+          publicKey = secrets.wireguard-vps-public;
+          presharedKey = secrets.wireguard-preshared;
+          allowedIPs = [ "10.100.0.0/24" ];
+          endpoint = "szczepan.ski:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";

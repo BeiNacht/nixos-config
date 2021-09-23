@@ -38,6 +38,10 @@ in
           publicKey = secrets.wireguard-desktop-public;
           presharedKey = secrets.wireguard-preshared;
           allowedIPs = [ "10.100.0.2/32" ];
+        }{
+          publicKey = secrets.wireguard-mini-public;
+          presharedKey = secrets.wireguard-preshared;
+          allowedIPs = [ "10.100.0.3/32" ];
         }];
       };
     };
