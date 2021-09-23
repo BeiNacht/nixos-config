@@ -76,6 +76,7 @@ in
     wget
     graphviz
     nix-tree
+    hdparm
   ];
 
   documentation.enable = false;

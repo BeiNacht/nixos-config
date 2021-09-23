@@ -28,9 +28,7 @@
     mergerfs
     samba
     openssl
-    hdparm
     smartmontools
-    docker-compose
   ];
 
   systemd = {

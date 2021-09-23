@@ -15,7 +15,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.extraModulePackages = with pkgs.linuxPackages; [ rtl88x2bu ];
 
-
   networking = {
     hostName = "mini";
     useDHCP = false;
@@ -26,6 +25,7 @@
     };
     networkmanager.enable = true;
   };
+
   services.k3s.enable = true;
   services.k3s.role = "server";
 
