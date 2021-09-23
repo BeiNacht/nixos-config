@@ -24,42 +24,47 @@ in
     options = [ "noatime" "discard" ];
   };
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.efiSupport = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.gfxmodeEfi = "1024x768";
-  boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.plymouth.enable = true;
-  boot.extraModulePackages = with pkgs.linuxPackages; [ it87 ];
-  boot.kernelModules = [ "it87" "v4l2loopback" ];
+  boot = {
+    loader = {
+      grub = {
+        enable = true;
+        version = 2;
+        device = "nodev";
+        efiSupport = true;
+        gfxmodeEfi = "1024x768";
+      };
 
-  networking.hostName = "desktop"; # Define your hostname.
-  networking.wireguard.interfaces = {
-    wg0 = {
-      ips = [ "10.100.0.2/24" ];
-      privateKey = secrets.wireguard-desktop-private;
+      efi.canTouchEfiVariables = true;
+    };
 
-      peers = [
-        {
-          publicKey = secrets.wireguard-vps-public;
-          presharedKey = secrets.wireguard-preshared;
-          allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "szczepan.ski:51820";
-          persistentKeepalive = 25;
-        }
-      ];
+    initrd.kernelModules = [ "amdgpu" ];
+    plymouth.enable = true;
+    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
+    kernelModules = [ "it87" "v4l2loopback" ];
+  };
+
+  networking = {
+    hostName = "desktop"; # Define your hostname.
+    useDHCP = false;
+    wireguard.interfaces = {
+      wg0 = {
+        ips = [ "10.100.0.2/24" ];
+        privateKey = secrets.wireguard-desktop-private;
+
+        peers = [
+          {
+            publicKey = secrets.wireguard-vps-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.0/24" ];
+            endpoint = "szczepan.ski:51820";
+            persistentKeepalive = 25;
+          }
+        ];
+      };
     };
   };
 
-  # Set your time zone.
   time.timeZone = "Europe/Berlin";
-
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
 
   console = {
      font = "latarcyrheb-sun32";
@@ -113,10 +118,25 @@ in
     fswatch
   ];
 
-  services.xserver.videoDrivers = [ "amdgpu" ];
-  services.hardware.xow.enable = true;
-  services.printing.enable = true;
   sound.enable = true;
+
+  services = {
+    printing.enable = true;
+    xserver.videoDrivers = [ "amdgpu" ];
+    hardware.xow.enable = true;
+    borgbackup.jobs.home-alex = {
+      compression = "auto,zstd";
+      encryption = {
+        mode = "repokey-blake2" ;
+        passphrase = secrets.borg-desktop-key;
+      };
+      environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
+      paths = "/home/alex";
+      repo = "ssh://alex@szczepan.ski/borg-backup/desktop";
+      startAt = "daily";
+      user = "alex";
+    };
+  };
 
   system.stateVersion = "21.05";
 }
