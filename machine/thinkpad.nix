@@ -157,8 +157,9 @@ in
 
   home-manager.users.alex.services.barrier.client = {
     enable = true;
+    enableCrypto = false;
     name = "thinkpad";
-    server = "192.168.0.150:24800"
+    server = "192.168.0.150:24800";
   };
 
   environment.systemPackages = with pkgs; [

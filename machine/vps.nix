@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
-
+let
+  secrets = import ./secrets.nix;
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -18,8 +20,37 @@
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
-  networking.useDHCP = false;
-  networking.interfaces.ens3.useDHCP = true;
+  networking = {
+    useDHCP = false;
+    interfaces.ens3.useDHCP = true;
+    wireguard.interfaces = {
+    wg0 = {
+      ips = [ "10.100.0.1/24" ];
+      listenPort = 51820;
+      postSetup = ''
+        ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o ens3 -j MASQUERADE
+      '';
+      postShutdown = ''
+        ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o ens3 -j MASQUERADE
+      '';
+      privateKey = secrets.wireguard-vps-private;
+      peers = [{
+        publicKey = secrets.wireguard-desktop-public;
+        presharedKey = secrets.wireguard-preshared;
+        allowedIPs = [ "10.100.0.2/32" ];
+      }];
+    };
+
+    nat = {
+      enable = true;
+      externalInterface = "ens3";
+      internalInterfaces = [ "wg0" ];
+    };
+    firewall = {
+      allowedTCPPorts = [ 80 443 ];
+      allowedUDPPorts = [ 80 443 51820 ];
+    };
+  };
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
@@ -93,9 +124,6 @@
 
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
-
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
-  networking.firewall.allowedUDPPorts = [ 80 443 ];
 
   system.stateVersion = "21.05";
 }

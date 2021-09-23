@@ -6,12 +6,22 @@ in
 {
   imports = [ <home-manager/nixos> ];
 
+  # systemd.user.services.barrierc = {
+  #   Unit = {
+  #     Description = "Barrier Server daemon";
+  #     After = [ "graphical-session-pre.target" ];
+  #     PartOf = [ "graphical-session.target" ];
+  #   };
+  #   Install.WantedBy = [ "graphical-session.target" ];
+  #   Service.ExecStart = "${unstable.pkgs.barrier}/bin/barrierc -c ~/.barrier";
+  # };
+
   home-manager.users.alex = { pkgs, ... }: {
     home = {
       file = {
         ".bin/rofi-default-sink.sh" = {
           executable = true;
-          source = ./.bin/rofi-default-sink.sh;
+          source = ./bin/rofi-default-sink.sh;
         };
       };
       packages =  with unstable.pkgs; [
@@ -59,6 +69,7 @@ in
         vulkan-tools
         wine
         winetricks
+        obs-studio
       ];
     };
 
@@ -218,11 +229,11 @@ in
       #   };
       # };
 
-      keychain = {
-        enable = true;
-        enableXsessionIntegration = true;
-        enableZshIntegration = true;
-      };
+      # keychain = {
+      #   enable = true;
+      #   enableXsessionIntegration = true;
+      #   enableZshIntegration = true;
+      # };
     };
 
     services = {
@@ -293,10 +304,6 @@ in
             timeout = 16;
           };
         };
-      };
-
-      barrier.client = {
-        enable = true;
       };
 
       nextcloud-client = {

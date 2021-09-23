@@ -33,7 +33,7 @@ in
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.plymouth.enable = true;
   boot.extraModulePackages = with pkgs.linuxPackages; [ it87 ];
-  boot.kernelModules = [ "it87" ];
+  boot.kernelModules = [ "it87" "v4l2loopback" ];
 
   networking.hostName = "desktop"; # Define your hostname.
 
