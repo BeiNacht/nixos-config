@@ -11,6 +11,7 @@ let
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec -a "$0" "$@"
   '';
+  secrets = import ../configs/secrets.nix;
 in
 {
   imports =
@@ -62,11 +63,6 @@ in
   console = {
      font = "latarcyrheb-sun32";
      keyMap = "us";
-  };
-
-  services.xserver = {
-    videoDrivers = [ "nvidia" ];
-#    deviceSection = ''BusID "PCI:0:2:0"'';
   };
 
   hardware.nvidia.prime = {
@@ -146,12 +142,49 @@ in
       [7 93 32767]
     ];
   };
-  services.power-profiles-daemon.enable = false;
-  services.tlp = {
-    enable = true;
-    settings = {
-      START_CHARGE_THRESH_BAT0 = 80;
-      STOP_CHARGE_THRESH_BAT0 = 90;
+  services = {
+    xserver = {
+      videoDrivers = [ "nvidia" ];
+      # deviceSection = ''BusID "PCI:0:2:0"'';
+    };
+    power-profiles-daemon.enable = false;
+    tlp = {
+      enable = true;
+      settings = {
+        START_CHARGE_THRESH_BAT0 = 80;
+        STOP_CHARGE_THRESH_BAT0 = 90;
+      };
+    };
+    borgbackup.jobs.home = rec {
+      compression = "auto,zstd";
+      encryption = {
+        mode = "repokey-blake2" ;
+        passphrase = secrets.borg-desktop-key;
+      };
+      extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
+      environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
+      paths = "/home/alex";
+      repo = "ssh://szczepan.ski/~/borg-backup/thinkpad";
+      startAt = "daily";
+      user = "alex";
+      prune.keep = {
+        daily = 7;
+        weekly = 4;
+        monthly = 6;
+      };
+      extraPruneArgs = "--save-space --list --stats";
+      exclude = map (x: paths + "/" + x) [
+        ".config/chromium/Default/Service Worker/CacheStorage"
+        ".cache"
+        ".local/share/libvirt/images"
+        ".local/share/Steam/steamapps"
+        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
+        "Games/guild-wars-second/drive_c/Program Files/Guild Wars/Gw.dat"
+        "Kamera"
+        "Nextcloud"
+        "Sync"
+        "Workspace"
+      ];
     };
   };
 
