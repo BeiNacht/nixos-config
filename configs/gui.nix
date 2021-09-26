@@ -34,7 +34,8 @@
   programs = {
     steam.enable = true;
     dconf.enable = true;
-    #ssh.startAgent = true;
+    adb.enable = true;
+    seahorse.enable = true;
     chromium = {
       enable = true;
       extensions = [
@@ -78,18 +79,18 @@
     fontDir.enable = true;
 
     fonts = with pkgs; [
-      open-sans
-      twemoji-color-font
+      corefonts
+      font-awesome
+      google-fonts
       liberation_ttf
+      meslo-lg
+      nerdfonts
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
-      corefonts
-      meslo-lg
-      google-fonts
-      font-awesome
+      open-sans
       stix-two
-      nerdfonts
+      twemoji-color-font
     ];
 
     fontconfig = {
@@ -105,8 +106,6 @@
   };
 
   hardware.bluetooth.enable = true;
-
-  programs.adb.enable = true;
 
   services = {
     blueman.enable = true;
