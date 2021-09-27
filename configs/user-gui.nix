@@ -28,48 +28,13 @@ in
         arandr
         baobab
         barrier
-        bitwarden
         blueberry
-        cura
-        cypress
-        discord
-        etcher
         evince
-        firefox
-        font-manager
-        fslint
-        gnome.cheese
         gnome.eog
         gnome.file-roller
         gnome.gnome-calculator
-        gnome.seahorse
-        homebank
-        insomnia
-        jellyfin-media-player
-        jellyfin-mpv-shim
-        kdenlive
         keepassxc
         libnotify
-        libreoffice
-        lutris
-        lxrandr
-        mangohud
-        meld
-        nextcloud-client
-        pinta
-        prusa-slicer
-        rpi-imager
-        signal-desktop
-        solaar
-        spotify
-        steam
-        teams
-        unrar
-        virtmanager
-        vulkan-tools
-        wine
-        winetricks
-        obs-studio
       ];
     };
 
@@ -228,12 +193,6 @@ in
       #     SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
       #   };
       # };
-
-      # keychain = {
-      #   enable = true;
-      #   enableXsessionIntegration = true;
-      #   enableZshIntegration = true;
-      # };
     };
 
     services = {
@@ -364,10 +323,6 @@ in
       flameshot.enable = true;
     };
 
-    xresources.properties = {
-      "Xft.dpi" = 120;
-    };
-
     xsession = {
       enable = true;
       pointerCursor = {
@@ -414,10 +369,5 @@ in
         };
       };
     };
-
-    # manuals not needed
-    manual.html.enable = false;
-    manual.json.enable = false;
-    manual.manpages.enable = false;
   };
 }

@@ -3,22 +3,17 @@ let
   secrets = import ./secrets.nix;
 in
 {
-  imports =
-    [
-      (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
-    ];
-
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
   services = {
     vnstat.enable = true;
     tuptime.enable = true;
-    vscode-server.enable = true;
     openssh = {
       enable = true;
       permitRootLogin = "no";
       passwordAuthentication = false;
       openFirewall = true;
+      extraConfig = "StreamLocalBindUnlink yes";
     };
     nextdns = {
       enable = true;
@@ -31,6 +26,9 @@ in
       ];
     };
     fwupd.enable = true;
+    journald = {
+      extraConfig = "SystemMaxUse=500M";
+    };
   };
 
   networking = {
@@ -66,6 +64,8 @@ in
     ffmpeg
     gnupg
     gocryptfs
+    graphviz
+    hdparm
     home-manager
     inxi
     iotop
@@ -74,6 +74,7 @@ in
     lsof
     manpages
     nix-du
+    nix-tree
     nmap
     nodejs
     pciutils
@@ -83,9 +84,6 @@ in
     unzip
     usbutils
     wget
-    graphviz
-    nix-tree
-    hdparm
   ];
 
   documentation.enable = false;

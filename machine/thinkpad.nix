@@ -24,6 +24,7 @@ in
       ../configs/common.nix
       ../configs/user.nix
       ../configs/user-gui.nix
+      ../configs/user-gui-applications.nix
       <home-manager/nixos>
     ];
 
