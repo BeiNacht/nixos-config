@@ -40,6 +40,7 @@
         ranger
         sshfs
         tree
+        unrar
         youtube-dl
       ];
     };
@@ -73,7 +74,11 @@
         };
 
         matchBlocks."nixos-vm" = {
-          hostname = "192.168.122.43";
+          hostname = "192.168.122.222";
+          remoteForwards = [{
+            bind.address = "/run/user/1000/gnupg/S.gpg-agent";
+            host.address = "/run/user/1000/gnupg/S.gpg-agent";
+          }];
         };
 
         matchBlocks."mini" = {
