@@ -77,6 +77,7 @@ in
     nix-tree
     nmap
     nodejs
+    parallel
     pciutils
     ruby
     tealdeer
