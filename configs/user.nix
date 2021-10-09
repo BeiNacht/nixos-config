@@ -22,8 +22,6 @@
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.bernd = { pkgs, ... }: {
-
-
     home = {
       enableNixpkgsReleaseCheck = false;
       packages =  with pkgs; [

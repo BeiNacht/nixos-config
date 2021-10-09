@@ -53,15 +53,15 @@ in
         size = 12;
       };
       gtk3 = {
-        bookmarks = [
-          "file:///home/bernd/Downloads"
-          "file:///home/bernd/Nextcloud"
-          "file:///mnt/second"
-          "smb://192.168.0.100/storage/"
-          "file:///home/bernd/Workspace"
-          "file:///home/bernd/3D%20Print"
-          "file:///home/bernd/Sync"
-        ];
+        # bookmarks = [
+        #   "file:///home/bernd/Downloads"
+        #   "file:///home/bernd/Nextcloud"
+        #   "file:///mnt/second"
+        #   "smb://192.168.0.100/storage/"
+        #   "file:///home/bernd/Workspace"
+        #   "file:///home/bernd/3D%20Print"
+        #   "file:///home/bernd/Sync"
+        # ];
         extraConfig = {
           gtk-application-prefer-dark-theme = 1;
         };
@@ -314,12 +314,6 @@ in
         dawnTime = "06:30-07:00";
       };
 
-      screen-locker = {
-        enable = true;
-        enableDetectSleep = true;
-        inactiveInterval = 30;
-        lockCmd = "light-locker-command -l";
-      };
       flameshot.enable = true;
     };
 

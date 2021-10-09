@@ -42,6 +42,7 @@ in
         wine
         winetricks
         obs-studio
+        freecad
       ];
     };
   };
