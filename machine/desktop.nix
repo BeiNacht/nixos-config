@@ -2,6 +2,8 @@
 
 let
   secrets = import ../configs/secrets.nix;
+  secrets-wireguard = import ../configs/secrets-wireguard-publickeys.nix;
+  secrets-desktop = import ../configs/secrets-desktop.nix;
 in
 {
   imports =
@@ -50,12 +52,12 @@ in
     wireguard.interfaces = {
       wg0 = {
         ips = [ "10.100.0.2/24" ];
-        privateKey = secrets.wireguard-desktop-private;
+        privateKey = secrets-desktop.wireguard-desktop-private;
 
         peers = [
           {
-            publicKey = secrets.wireguard-vps-public;
-            presharedKey = secrets.wireguard-preshared;
+            publicKey = secrets-wireguard.wireguard-vps-public;
+            presharedKey = secrets-wireguard.wireguard-preshared;
             allowedIPs = [ "10.100.0.0/24" ];
             endpoint = "szczepan.ski:51820";
             persistentKeepalive = 25;
@@ -81,11 +83,11 @@ in
       extraPackages = with pkgs; [
         rocm-opencl-icd
         rocm-opencl-runtime
-        amdvlk
+        # amdvlk
       ];
-      extraPackages32 = with pkgs; [
-        driversi686Linux.amdvlk
-      ];
+      # extraPackages32 = with pkgs; [
+      #   driversi686Linux.amdvlk
+      # ];
     };
 
     fancontrol = {
@@ -111,14 +113,6 @@ in
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    cpu-x
-    hwinfo
-    hardinfo
-    phoronix-test-suite
-    fswatch
-  ];
-
   sound.enable = true;
 
   services = {
@@ -129,12 +123,12 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2" ;
-        passphrase = secrets.borg-desktop-key;
+        passphrase = secrets-desktop.borg-desktop-key;
       };
-      extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
+      extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
       paths = "/home/alex";
-      repo = "ssh://szczepan.ski/~/borg-backup/desktop";
+      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
       startAt = "daily";
       user = "alex";
       prune.keep = {
@@ -144,14 +138,18 @@ in
       };
       extraPruneArgs = "--save-space --list --stats";
       exclude = map (x: paths + "/" + x) [
-        ".config/chromium/Default/Service Worker/CacheStorage"
         ".cache"
+        ".config/chromium/Default/Service Worker/CacheStorage"
+        ".config/discord/Cache"
         ".local/share/libvirt/images"
+        ".local/share/Steam/config/htmlcache/Cache"
         ".local/share/Steam/steamapps"
-        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
+        ".local/share/Trash"
         "Games/guild-wars-second/drive_c/Program Files/Guild Wars/Gw.dat"
+        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
         "Kamera"
         "Nextcloud"
+        "shared"
         "Sync"
         "Workspace"
       ];

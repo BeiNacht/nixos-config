@@ -12,6 +12,7 @@ let
     exec -a "$0" "$@"
   '';
   secrets = import ../configs/secrets.nix;
+  secrets-thinkpad = import ../configs/secrets-thinkpad.nix;
 in
 {
   imports =
@@ -160,12 +161,12 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2" ;
-        passphrase = secrets.borg-desktop-key;
+        passphrase = secrets-thinkpad.borg-thinkpad-key;
       };
       extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
       paths = "/home/alex";
-      repo = "ssh://szczepan.ski/~/borg-backup/thinkpad";
+      repo = "ssh://u278697-sub1@u278697.your-storagebox.de:23/./borg";
       startAt = "daily";
       user = "alex";
       prune.keep = {
@@ -175,14 +176,17 @@ in
       };
       extraPruneArgs = "--save-space --list --stats";
       exclude = map (x: paths + "/" + x) [
-        ".config/chromium/Default/Service Worker/CacheStorage"
         ".cache"
+        ".config/chromium/Default/Service Worker/CacheStorage"
+        ".config/discord/Cache"
         ".local/share/libvirt/images"
         ".local/share/Steam/steamapps"
-        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
+        ".local/share/Trash"
         "Games/guild-wars-second/drive_c/Program Files/Guild Wars/Gw.dat"
+        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
         "Kamera"
         "Nextcloud"
+        "shared"
         "Sync"
         "Workspace"
       ];
