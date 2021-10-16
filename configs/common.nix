@@ -48,11 +48,6 @@ in
     networkmanager.dns = "none";
   };
 
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryFlavor = "curses";
-  };
-
   environment.systemPackages = with pkgs; [
     ack
     borgbackup

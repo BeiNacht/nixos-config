@@ -29,13 +29,25 @@
     ponymix
     pulseaudio-ctl
     python39Packages.pyyaml
+
+    i3pystatus (python38.withPackages(ps: with ps; [ i3pystatus keyring ]))
   ];
 
   programs = {
     steam.enable = true;
     dconf.enable = true;
     adb.enable = true;
-    seahorse.enable = true;
+    # seahorse.enable = true;
+    ssh = {
+      startAgent = true;
+    };
+
+    gnupg.agent = {
+      enable = true;
+      pinentryFlavor = "curses";
+      # enableSSHSupport = true;
+    };
+
     chromium = {
       enable = true;
       extensions = [
@@ -72,6 +84,30 @@
         "CloudPrintSubmitEnabled" = false;
       };
     };
+
+    # sway = {
+    #   enable = true;
+    #   extraPackages = with pkgs; [
+    #     dmenu
+    #     swaylock
+    #     swayidle
+    #     xwayland
+    #     mako
+    #     kanshi
+    #     grim
+    #     slurp
+    #     wl-clipboard
+    #     wf-recorder
+    #     (python38.withPackages(ps: with ps; [ i3pystatus keyring ]))
+    #   ];
+    #   extraSessionCommands = ''
+    #     export SDL_VIDEODRIVER=wayland
+    #     export QT_QPA_PLATFORM=wayland
+    #     export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+    #     export _JAVA_AWT_WM_NONREPARENTING=1
+    #     export MOZ_ENABLE_WAYLAND=1
+    #   '';
+    # };
   };
 
   fonts = {
@@ -107,41 +143,72 @@
 
   hardware.bluetooth.enable = true;
 
+  # systemd.user.targets.sway-session = {
+  #   description = "Sway compositor session";
+  #   documentation = [ "man:systemd.special(7)" ];
+  #   bindsTo = [ "graphical-session.target" ];
+  #   wants = [ "graphical-session-pre.target" ];
+  #   after = [ "graphical-session-pre.target" ];
+  # };
+
+  # systemd.user.services.kanshi = {
+  #   description = "Kanshi output autoconfig ";
+  #   wantedBy = [ "graphical-session.target" ];
+  #   partOf = [ "graphical-session.target" ];
+  #   environment = { XDG_CONFIG_HOME="/home/alex/.config"; };
+  #   serviceConfig = {
+  #     # kanshi doesn't have an option to specifiy config file yet, so it looks
+  #     # at .config/kanshi/config
+  #     ExecStart = ''
+  #     ${pkgs.kanshi}/bin/kanshi
+  #     '';
+  #     RestartSec = 5;
+  #     Restart = "always";
+  #   };
+  # };
+
   services = {
     blueman.enable = true;
     udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-    gnome.gnome-keyring.enable = true;
     printing = {
       enable = true;
       drivers = [ pkgs.brlaser ];
     };
     xserver = {
       enable = true;
-      displayManager = {
-        lightdm = {
-          enable = true;
-          # background = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
-          greeters.gtk.theme = {
-            package = pkgs.pantheon.elementary-gtk-theme;
-            name = "elementary";
-          };
-        };
-        defaultSession = "xsession";
-        session = [{
-           manage = "desktop";
-           name = "xsession";
-           start = ''exec $HOME/.xsession'';
-        }];
-      };
 
-      desktopManager = {
-        xfce = {
-          enable = true;
-          noDesktop = true;
-          enableXfwm = true;
-          thunarPlugins = [ pkgs.xfce.thunar-archive-plugin ];
-        };
-      };
+      # displayManager.defaultSession = "sway";
+      # displayManager.sddm.enable = true;
+
+      # displayManager = {
+      #   lightdm = {
+      #     enable = true;
+      #     background = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
+      #     # greeters.gtk.theme = {
+      #     #   package = pkgs.pantheon.elementary-gtk-theme;
+      #     #   name = "elementary";
+      #     # };
+      #     greeters.pantheon.enable = true;
+      #   };
+      #   defaultSession = "xsession";
+      #   session = [{
+      #      manage = "desktop";
+      #      name = "xsession";
+      #      start = ''exec $HOME/.xsession'';
+      #   }];
+      # };
+
+
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+      # desktopManager = {
+      #   xfce = {
+      #     enable = true;
+      #     noDesktop = true;
+      #     enableXfwm = true;
+      #     thunarPlugins = [ pkgs.xfce.thunar-archive-plugin ];
+      #   };
+      # };
       layout = "us";
       # Enable touchpad support.
       libinput.enable = true;
