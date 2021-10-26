@@ -2,7 +2,6 @@
 
 let
   secrets = import ../configs/secrets.nix;
-  secrets-wireguard = import ../configs/secrets-wireguard-publickeys.nix;
   secrets-desktop = import ../configs/secrets-desktop.nix;
 in
 {
@@ -16,6 +15,7 @@ in
       ../configs/user-gui-applications.nix
       ../configs/user-gui.nix
       ../configs/user.nix
+      ../configs/bspwm.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -42,8 +42,9 @@ in
 
     initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;
-    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
+    extraModulePackages = with pkgs.linuxPackages_5_14; [ it87 ];
     kernelModules = [ "it87" "v4l2loopback" ];
+    kernelPackages = pkgs.linuxPackages_5_14;
   };
 
   networking = {
@@ -52,12 +53,12 @@ in
     wireguard.interfaces = {
       wg0 = {
         ips = [ "10.100.0.2/24" ];
-        privateKey = secrets-desktop.wireguard-desktop-private;
+        privateKey = secrets-desktop.wireguard-private;
 
         peers = [
           {
-            publicKey = secrets-wireguard.wireguard-vps-public;
-            presharedKey = secrets-wireguard.wireguard-preshared;
+            publicKey = secrets.wireguard-vps-public;
+            presharedKey = secrets.wireguard-preshared;
             allowedIPs = [ "10.100.0.0/24" ];
             endpoint = "szczepan.ski:51820";
             persistentKeepalive = 25;
@@ -118,17 +119,20 @@ in
   services = {
     printing.enable = true;
     xserver.videoDrivers = [ "amdgpu" ];
+    xserver.deviceSection = ''
+    Option "TearFree" "true"
+    '';
     hardware.xow.enable = true;
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2" ;
-        passphrase = secrets-desktop.borg-desktop-key;
+        passphrase = secrets-desktop.borg-key;
       };
       extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
       paths = "/home/alex";
-      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
+      repo = secrets-desktop.borg-repo;
       startAt = "daily";
       user = "alex";
       prune.keep = {

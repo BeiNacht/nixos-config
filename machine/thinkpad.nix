@@ -11,7 +11,6 @@ let
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec -a "$0" "$@"
   '';
-  secrets = import ../configs/secrets.nix;
   secrets-thinkpad = import ../configs/secrets-thinkpad.nix;
 in
 {
@@ -39,20 +38,20 @@ in
 
   fileSystems."/".options = [ "noatime" "discard" ];
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.efiSupport = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.gfxmodeEfi = "1024x768";
-
-  # boot.plymouth.enable = true;
-
-  # environment.etc."issue.d/ip.issue".text = "\\4\n";
+  boot = {
+    loader = {
+      grub.enable = true;
+      grub.version = 2;
+      grub.device = "nodev";
+      grub.efiSupport = true;
+      efi.canTouchEfiVariables = true;
+      grub.gfxmodeEfi = "1024x768";
+    };
+    kernelPackages = pkgs.linuxPackages_5_14;
+    boot.plymouth.enable = true;
+  };
 
   networking.hostName = "thinkpad"; # Define your hostname.
-
-  # Set your time zone.
   time.timeZone = "Europe/Berlin";
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -131,23 +130,25 @@ in
   };
   hardware.sane.enable = true;
 
-  #thinkfan
-  services.thinkfan = {
-    enable = true;
-    levels = [
-      [0 0 67]
-      [1 65 75]
-      [2 73 80]
-      [3 78 85]
-      [4 83 90]
-      [6 88 95]
-      [7 93 32767]
-    ];
-  };
   services = {
+    thinkfan = {
+      enable = true;
+      levels = [
+        [0 0 67]
+        [1 65 75]
+        [2 73 80]
+        [3 78 85]
+        [4 83 90]
+        [6 88 95]
+        [7 93 32767]
+      ];
+    };
     xserver = {
       videoDrivers = [ "nvidia" ];
       # deviceSection = ''BusID "PCI:0:2:0"'';
+      # deviceSection = ''
+      # Option "TearFree" "true"
+      # '';
     };
     power-profiles-daemon.enable = false;
     tlp = {
@@ -161,12 +162,12 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2" ;
-        passphrase = secrets-thinkpad.borg-thinkpad-key;
+        passphrase = secrets-thinkpad.borg-key;
       };
       extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
       paths = "/home/alex";
-      repo = "ssh://u278697-sub1@u278697.your-storagebox.de:23/./borg";
+      repo = secrets-thinkpad.borg-thinkpad-key;
       startAt = "daily";
       user = "alex";
       prune.keep = {
@@ -202,7 +203,7 @@ in
 
   environment.systemPackages = with pkgs; [
     nvidia-offload
-    xorg.xf86videointel
+    # xorg.xf86videointel
     intel-gpu-tools
     gnome.simple-scan
   ];

@@ -1,4 +1,7 @@
 { config, pkgs, lib, ... }:
+let
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+in
 {
   imports = [ <home-manager/nixos> ];
 
@@ -24,7 +27,7 @@
   home-manager.users.alex = { pkgs, ... }: {
     home = {
       enableNixpkgsReleaseCheck = false;
-      packages =  with pkgs; [
+      packages = with unstable.pkgs; [
         atop
         bpytop
         dfc
@@ -61,6 +64,21 @@
           localForwards = [ {
             bind.address = "127.0.0.1";
             bind.port = 8386;
+            host.address = "127.0.0.1";
+            host.port = 8384;
+          } {
+            bind.address = "127.0.0.1";
+            bind.port = 9092;
+            host.address = "127.0.0.1";
+            host.port = 9091;
+          }];
+        };
+
+        matchBlocks."new-vps" = {
+          hostname = "207.180.220.97";
+          localForwards = [ {
+            bind.address = "127.0.0.1";
+            bind.port = 8387;
             host.address = "127.0.0.1";
             host.port = 8384;
           } {
@@ -118,9 +136,6 @@
           color = { ui = "auto"; };
           push = { default = "current"; };
           pull = { rebase = true; };
-          credential.helper = "${
-            pkgs.git.override { withLibsecret = true; }
-          }/bin/git-credential-libsecret";
         };
       };
 
@@ -144,7 +159,7 @@
         plugins = [
           {
             name = "powerlevel10k";
-            src = pkgs.zsh-powerlevel10k;
+            src = unstable.pkgs.zsh-powerlevel10k;
             file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
           }
           {

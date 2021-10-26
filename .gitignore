@@ -2,4 +2,4 @@
 !*.secret
 configs/secrets.nix
 configs/secrets-desktop.nix
-configs/secrets-wireguard-publickeys.nix
+configs/secrets-thinkpad.nix
