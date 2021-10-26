@@ -44,6 +44,10 @@ in
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+  services.xserver.enable = true;
+  services.xserver.desktopManager.pantheon.enable = true;
+  services.xserver.displayManager.lightdm.greeters.pantheon.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
 
   system.stateVersion = "21.05";
 }

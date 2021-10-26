@@ -8,7 +8,7 @@ in
 
   home-manager.users.bernd = { pkgs, ... }: {
     home = {
-      packages =  with unstable.pkgs; [
+      packages = with unstable.pkgs; [
         bitwarden
         cura
         cypress

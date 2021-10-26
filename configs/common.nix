@@ -71,7 +71,7 @@ in
     nix-du
     nix-tree
     nmap
-    nodejs
+    nodejs-16_x
     parallel
     pciutils
     ruby
