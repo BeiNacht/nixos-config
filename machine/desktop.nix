@@ -3,6 +3,7 @@
 let
   secrets = import ../configs/secrets.nix;
   secrets-desktop = import ../configs/secrets-desktop.nix;
+  be = import ../configs/borg-exclude.nix;
 in
 {
   imports =
@@ -141,22 +142,7 @@ in
         monthly = 6;
       };
       extraPruneArgs = "--save-space --list --stats";
-      exclude = map (x: paths + "/" + x) [
-        ".cache"
-        ".config/chromium/Default/Service Worker/CacheStorage"
-        ".config/discord/Cache"
-        ".local/share/libvirt/images"
-        ".local/share/Steam/config/htmlcache/Cache"
-        ".local/share/Steam/steamapps"
-        ".local/share/Trash"
-        "Games/guild-wars-second/drive_c/Program Files/Guild Wars/Gw.dat"
-        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
-        "Kamera"
-        "Nextcloud"
-        "shared"
-        "Sync"
-        "Workspace"
-      ];
+      exclude = map (x: paths + "/" + x) be.borg-exclude;
     };
   };
 

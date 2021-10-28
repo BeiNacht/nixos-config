@@ -51,12 +51,8 @@ in
   environment.systemPackages = with pkgs; [
     ack
     borgbackup
-    broot
     btrfs-progs
-    bwm_ng
     cargo
-    exa
-    ffmpeg
     gnupg
     gocryptfs
     graphviz
@@ -75,11 +71,11 @@ in
     parallel
     pciutils
     ruby
-    tealdeer
     unixtools.xxd
     unzip
     usbutils
     wget
+    nethogs
   ];
 
   documentation.enable = false;

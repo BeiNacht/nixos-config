@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, lib, ... }:
 let
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
@@ -12,6 +8,7 @@ let
     exec -a "$0" "$@"
   '';
   secrets-thinkpad = import ../configs/secrets-thinkpad.nix;
+  be = import ../configs/borg-exclude.nix;
 in
 {
   imports =
@@ -176,21 +173,7 @@ in
         monthly = 6;
       };
       extraPruneArgs = "--save-space --list --stats";
-      exclude = map (x: paths + "/" + x) [
-        ".cache"
-        ".config/chromium/Default/Service Worker/CacheStorage"
-        ".config/discord/Cache"
-        ".local/share/libvirt/images"
-        ".local/share/Steam/steamapps"
-        ".local/share/Trash"
-        "Games/guild-wars-second/drive_c/Program Files/Guild Wars/Gw.dat"
-        "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
-        "Kamera"
-        "Nextcloud"
-        "shared"
-        "Sync"
-        "Workspace"
-      ];
+      exclude = map (x: paths + "/" + x) be.borg-exclude;
     };
   };
 

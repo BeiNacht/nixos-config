@@ -1,9 +1,7 @@
 { config, pkgs, lib, ... }:
 
-let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in
-{
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+in {
   imports = [ <home-manager/nixos> ];
 
   home-manager.users.alex = { pkgs, ... }: {
@@ -51,36 +49,13 @@ in
         #   "file:///home/alex/3D%20Print"
         #   "file:///home/alex/Sync"
         # ];
-        extraConfig = {
-          gtk-application-prefer-dark-theme = 1;
-        };
-      #   extraCss = ''
-      #   decoration
-      #   {
-      #      border-radius: 0px 0px 0 0;
-      #      border-width: 0px;
-      #      /*box-shadow: 1px 12px 12px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.18);*/
-      #      box-shadow: none;
-      #      margin: 0px;
-      #  }
-
-      #  decoration:backdrop
-      #  {
-      #      border-radius: 0px 0px 0 0;
-      #      border-width: 0px;
-      #      /*box-shadow: 1px 12px 12px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.18);*/
-      #      box-shadow: none;
-      #      margin: 0px;
-      #  }
-      #  '';
+        extraConfig = { gtk-application-prefer-dark-theme = 1; };
       };
       iconTheme = {
         package = pkgs.pantheon.elementary-icon-theme;
         name = "elementary";
       };
-      theme = {
-        name = "Adwaita-dark";
-      };
+      theme = { name = "Adwaita-dark"; };
     };
 
     programs = {
@@ -151,38 +126,37 @@ in
       git = {
         extraConfig = {
           credential.helper = "${
-            pkgs.git.override { withLibsecret = true; }
-          }/bin/git-credential-libsecret";
+              pkgs.git.override { withLibsecret = true; }
+            }/bin/git-credential-libsecret";
         };
       };
-
 
       kitty = {
         enable = true;
         extraConfig = ''
-            enable_audio_bell false
+          enable_audio_bell false
 
-            background            #000000
-            foreground            #e9e9e9
-            cursor                #e9e9e9
-            selection_background  #424242
-            color0                #000000
-            color8                #000000
-            color1                #d44d53
-            color9                #d44d53
-            color2                #b9c949
-            color10               #b9c949
-            color3                #e6c446
-            color11               #e6c446
-            color4                #79a6da
-            color12               #79a6da
-            color5                #c396d7
-            color13               #c396d7
-            color6                #70c0b1
-            color14               #70c0b1
-            color7                #fffefe
-            color15               #fffefe
-            selection_foreground #000000
+          background            #000000
+          foreground            #e9e9e9
+          cursor                #e9e9e9
+          selection_background  #424242
+          color0                #000000
+          color8                #000000
+          color1                #d44d53
+          color9                #d44d53
+          color2                #b9c949
+          color10               #b9c949
+          color3                #e6c446
+          color11               #e6c446
+          color4                #79a6da
+          color12               #79a6da
+          color5                #c396d7
+          color13               #c396d7
+          color6                #70c0b1
+          color14               #70c0b1
+          color7                #fffefe
+          color15               #fffefe
+          selection_foreground #000000
         '';
       };
     };
