@@ -52,7 +52,7 @@ in
       internalInterfaces = [ "wg0" ];
     };
     firewall = {
-      allowedTCPPorts = [ 80 443 ];
+      allowedTCPPorts = [ 80 443 22000 ];
       allowedUDPPorts = [ 80 443 51820 ];
     };
   };

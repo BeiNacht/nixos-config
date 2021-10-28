@@ -1,14 +1,13 @@
 { config, pkgs, ... }:
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  unstable = import <nixos-unstable> {
+    config = {
+      allowUnfree = true;
+      chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
+    };
+  };
 in
 {
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowBroken = true;
-    chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
-  };
-
   networking = {
     firewall.enable = false;
     networkmanager = {
@@ -31,20 +30,16 @@ in
   ];
 
   programs = {
-    steam.enable = true;
     dconf.enable = true;
     adb.enable = true;
-    # seahorse.enable = true;
     ssh = {
       startAgent = true;
     };
-
     gnupg.agent = {
       enable = true;
       pinentryFlavor = "curses";
       # enableSSHSupport = true;
     };
-
     chromium = {
       enable = true;
       extensions = [
@@ -88,7 +83,7 @@ in
     fontDir.enable = true;
 
     fonts = with pkgs; [
-      corefonts
+      # corefonts
       font-awesome
       google-fonts
       liberation_ttf

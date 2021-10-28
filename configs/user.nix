@@ -28,6 +28,10 @@ in
     home = {
       enableNixpkgsReleaseCheck = false;
       packages = with unstable.pkgs; [
+        exa
+        broot
+        ffmpeg
+        tealdeer
         atop
         bpytop
         dfc

@@ -16,6 +16,7 @@ in
         etcher
         firefox
         font-manager
+        freecad
         fslint
         gnome.cheese
         homebank
@@ -29,6 +30,7 @@ in
         lxrandr
         mangohud
         meld
+        obs-studio
         pinta
         prusa-slicer
         rpi-imager
@@ -41,8 +43,6 @@ in
         vulkan-tools
         wine
         winetricks
-        obs-studio
-        freecad
       ];
     };
   };
