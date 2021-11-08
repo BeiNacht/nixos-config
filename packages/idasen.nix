@@ -1,6 +1,7 @@
-with import <nixpkgs> {};
+with import <nixpkgs> { };
 
-( let
+(
+  let
     idasen = pkgs.python3Packages.buildPythonPackage rec {
       name = "idasen";
       version = "v0.7.1";
@@ -20,7 +21,8 @@ with import <nixpkgs> {};
       };
     };
 
-  in pkgs.python3.buildEnv.override rec {
+  in
+  pkgs.python3.buildEnv.override rec {
     extraLibs = with pkgs.python3Packages; [ numpy toolz vpn-slice ];
     propagatedBuildInputs = with pkgs.python3Packages; [ setproctitle ];
   }

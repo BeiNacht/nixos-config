@@ -70,9 +70,9 @@ in
         "UrlKeyedAnonymizedDataCollectionEnabled" = false;
         "SpellcheckEnabled" = true;
         "SpellcheckLanguage" = [
-                                "de"
-                                "en-US"
-                              ];
+          "de"
+          "en-US"
+        ];
         "CloudPrintSubmitEnabled" = false;
       };
     };
