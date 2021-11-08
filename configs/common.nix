@@ -18,10 +18,14 @@ in
     nextdns = {
       enable = true;
       arguments = [
-        "-config" secrets.nextdnshash
-        "-cache-size" "10MB"
-        "-listen" "127.0.0.1:53"
-        "-forwarder" secrets.nextdnsforwarder
+        "-config"
+        secrets.nextdnshash
+        "-cache-size"
+        "10MB"
+        "-listen"
+        "127.0.0.1:53"
+        "-forwarder"
+        secrets.nextdnsforwarder
         "-report-client-info"
       ];
     };
@@ -34,13 +38,14 @@ in
   networking = {
     nameservers = [ "127.0.0.1" "::1" ];
     hosts = {
-      "2.56.97.114" = ["szczepan.ski"];
-      "10.100.0.1" = ["vps.wg"];
-      "10.100.0.2" = ["desktop.wg"];
-      "10.100.0.3" = ["mini.wg"];
-      "192.168.0.24" = ["mini.lan"];
-      "192.168.0.100" = ["homeserver.lan"];
-      "192.168.0.150" = ["desktop.lan"];
+      "2.56.97.114" = [ "old-vps" ];
+      "207.180.220.97" = [ "szczepan.ski" ];
+      "10.100.0.1" = [ "vps.wg" ];
+      "10.100.0.2" = [ "desktop.wg" ];
+      "10.100.0.3" = [ "mini.wg" ];
+      "192.168.0.24" = [ "mini.lan" ];
+      "192.168.0.100" = [ "homeserver.lan" ];
+      "192.168.0.150" = [ "desktop.lan" ];
     };
     # If using dhcpcd:
     dhcpcd.extraConfig = "nohook resolv.conf";

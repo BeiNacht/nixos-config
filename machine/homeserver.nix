@@ -60,7 +60,7 @@
         User = "alex";
         # ExecStart="/home/alex/snapraid-sync";
       };
-      path = [pkgs.bash pkgs.snapraid pkgs.curl pkgs.smartmontools pkgs.hdparm];
+      path = [ pkgs.bash pkgs.snapraid pkgs.curl pkgs.smartmontools pkgs.hdparm ];
 
       script = ''
         /home/alex/snapraid-sync
@@ -69,7 +69,7 @@
 
     timers.snapraid-sync = {
       #enable = true;
-      wantedBy = ["timers.target"];
+      wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "Mon-Sun, 23:00";
         # Unit = "snapraid-sync.service";
@@ -95,7 +95,7 @@
     enable = true;
     extraPackages = with pkgs; [
       #intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       libvdpau-va-gl
     ];
@@ -145,19 +145,20 @@
     };
   };
 
-  security.sudo.extraRules = [ {
+  security.sudo.extraRules = [{
     users = [ "alex" ];
-    commands = [ {
+    commands = [{
       command = "${pkgs.hdparm}/bin/hdparm";
       options = [ "SETENV" "NOPASSWD" ];
-    } ];
-  } {
-    users = [ "alex" ];
-    commands = [ {
-      command = "${pkgs.snapraid}/bin/snapraid";
-      options = [ "SETENV" "NOPASSWD" ];
-    } ];
-  }];
+    }];
+  }
+    {
+      users = [ "alex" ];
+      commands = [{
+        command = "${pkgs.snapraid}/bin/snapraid";
+        options = [ "SETENV" "NOPASSWD" ];
+      }];
+    }];
 
   networking.firewall.enable = false;
 

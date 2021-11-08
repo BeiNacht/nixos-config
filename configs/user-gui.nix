@@ -1,7 +1,8 @@
 { config, pkgs, lib, ... }:
 
 let unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in {
+in
+{
   imports = [ <home-manager/nixos> ];
 
   home-manager.users.alex = { pkgs, ... }: {
@@ -30,6 +31,12 @@ in {
         name = "Default Sink";
         exec = "/home/alex/.bin/rofi-default-sink.sh";
         terminal = false;
+      };
+    };
+
+    services = {
+      syncthing = {
+        enable = true;
       };
     };
 
@@ -75,42 +82,21 @@ in {
           jnoortheen.nix-ide
           brettm12345.nixfmt-vscode
         ];
-        # userSettings = {
-        #   #"terminal.integrated.fontFamily" = "Hack";
-        #   "workbench.colorTheme" = "Hyper Term Black";
-        #   "window.titleBarStyle" = "custom";
-        # };
       };
 
       rofi = {
         enable = true;
-        lines = 10;
-        borderWidth = 2;
-        scrollbar = false;
-        padding = 50;
         font = "Liberation Sans Regular 20";
-        separator = "solid";
-        colors = {
-          window = {
-            background = "#dd000000";
-            border = "#a6a6a6";
-            separator = "#a6a6a6";
-          };
-          rows = {
-            normal = {
-              background = "#00000000";
-              foreground = "#a6a6a6";
-              backgroundAlt = "#00000000";
-              highlight = {
-                background = "#a6a6a6";
-                foreground = "#000000";
-              };
-            };
-          };
-        };
         extraConfig = {
           modi = "drun,window";
           show-icons = true;
+          color-normal = "#00000000, #a6a6a6, #00000000, #a6a6a6, #000000";
+          color-window = "#dd000000, #a6a6a6, #a6a6a6";
+          separator-style = "solid";
+          padding = 50;
+          lines = 10;
+          borderWidth = 2;
+          hide-scrollbar = true;
         };
       };
 

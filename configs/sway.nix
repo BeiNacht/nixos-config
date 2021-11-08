@@ -16,7 +16,7 @@ in
         grim
         slurp
         wl-clipboard
-        (python38.withPackages(ps: with ps; [ i3pystatus keyring ]))
+        (python38.withPackages (ps: with ps; [ i3pystatus keyring ]))
       ];
       extraSessionCommands = ''
         export SDL_VIDEODRIVER=wayland
@@ -40,12 +40,12 @@ in
     description = "Kanshi output autoconfig ";
     wantedBy = [ "graphical-session.target" ];
     partOf = [ "graphical-session.target" ];
-    environment = { XDG_CONFIG_HOME="/home/alex/.config"; };
+    environment = { XDG_CONFIG_HOME = "/home/alex/.config"; };
     serviceConfig = {
       # kanshi doesn't have an option to specifiy config file yet, so it looks
       # at .config/kanshi/config
       ExecStart = ''
-      ${pkgs.kanshi}/bin/kanshi
+        ${pkgs.kanshi}/bin/kanshi
       '';
       RestartSec = 5;
       Restart = "always";

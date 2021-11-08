@@ -1,13 +1,13 @@
 { config, pkgs, lib, ... }:
 {
   imports =
-  [
-    # <nixos-hardware/common/cpu/intel>
-    /etc/nixos/hardware-configuration.nix
-    #../configs/docker.nix
-    ../configs/common.nix
-    ../configs/user.nix
-  ];
+    [
+      # <nixos-hardware/common/cpu/intel>
+      /etc/nixos/hardware-configuration.nix
+      #../configs/docker.nix
+      ../configs/common.nix
+      ../configs/user.nix
+    ];
 
   # Boot
   boot.loader.grub.enable = false;
@@ -16,7 +16,7 @@
 
   # Kernel configuration
   boot.kernelPackages = pkgs.linuxPackages_rpi4;
-  boot.kernelParams = ["cma=64M" "console=tty0"];
+  boot.kernelParams = [ "cma=64M" "console=tty0" ];
 
   # Enable additional firmware (such as Wi-Fi drivers).
   hardware.enableRedistributableFirmware = true;
@@ -34,13 +34,15 @@
   #     };
   # };
 
-  swapDevices = [ { device = "/swapfile"; size = 1024; } ];
+  swapDevices = [{ device = "/swapfile"; size = 1024; }];
 
   networking.hostName = "raspberrypi4";
 
   # Packages
   environment.systemPackages = with pkgs; [
-    nano git htop
+    nano
+    git
+    htop
   ];
 
   # Miscellaneous

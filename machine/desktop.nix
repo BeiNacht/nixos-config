@@ -7,7 +7,7 @@ let
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       /etc/nixos/hardware-configuration.nix
       ../configs/gui.nix
       ../configs/docker.nix
@@ -72,8 +72,8 @@ in
   time.timeZone = "Europe/Berlin";
 
   console = {
-     font = "latarcyrheb-sun32";
-     keyMap = "us";
+    font = "latarcyrheb-sun32";
+    keyMap = "us";
   };
 
   hardware = {
@@ -121,13 +121,13 @@ in
     printing.enable = true;
     xserver.videoDrivers = [ "amdgpu" ];
     xserver.deviceSection = ''
-    Option "TearFree" "true"
+      Option "TearFree" "true"
     '';
     hardware.xow.enable = true;
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
       encryption = {
-        mode = "repokey-blake2" ;
+        mode = "repokey-blake2";
         passphrase = secrets-desktop.borg-key;
       };
       extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";

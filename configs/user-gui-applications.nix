@@ -21,13 +21,9 @@ in
         gnome.cheese
         homebank
         insomnia
-        jellyfin-media-player
-        jellyfin-mpv-shim
         kdenlive
-        keepassxc
         libreoffice
         lutris
-        lxrandr
         mangohud
         meld
         obs-studio

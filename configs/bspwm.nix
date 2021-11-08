@@ -18,14 +18,13 @@ in
         };
         defaultSession = "xsession";
         session = [{
-           manage = "desktop";
-           name = "xsession";
-           start = ''exec $HOME/.xsession'';
+          manage = "desktop";
+          name = "xsession";
+          start = ''exec $HOME/.xsession'';
         }];
       };
 
       desktopManager = {
-        gnome.enable = true;
         xfce = {
           enable = true;
           noDesktop = true;
@@ -41,7 +40,7 @@ in
   };
 
   home-manager.users.alex = { pkgs, ... }: {
-        services = {
+    services = {
       # picom = {
       #   enable = true;
       #   blur = true;
@@ -127,7 +126,7 @@ in
             bspc query -N -n "focused.$\{layer\}" && layer=below; \
             bspc node -l "$layer"'';
           "super + {s,f,k}" =
-          ''state={floating,fullscreen,pseudo_tiled}; \
+            ''state={floating,fullscreen,pseudo_tiled}; \
             bspc query -N -n "focused.$\{state\}" && state=tiled; \
             bspc node -t "$state" '';
           "super + alt + {Left,Down,Up,Right}" = "bspc node -p {west,south,north,east}";
@@ -166,52 +165,52 @@ in
       flameshot.enable = true;
     };
 
-   xsession = {
-     enable = true;
-     pointerCursor = {
-       defaultCursor = "left_ptr";
-       name = "elementary";
-       package = pkgs.pantheon.elementary-icon-theme;
-     };
-     windowManager = {
-       command = pkgs.lib.mkForce ''
-         ${pkgs.bspwm}/bin/bspwm -c ~/.config/bspwm/bspwmrc &
-         ${pkgs.xfce.xfce4-session}/bin/xfce4-session
-       '';
-       bspwm = {
-         enable = true;
-         extraConfig = ''
-          bspc wm --adopt-orphans
+    xsession = {
+      enable = true;
+      pointerCursor = {
+        defaultCursor = "left_ptr";
+        name = "elementary";
+        package = pkgs.pantheon.elementary-icon-theme;
+      };
+      windowManager = {
+        command = pkgs.lib.mkForce ''
+          ${pkgs.bspwm}/bin/bspwm -c ~/.config/bspwm/bspwmrc &
+          ${pkgs.xfce.xfce4-session}/bin/xfce4-session
+        '';
+        bspwm = {
+          enable = true;
+          extraConfig = ''
+            bspc wm --adopt-orphans
 
-          node /home/alex/Sync/windows.js
-          bspc subscribe monitor_add monitor_remove| while read -r a event; do
             node /home/alex/Sync/windows.js
-          done &
-         '';
-         settings = {
-           border_width = 4;
-           window_gap = 5;
-           top_padding = 0;
-           left_padding = 0;
-           right_padding = 0;
-           bottom_padding = 0;
-           split_ratio = 0.50;
-           borderless_monocle = true;
-           single_monocle = true;
-           gapless_monocle = true;
-           focus_follows_pointer = true;
-           pointer_follows_monitor = true;
-           pointer_follows_focus = false;
-           center_pseudo_tiled = true;
-           automatic_scheme = "alternate";
-           remove_unplugged_monitors = true;
-           remove_disabled_monitors = true;
-           normal_border_color = "#333333";
-           focused_border_color = "#666666";
-           presel_feedback_color = "#000000";
-         };
-       };
-     };
-   };
+            bspc subscribe monitor_add monitor_remove| while read -r a event; do
+              node /home/alex/Sync/windows.js
+            done &
+          '';
+          settings = {
+            border_width = 4;
+            window_gap = 5;
+            top_padding = 0;
+            left_padding = 0;
+            right_padding = 0;
+            bottom_padding = 0;
+            split_ratio = 0.50;
+            borderless_monocle = true;
+            single_monocle = true;
+            gapless_monocle = true;
+            focus_follows_pointer = true;
+            pointer_follows_monitor = true;
+            pointer_follows_focus = false;
+            center_pseudo_tiled = true;
+            automatic_scheme = "alternate";
+            remove_unplugged_monitors = true;
+            remove_disabled_monitors = true;
+            normal_border_color = "#333333";
+            focused_border_color = "#666666";
+            presel_feedback_color = "#000000";
+          };
+        };
+      };
+    };
   };
 }

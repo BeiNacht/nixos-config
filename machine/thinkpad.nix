@@ -11,6 +11,9 @@ let
   be = import ../configs/borg-exclude.nix;
 in
 {
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
   imports =
     [
       <nixos-hardware/lenovo/thinkpad/x1-extreme>
@@ -22,15 +25,16 @@ in
       ../configs/user.nix
       ../configs/user-gui.nix
       ../configs/user-gui-applications.nix
+      ../configs/bspwm.nix
       <home-manager/nixos>
     ];
 
   # boot.initrd.luks.devices = {
-	# root = {
-	# 	preLVM = true;
- 	# 	device = "/dev/disk/by-uuid/b59e9746-b9b4-4de1-94f6-84a387b9d72e";
-	# 	allowDiscards = true;
-  # 	};
+  # root = {
+  #   preLVM = true;
+  #   device = "/dev/disk/by-uuid/b59e9746-b9b4-4de1-94f6-84a387b9d72e";
+  #   allowDiscards = true;
+  #   };
   # };
 
   fileSystems."/".options = [ "noatime" "discard" ];
@@ -45,7 +49,7 @@ in
       grub.gfxmodeEfi = "1024x768";
     };
     kernelPackages = pkgs.linuxPackages_5_14;
-    boot.plymouth.enable = true;
+    plymouth.enable = true;
   };
 
   networking.hostName = "thinkpad"; # Define your hostname.
@@ -59,8 +63,8 @@ in
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";
   console = {
-     font = "latarcyrheb-sun32";
-     keyMap = "us";
+    font = "latarcyrheb-sun32";
+    keyMap = "us";
   };
 
   hardware.nvidia.prime = {
@@ -73,40 +77,40 @@ in
     nvidiaBusId = "PCI:1:0:0";
   };
 
-#  hardware.bumblebee = {
-#    enable = true;
-#    connectDisplay = true;
-#  };
+  #  hardware.bumblebee = {
+  #    enable = true;
+  #    connectDisplay = true;
+  #  };
 
   hardware.opengl = {
     enable = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       libvdpau-va-gl
     ];
   };
 
   nixpkgs.config.packageOverrides = pkgs: rec {
-#    bumblebee = pkgs.bumblebee.override {
-#      extraNvidiaDeviceOptions = ''
-#        Option "ProbeAllGpus" "false"
-#        Option "AllowEmptyInitialConfiguration"
-#      EndSection#
+    #    bumblebee = pkgs.bumblebee.override {
+    #      extraNvidiaDeviceOptions = ''
+    #        Option "ProbeAllGpus" "false"
+    #        Option "AllowEmptyInitialConfiguration"
+    #      EndSection#
 
-#      Section "ServerLayout"
-#        Identifier  "Layout0"
-#        Option      "AutoAddDevices" "true"     # Bumblebee defaults to false
-#        Option      "AutoAddGPU" "false"
-#      EndSection
+    #      Section "ServerLayout"
+    #        Identifier  "Layout0"
+    #        Option      "AutoAddDevices" "true"     # Bumblebee defaults to false
+    #        Option      "AutoAddGPU" "false"
+    #      EndSection
 
-#      Section "Screen"                            # Add this section
-#        Identifier "Screen0"
-#        Device "DiscreteNvidia"
-#      '';
-#    };
+    #      Section "Screen"                            # Add this section
+    #        Identifier "Screen0"
+    #        Device "DiscreteNvidia"
+    #      '';
+    #    };
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
 
@@ -120,7 +124,7 @@ in
         avoid-resampling = "yes";
       };
     };
-    configFile = pkgs.runCommand "default.pa" {} ''
+    configFile = pkgs.runCommand "default.pa" { } ''
       sed 's/module-udev-detect$/module-udev-detect tsched=0/' \
         ${pkgs.pulseaudio}/etc/pulse/default.pa > $out
     '';
@@ -131,13 +135,13 @@ in
     thinkfan = {
       enable = true;
       levels = [
-        [0 0 67]
-        [1 65 75]
-        [2 73 80]
-        [3 78 85]
-        [4 83 90]
-        [6 88 95]
-        [7 93 32767]
+        [ 0 0 67 ]
+        [ 1 65 75 ]
+        [ 2 73 80 ]
+        [ 3 78 85 ]
+        [ 4 83 90 ]
+        [ 6 88 95 ]
+        [ 7 93 32767 ]
       ];
     };
     xserver = {
@@ -158,13 +162,13 @@ in
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
       encryption = {
-        mode = "repokey-blake2" ;
+        mode = "repokey-blake2";
         passphrase = secrets-thinkpad.borg-key;
       };
       extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
       paths = "/home/alex";
-      repo = secrets-thinkpad.borg-thinkpad-key;
+      repo = secrets-thinkpad.borg-repo;
       startAt = "daily";
       user = "alex";
       prune.keep = {

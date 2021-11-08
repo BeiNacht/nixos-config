@@ -4,7 +4,7 @@ let
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/docker.nix
@@ -38,11 +38,12 @@ in
           publicKey = secrets.wireguard-desktop-public;
           presharedKey = secrets.wireguard-preshared;
           allowedIPs = [ "10.100.0.2/32" ];
-        }{
-          publicKey = secrets.wireguard-mini-public;
-          presharedKey = secrets.wireguard-preshared;
-          allowedIPs = [ "10.100.0.3/32" ];
-        }];
+        }
+          {
+            publicKey = secrets.wireguard-mini-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.3/32" ];
+          }];
       };
     };
 
@@ -56,10 +57,6 @@ in
       allowedUDPPorts = [ 80 443 51820 ];
     };
   };
-
-  # List packages installed in system profile. To search, run:
-  environment.systemPackages = with pkgs; [
-  ];
 
   programs.mtr.enable = true;
 
@@ -91,10 +88,10 @@ in
             '';
           };
           "/.well-known/carddav" = {
-             return = "301 $scheme://$host/remote.php/dav";
+            return = "301 $scheme://$host/remote.php/dav";
           };
           "/.well-known/caldav" = {
-             return = "301 $scheme://$host/remote.php/dav";
+            return = "301 $scheme://$host/remote.php/dav";
           };
         };
       };
@@ -114,17 +111,17 @@ in
     enable = true;
 
     jails.DEFAULT =
-    ''
-      bantime  = 7d
-    '';
+      ''
+        bantime  = 7d
+      '';
 
     jails.sshd =
-    ''
-      filter = sshd
-      maxretry = 4
-      action   = iptables[name=ssh, port=ssh, protocol=tcp]
-      enabled  = true
-    '';
+      ''
+        filter = sshd
+        maxretry = 4
+        action   = iptables[name=ssh, port=ssh, protocol=tcp]
+        enabled  = true
+      '';
   };
 
   # Limit stack size to reduce memory usage
