@@ -21,12 +21,9 @@ in
     glxinfo
     gparted
     libsecret
-    lightlocker
     networkmanager-openconnect
     openconnect
-    ponymix
     pulseaudio-ctl
-    python39Packages.pyyaml
   ];
 
   programs = {
@@ -83,40 +80,47 @@ in
     fontDir.enable = true;
 
     fonts = with pkgs; [
+      # (nerdfonts.override { fonts = [ "Liberation" ]; })
+      nerdfonts
       # corefonts
-      font-awesome
       google-fonts
       liberation_ttf
-      meslo-lg
-      nerdfonts
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
+      noto-fonts-extra
+
       open-sans
       stix-two
       twemoji-color-font
     ];
 
-    fontconfig = {
-      enable = true;
-      antialias = true;
-      defaultFonts = {
-        # monospace = [ "Fira Mono" ];
-        serif = [ "Linux Libertine" ];
-        sansSerif = [ "Open Sans" ];
-        emoji = [ "Twitter Color Emoji" ];
-      };
-    };
+    # fontconfig = {
+    #   enable = true;
+    #   antialias = true;
+    #   defaultFonts = {
+    #     # monospace = [ "Fira Mono" ];
+    #     serif = [ "Linux Libertine" ];
+    #     sansSerif = [ "Open Sans" ];
+    #     emoji = [ "Twitter Color Emoji" ];
+    #   };
+    # };
   };
 
   hardware.bluetooth.enable = true;
 
   services = {
-    blueman.enable = true;
+    mullvad-vpn.enable = true;
+    gvfs.enable = true;
     udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
     printing = {
       enable = true;
       drivers = [ pkgs.brlaser ];
     };
+    etesync-dav = {
+      enable = true;
+      apiUrl = "https://etesync.szczepan.ski/";
+    };
   };
+
 }

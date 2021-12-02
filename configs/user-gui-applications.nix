@@ -18,15 +18,14 @@ in
         font-manager
         freecad
         fslint
-        gnome.cheese
         homebank
         insomnia
         kdenlive
         libreoffice
         lutris
-        mangohud
+        # mangohud
         meld
-        obs-studio
+        # obs-studio
         pinta
         prusa-slicer
         rpi-imager

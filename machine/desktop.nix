@@ -17,6 +17,7 @@ in
       ../configs/user-gui.nix
       ../configs/user.nix
       ../configs/bspwm.nix
+      #../configs/pantheon.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -43,13 +44,12 @@ in
 
     initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;
-    extraModulePackages = with pkgs.linuxPackages_5_14; [ it87 ];
+    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
     kernelModules = [ "it87" "v4l2loopback" ];
-    kernelPackages = pkgs.linuxPackages_5_14;
   };
 
   networking = {
-    hostName = "desktop"; # Define your hostname.
+    hostName = "desktop";
     useDHCP = false;
     wireguard.interfaces = {
       wg0 = {
@@ -118,12 +118,13 @@ in
   sound.enable = true;
 
   services = {
+    netdata.enable = true;
     printing.enable = true;
     xserver.videoDrivers = [ "amdgpu" ];
-    xserver.deviceSection = ''
-      Option "TearFree" "true"
-    '';
-    hardware.xow.enable = true;
+    # xserver.deviceSection = ''
+    #   Option "TearFree" "true"
+    # '';
+    # hardware.xow.enable = true;
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
       encryption = {
@@ -146,5 +147,5 @@ in
     };
   };
 
-  system.stateVersion = "21.05";
+  system.stateVersion = "21.11";
 }
