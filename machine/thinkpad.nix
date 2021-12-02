@@ -26,30 +26,49 @@ in
       ../configs/user-gui.nix
       ../configs/user-gui-applications.nix
       ../configs/bspwm.nix
+      # ../configs/pantheon.nix
       <home-manager/nixos>
     ];
 
-  # boot.initrd.luks.devices = {
-  # root = {
-  #   preLVM = true;
-  #   device = "/dev/disk/by-uuid/b59e9746-b9b4-4de1-94f6-84a387b9d72e";
-  #   allowDiscards = true;
-  #   };
-  # };
-
-  fileSystems."/".options = [ "noatime" "discard" ];
-
   boot = {
     loader = {
-      grub.enable = true;
-      grub.version = 2;
-      grub.device = "nodev";
-      grub.efiSupport = true;
-      efi.canTouchEfiVariables = true;
-      grub.gfxmodeEfi = "1024x768";
+      grub = {
+        enable = true;
+        device = "nodev";
+        version = 2;
+        efiSupport = true;
+        enableCryptodisk = true;
+        gfxmodeEfi = "1024x768";
+      };
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot/efi";
+      };
     };
     kernelPackages = pkgs.linuxPackages_5_14;
     plymouth.enable = true;
+    initrd = {
+      luks.devices."root" = {
+        device = "/dev/disk/by-uuid/9e93feb7-8134-4b62-a05b-1aeade759880";
+        keyFile = "/keyfile0.bin";
+        allowDiscards = true;
+      };
+      secrets = {
+        "keyfile0.bin" = "/etc/secrets/initrd/keyfile0.bin";
+        "keyfile1.bin" = "/etc/secrets/initrd/keyfile1.bin";
+      };
+    };
+  };
+
+  # Data mount
+  fileSystems."/data" = {
+    device = "/dev/disk/by-uuid/33693f43-076d-41fc-a612-f49ab6870ccb"; # UUID for /dev/mapper/crypted-data
+    encrypted = {
+      enable = true;
+      label = "crypted-data";
+      blkDev = "/dev/disk/by-uuid/9bf1d00e-1edc-4de3-9d5e-71a6722ef193"; # UUID for /dev/sda1
+      keyFile = "/keyfile1.bin";
+    };
   };
 
   networking.hostName = "thinkpad"; # Define your hostname.
@@ -152,13 +171,14 @@ in
       # '';
     };
     power-profiles-daemon.enable = false;
-    tlp = {
-      enable = true;
-      settings = {
-        START_CHARGE_THRESH_BAT0 = 80;
-        STOP_CHARGE_THRESH_BAT0 = 90;
-      };
-    };
+    auto-cpufreq.enable = true;
+    # tlp = {
+    #   enable = true;
+    #   settings = {
+    #     START_CHARGE_THRESH_BAT0 = 80;
+    #     STOP_CHARGE_THRESH_BAT0 = 90;
+    #   };
+    # };
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
       encryption = {
@@ -196,6 +216,8 @@ in
   ];
 
   networking.firewall.enable = false;
+
+  powerManagement.powertop.enable = true;
 
   system.stateVersion = "21.05";
 }

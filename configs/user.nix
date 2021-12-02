@@ -26,7 +26,6 @@ in
 
   home-manager.users.alex = { pkgs, ... }: {
     home = {
-      enableNixpkgsReleaseCheck = false;
       packages = with unstable.pkgs; [
         exa
         broot
@@ -44,10 +43,22 @@ in
         pstree
         ranger
         sshfs
-        tree
         unrar
         youtube-dl
       ];
+      sessionPath = [
+        "$HOME/.npm-packages"
+        "$HOME/.bin"
+      ];
+      file = {
+        ".npmrc" = {
+          source = ../home/npmrc;
+        };
+        ".bin/git-redate" = {
+          executable = true;
+          source = ../home/bin/git-redate;
+        };
+      };
     };
 
     programs = {

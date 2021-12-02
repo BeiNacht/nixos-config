@@ -6,6 +6,7 @@ in
 {
 
   services = {
+    blueman.enable = true;
     xserver = {
       enable = true;
       displayManager = {
@@ -39,7 +40,41 @@ in
     };
   };
 
+  environment.systemPackages = with unstable.pkgs; [
+    lightlocker
+    pulseaudio-ctl
+  ];
+
   home-manager.users.alex = { pkgs, ... }: {
+    home = {
+      packages = with unstable.pkgs; [
+        arandr
+        evince
+        gnome.eog
+        gnome.file-roller
+        gnome.gnome-calculator
+        keepassxc
+        libnotify
+        gnome.cheese
+      ];
+    };
+
+    gtk = {
+      enable = true;
+      font = {
+        name = "Liberation Sans Regular";
+        size = 12;
+      };
+      gtk3 = {
+        extraConfig = { gtk-application-prefer-dark-theme = 1; };
+      };
+      iconTheme = {
+        package = pkgs.pantheon.elementary-icon-theme;
+        name = "elementary";
+      };
+      theme = { name = "Adwaita-dark"; };
+    };
+
     services = {
       # picom = {
       #   enable = true;
@@ -50,44 +85,45 @@ in
 
       dunst = {
         enable = true;
+        package = unstable.dunst;
+        iconTheme = {
+          package = pkgs.pantheon.elementary-icon-theme;
+          name = "elementary";
+        };
         settings = {
           global = {
-            font = "SF Pro Display Regular 12";
-            markup = "yes";
-            format = "%s %p\n%b";
-            sort = "yes";
-            indicate_hidden = "no";
             alignment = "center";
-            bounce_freq = 0;
-            show_age_threshold = 60;
-            word_wrap = "yes";
-            ignore_newline = "no";
-            geometry = "300x0-5-5";
-            shrink = "yes";
-            transparency = 0;
-            idle_threshold = 120;
-            monitor = 0;
             follow = "mouse";
-            sticky_history = "yes";
-            history_length = 20;
-            show_indicators = "no";
-            line_height = 0;
-            separator_height = 1;
-            stack_duplicates = "no";
-            padding = 8;
+            font = "SF Pro Display Regular 12";
+            format = "%s %p %b";
+            width = "(0,300)";
+            # height = 300;
+            origin = "bottom-right";
+            notification_limit = 5;
+            offset = "4x4";
             horizontal_padding = 8;
-            separator_color = "frame";
-            startup_notification = true;
-            # dmenu = /usr/bin/dmenu -p dunst;
-            # browser = /usr/bin/firefox -new-tab;
             icon_position = "left";
-            icon_path = "/usr/share/icons/Arc";
+            idle_threshold = 120;
+            ignore_newline = "no";
+            indicate_hidden = "no";
+            line_height = 0;
+            markup = "yes";
             max_icon_size = 64;
-          };
-
-          frame = {
-            width = 1;
-            color = "#A6A6A6";
+            monitor = 0;
+            padding = 8;
+            separator_color = "frame";
+            separator_height = 1;
+            show_age_threshold = 60;
+            show_indicators = "no";
+            shrink = "yes";
+            sort = "yes";
+            stack_duplicates = "no";
+            startup_notification = true;
+            sticky_history = "yes";
+            transparency = 0;
+            word_wrap = "yes";
+            frame_width = 2;
+            frame_color = "#A6A6A6";
           };
 
           urgency_low = {
@@ -150,10 +186,32 @@ in
         };
       };
 
-      nextcloud-client = {
-        enable = true;
-        startInBackground = true;
-      };
+      # nextcloud-client = {
+      #   enable = true;
+      #   startInBackground = true;
+      # };
+
+      # polybar = {
+      #   enable = true;
+      #   script = "polybar bar &";
+      #   settings = {
+      #     "bar/top" = {
+      #       monitor = "\${env:MONITOR:DisplayPort-1}";
+      #       width = "100%";
+      #       height = "3%";
+      #       radius = 0;
+      #       modules-center = "date";
+      #     };
+
+      #     "module/date" = {
+      #       type = "internal/date";
+      #       internal = 5;
+      #       date = "%d.%m.%y";
+      #       time = "%H:%M";
+      #       label = "%time%  %date%";
+      #     };
+      #   };
+      # };
 
       redshift = {
         enable = true;
@@ -189,7 +247,7 @@ in
           '';
           settings = {
             border_width = 4;
-            window_gap = 5;
+            window_gap = 4;
             top_padding = 0;
             left_padding = 0;
             right_padding = 0;

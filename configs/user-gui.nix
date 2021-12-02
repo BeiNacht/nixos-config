@@ -1,6 +1,16 @@
 { config, pkgs, lib, ... }:
 
-let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+with builtins; let
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  rofiPin = import
+    (pkgs.fetchFromGitHub {
+      owner = "NixOS";
+      repo = "nixpkgs";
+      rev = "42ded9d56bf0f56bebfcd49b4e942e7ffba4d5fc";
+      sha256 = "KK/LIcEIU4mKYuGxXSqyBRA/fVplsRs3gnmtdUCqKxU=";
+      fetchSubmodules = true;
+    })
+    { };
 in
 {
   imports = [ <home-manager/nixos> ];
@@ -10,19 +20,15 @@ in
       file = {
         ".bin/rofi-default-sink.sh" = {
           executable = true;
-          source = ./bin/rofi-default-sink.sh;
+          source = ../home/bin/rofi-default-sink.sh;
         };
       };
       packages = with unstable.pkgs; [
-        arandr
         baobab
         barrier
-        evince
-        gnome.eog
-        gnome.file-roller
-        gnome.gnome-calculator
         keepassxc
-        libnotify
+        ponymix #rofi-default
+        mullvad-vpn
       ];
     };
 
@@ -38,31 +44,6 @@ in
       syncthing = {
         enable = true;
       };
-    };
-
-    gtk = {
-      enable = true;
-      font = {
-        name = "Liberation Sans Regular";
-        size = 12;
-      };
-      gtk3 = {
-        # bookmarks = [
-        #   "file:///home/alex/Downloads"
-        #   "file:///home/alex/Nextcloud"
-        #   "file:///mnt/second"
-        #   "smb://192.168.0.100/storage/"
-        #   "file:///home/alex/Workspace"
-        #   "file:///home/alex/3D%20Print"
-        #   "file:///home/alex/Sync"
-        # ];
-        extraConfig = { gtk-application-prefer-dark-theme = 1; };
-      };
-      iconTheme = {
-        package = pkgs.pantheon.elementary-icon-theme;
-        name = "elementary";
-      };
-      theme = { name = "Adwaita-dark"; };
     };
 
     programs = {
@@ -87,6 +68,7 @@ in
       rofi = {
         enable = true;
         font = "Liberation Sans Regular 20";
+        package = rofiPin.rofi;
         extraConfig = {
           modi = "drun,window";
           show-icons = true;
