@@ -212,7 +212,6 @@ in
     nvidia-offload
     # xorg.xf86videointel
     intel-gpu-tools
-    gnome.simple-scan
   ];
 
   networking.firewall.enable = false;

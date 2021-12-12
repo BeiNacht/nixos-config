@@ -44,8 +44,9 @@ in
 
     initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;
-    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
+    extraModulePackages = with pkgs.linuxPackages_lqx; [ it87 ];
     kernelModules = [ "it87" "v4l2loopback" ];
+    kernelPackages = pkgs.linuxPackages_lqx;
   };
 
   networking = {
@@ -121,9 +122,9 @@ in
     netdata.enable = true;
     printing.enable = true;
     xserver.videoDrivers = [ "amdgpu" ];
-    # xserver.deviceSection = ''
-    #   Option "TearFree" "true"
-    # '';
+    xserver.deviceSection = ''
+      Option "TearFree" "true"
+    '';
     # hardware.xow.enable = true;
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";

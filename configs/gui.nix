@@ -24,6 +24,7 @@ in
     networkmanager-openconnect
     openconnect
     pulseaudio-ctl
+    gnome.simple-scan
   ];
 
   programs = {
@@ -108,6 +109,7 @@ in
   };
 
   hardware.bluetooth.enable = true;
+  hardware.sane.enable = true;
 
   services = {
     mullvad-vpn.enable = true;
