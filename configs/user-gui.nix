@@ -29,6 +29,7 @@ in
         keepassxc
         ponymix #rofi-default
         mullvad-vpn
+        dracula-theme
       ];
     };
 
