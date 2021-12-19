@@ -20,7 +20,6 @@ in
       #../configs/pantheon.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
   fileSystems."/".options = [ "noatime" "discard" ];
   fileSystems."/boot".options = [ "noatime" "discard" ];
   fileSystems."/mnt/second" = {
@@ -37,6 +36,7 @@ in
         device = "nodev";
         efiSupport = true;
         gfxmodeEfi = "1024x768";
+        configurationLimit = 5;
       };
 
       efi.canTouchEfiVariables = true;

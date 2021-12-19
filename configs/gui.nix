@@ -8,6 +8,8 @@ let
   };
 in
 {
+  nixpkgs.config.allowUnfree = true;
+
   networking = {
     firewall.enable = false;
     networkmanager = {
@@ -41,7 +43,7 @@ in
     chromium = {
       enable = true;
       extensions = [
-        "cbnipbdpgcncaghphljjicfgmkonflee" # Axel Springer Blocker
+        # "cbnipbdpgcncaghphljjicfgmkonflee" # Axel Springer Blocker
         "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
         "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
         "oboonakemofpalcgghocfoadofidjkkk" # KeePassXC-Browser
@@ -83,7 +85,7 @@ in
     fonts = with pkgs; [
       # (nerdfonts.override { fonts = [ "Liberation" ]; })
       nerdfonts
-      # corefonts
+      corefonts
       google-fonts
       liberation_ttf
       noto-fonts

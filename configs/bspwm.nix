@@ -7,12 +7,13 @@ in
 
   services = {
     blueman.enable = true;
+    accounts-daemon.enable = pkgs.lib.mkForce false;
     xserver = {
       enable = true;
       displayManager = {
         lightdm = {
           enable = true;
-          background = pkgs.nixos-artwork.wallpapers.nineish-dark-gray.gnomeFilePath;
+          background = ../wallpaper.jpg;
           greeters.gtk.theme = {
             name = "Adwaita-dark";
           };

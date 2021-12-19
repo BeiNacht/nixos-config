@@ -11,9 +11,6 @@ let
   be = import ../configs/borg-exclude.nix;
 in
 {
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
   imports =
     [
       <nixos-hardware/lenovo/thinkpad/x1-extreme>
@@ -45,7 +42,7 @@ in
         efiSysMountPoint = "/boot/efi";
       };
     };
-    kernelPackages = pkgs.linuxPackages_5_14;
+    kernelPackages = pkgs.linuxPackages_lqx;
     plymouth.enable = true;
     initrd = {
       luks.devices."root" = {
@@ -172,6 +169,7 @@ in
     };
     power-profiles-daemon.enable = false;
     auto-cpufreq.enable = true;
+    tlp.enable = false;
     # tlp = {
     #   enable = true;
     #   settings = {
@@ -201,12 +199,16 @@ in
     };
   };
 
-  home-manager.users.alex.services.barrier.client = {
-    enable = true;
-    enableCrypto = false;
-    name = "thinkpad";
-    server = "192.168.0.150:24800";
-  };
+  # home-manager.users.alex.services.barrier.client = {
+  #   enable = true;
+  #   enableCrypto = false;
+  #   name = "thinkpad";
+  #   server = "192.168.0.150:24800";
+  # };
+
+  systemd.extraConfig = ''
+    DefaultTimeoutStopSec=10s
+  '';
 
   environment.systemPackages = with pkgs; [
     nvidia-offload

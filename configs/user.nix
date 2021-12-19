@@ -58,6 +58,10 @@ in
           executable = true;
           source = ../home/bin/git-redate;
         };
+        ".bin/backup-to-stick" = {
+          executable = true;
+          source = ../home/bin/backup-to-stick;
+        };
       };
     };
 
