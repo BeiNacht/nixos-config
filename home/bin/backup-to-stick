@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+rsync -rtpogv --progress --delete -s /home/bernd/Workspace /run/media/bernd/USB-Stick/
+rsync -rtpogv --progress --delete -s /home/bernd/Sync /run/media/bernd/USB-Stick/
+rsync -rtpogv --progress --delete -s /home/bernd/Kamera /run/media/bernd/USB-Stick/

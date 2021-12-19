@@ -30,6 +30,8 @@ in
         ponymix #rofi-default
         mullvad-vpn
         dracula-theme
+        deadbeef
+        grsync
       ];
     };
 
