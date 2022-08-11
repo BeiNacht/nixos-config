@@ -10,5 +10,6 @@
     "Games/guild-wars-second/drive_c/Program Files/Guild Wars/Gw.dat"
     "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
     "shared"
+    "docker/jellyfin/data"
   ];
 }

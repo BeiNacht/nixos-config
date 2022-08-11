@@ -68,19 +68,21 @@ in
     lm_sensors
     lsd
     lsof
-    manpages
+    man-pages
+    mlocate
+    nethogs
     nix-du
     nix-tree
     nmap
     nodejs
     parallel
     pciutils
+    # plocate
     ruby
     unixtools.xxd
     unzip
     usbutils
     wget
-    nethogs
   ];
 
   documentation.enable = false;

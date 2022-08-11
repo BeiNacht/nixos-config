@@ -25,7 +25,12 @@ in
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.alex = { pkgs, ... }: {
+    imports = [
+      "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+    ];
+
     home = {
+      stateVersion = "22.05";
       packages = with unstable.pkgs; [
         exa
         broot
@@ -212,9 +217,10 @@ in
       # };
     };
 
+    services.vscode-server.enable = true;
+
     # manuals not needed
     manual.html.enable = false;
     manual.json.enable = false;
-    manual.manpages.enable = false;
   };
 }
