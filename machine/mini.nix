@@ -17,13 +17,12 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.extraModulePackages = with pkgs.linuxPackages; [ rtl88x2bu ];
 
+  time.timeZone = "Europe/Berlin";
   networking = {
     hostName = "mini";
     useDHCP = false;
-    # interfaces.enp3s0.useDHCP = true;
     firewall = {
       enable = false;
-      # allowedTCPPorts = [ 6443 ];
     };
     networkmanager.enable = true;
     wireguard.interfaces = {
@@ -44,8 +43,28 @@ in
     };
   };
 
-  services.k3s.enable = true;
-  services.k3s.role = "server";
+  services = {
+    k3s = {
+      enable = true;
+      role = "server";
+    };
 
-  system.stateVersion = "21.05";
+    nextdns = {
+      arguments = pkgs.lib.mkForce [
+        "-config"
+        secrets.nextdnshash
+        "-cache-size"
+        "10MB"
+        "-listen"
+        "0.0.0.0:53"
+        "-listen"
+        ":::53"
+        "-forwarder"
+        secrets.nextdnsforwarder
+        "-report-client-info"
+      ];
+    };
+  };
+
+  system.stateVersion = "22.05";
 }

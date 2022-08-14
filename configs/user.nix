@@ -32,24 +32,25 @@ in
     home = {
       stateVersion = "22.05";
       packages = with unstable.pkgs; [
-        exa
-        broot
-        ffmpeg
-        tealdeer
         atop
         bpytop
+        broot
         dfc
+        exa
+        ffmpeg
         git-secret
         glances
         htop
         kubectl
         ncdu
         neofetch
+        nixfmt
         pstree
         ranger
         sshfs
+        tealdeer
         unrar
-        youtube-dl
+        yt-dlp
       ];
       sessionPath = [
         "$HOME/.npm-packages"
