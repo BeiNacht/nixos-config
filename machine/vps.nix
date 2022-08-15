@@ -217,7 +217,7 @@ in {
         "homeassistant.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          locations = { "/" = { proxyPass = "http://10.0.0.3:8123/"; }; };
+          locations = { "/" = { proxyPass = "http://10.100.0.3:8123/"; }; };
         };
       };
     };
