@@ -1,8 +1,6 @@
 { config, pkgs, lib, ... }:
-let
-  secrets = import ./secrets.nix;
-in
-{
+let secrets = import ./secrets.nix;
+in {
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
   services = {
@@ -30,22 +28,16 @@ in
       ];
     };
     fwupd.enable = true;
-    journald = {
-      extraConfig = "SystemMaxUse=500M";
-    };
+    journald = { extraConfig = "SystemMaxUse=500M"; };
   };
 
   networking = {
     nameservers = [ "127.0.0.1" "::1" ];
     hosts = {
-      "2.56.97.114" = [ "old-vps" ];
       "207.180.220.97" = [ "szczepan.ski" ];
       "10.100.0.1" = [ "vps.wg" ];
       "10.100.0.2" = [ "desktop.wg" ];
       "10.100.0.3" = [ "mini.wg" ];
-      "192.168.0.24" = [ "mini.lan" ];
-      "192.168.0.100" = [ "homeserver.lan" ];
-      "192.168.0.150" = [ "desktop.lan" ];
     };
     # If using dhcpcd:
     dhcpcd.extraConfig = "nohook resolv.conf";
@@ -87,15 +79,13 @@ in
 
   documentation.enable = false;
 
-  nix.autoOptimiseStore = true;
+  nix.settings = { auto-optimise-store = true; };
 
   boot = {
     tmpOnTmpfs = true;
     kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
-    kernel.sysctl = {
-      "vm.max_map_count" = 262144;
-    };
+    kernel.sysctl = { "vm.max_map_count" = 262144; };
   };
 
   nix.gc = {

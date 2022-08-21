@@ -6,6 +6,7 @@ in {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
     defaultUserShell = pkgs.zsh;
+    mutableUsers = false;
 
     users.alex = {
       isNormalUser = true;
@@ -84,41 +85,7 @@ in {
         serverAliveInterval = 60;
         forwardAgent = true;
 
-        matchBlocks."old-vps" = {
-          hostname = "2.56.97.114";
-          localForwards = [
-            {
-              bind.address = "127.0.0.1";
-              bind.port = 8386;
-              host.address = "127.0.0.1";
-              host.port = 8384;
-            }
-            {
-              bind.address = "127.0.0.1";
-              bind.port = 9092;
-              host.address = "127.0.0.1";
-              host.port = 9091;
-            }
-          ];
-        };
-
-        matchBlocks."szczepan.ski" = {
-          hostname = "207.180.220.97";
-          localForwards = [
-            {
-              bind.address = "127.0.0.1";
-              bind.port = 8387;
-              host.address = "127.0.0.1";
-              host.port = 8384;
-            }
-            {
-              bind.address = "127.0.0.1";
-              bind.port = 9092;
-              host.address = "127.0.0.1";
-              host.port = 9091;
-            }
-          ];
-        };
+        matchBlocks."szczepan.ski" = { hostname = "207.180.220.97"; };
 
         matchBlocks."nixos-vm" = {
           hostname = "192.168.122.222";
