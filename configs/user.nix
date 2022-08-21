@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+let
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  secrets = import ./secrets.nix;
 in {
   imports = [ <home-manager/nixos> ];
 
@@ -10,6 +12,7 @@ in {
 
     users.alex = {
       isNormalUser = true;
+      hashedPassword = secrets.hashedPassword;
       extraGroups = [
         "wheel"
         "docker"

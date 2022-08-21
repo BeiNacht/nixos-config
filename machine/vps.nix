@@ -1,6 +1,5 @@
 { config, lib, pkgs, ... }:
 let
-  secrets-desktop = import ../configs/secrets-desktop.nix;
   secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
 in {
