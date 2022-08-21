@@ -94,6 +94,8 @@ in {
     };
   };
 
+  environment.systemPackages = with pkgs; [ goaccess ];
+
   programs.mtr.enable = true;
   programs.fuse.userAllowOther = true;
 
@@ -109,6 +111,14 @@ in {
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
       clientMaxBodySize = "0";
+
+      commonHttpConfig = ''
+        log_format  main  '$host $remote_addr - $remote_user [$time_local] $upstream_cache_status "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for" "$gzip_ratio" '
+                          '$request_time $upstream_response_time $pipe';
+        access_log  /var/log/nginx/access.log main;
+      '';
 
       virtualHosts = {
         "szczepan.ski" = {
@@ -144,26 +154,6 @@ in {
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:8082/"; }; };
         };
-        "portainer.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:8083/"; }; };
-        };
-        "mail.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:8084/"; }; };
-        };
-        "git.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:49154/"; }; };
-        };
-        "jellyfin.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:8085/"; }; };
-        };
         "etesync-web.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
@@ -174,11 +164,31 @@ in {
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:8087/"; }; };
         };
-        "file-manager.szczepan.ski" = {
+        "portainer.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:8088/"; }; };
+          locations = { "/" = { proxyPass = "http://127.0.0.1:8083/"; }; };
         };
+        # "mail.szczepan.ski" = {
+        #   forceSSL = true;
+        #   enableACME = true;
+        #   locations = { "/" = { proxyPass = "http://127.0.0.1:8084/"; }; };
+        # };
+        # "git.szczepan.ski" = {
+        #   forceSSL = true;
+        #   enableACME = true;
+        #   locations = { "/" = { proxyPass = "http://127.0.0.1:49154/"; }; };
+        # };
+        "jellyfin.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = { "/" = { proxyPass = "http://127.0.0.1:8085/"; }; };
+        };
+        # "file-manager.szczepan.ski" = {
+        #   forceSSL = true;
+        #   enableACME = true;
+        #   locations = { "/" = { proxyPass = "http://127.0.0.1:8088/"; }; };
+        # };
         "webdav.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
@@ -201,7 +211,7 @@ in {
           locations = {
             "/" = {
               extraConfig = ''
-                proxy_set_header        Host $host;
+                proxy_set_header        Host localhost;
                 proxy_set_header        X-Real-IP $remote_addr;
                 proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header        X-Forwarded-Proto $scheme;
@@ -217,7 +227,24 @@ in {
         "homeassistant.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          locations = { "/" = { proxyPass = "http://10.100.0.3:8123/"; }; };
+          locations = {
+            "/" = {
+              proxyPass = "http://10.100.0.3:8123/";
+              proxyWebsockets = true;
+            };
+          };
+        };
+        "goaccess.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          basicAuth = { alex = secrets.nginx-syncthing-password; };
+          locations = {
+            "/" = { root = "/var/www/goaccess"; };
+            "/ws" = {
+              proxyPass = "http://127.0.0.1:7890/";
+              proxyWebsockets = true;
+            };
+          };
         };
       };
     };
