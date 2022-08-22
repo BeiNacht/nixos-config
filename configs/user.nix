@@ -187,9 +187,5 @@ in {
     };
 
     services.vscode-server.enable = true;
-
-    # manuals not needed
-    manual.html.enable = false;
-    manual.json.enable = false;
   };
 }
