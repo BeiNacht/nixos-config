@@ -73,6 +73,11 @@ in {
             presharedKey = secrets.wireguard-preshared;
             allowedIPs = [ "10.100.0.5/32" ];
           }
+          {
+            publicKey = secrets.wireguard-raspberrypi-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.6/32" ];
+          }
         ];
       };
     };
@@ -228,7 +233,7 @@ in {
           enableACME = true;
           locations = {
             "/" = {
-              proxyPass = "http://10.100.0.3:8123/";
+              proxyPass = "http://10.100.0.6:8123/";
               proxyWebsockets = true;
             };
           };
