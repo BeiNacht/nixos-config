@@ -3,38 +3,14 @@ let
   secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
-
-  configFile = pkgs.writeText "monero.conf" ''
-    log-file=/dev/stdout
-    data-dir=/var/lib/monero
-    rpc-bind-ip=127.0.0.1
-    rpc-bind-port=18081
-    enforce-dns-checkpointing=true
-    enable-dns-blocklist=true # Block known-malicious nodes
-    no-igd=true # Disable UPnP port mapping
-    no-zmq=true # ZMQ configuration
-
-    # bandwidth settings
-    out-peers=32 # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
-    in-peers=32 # The default is unlimited; we prefer to put a cap on this
-  '';
 in {
-  imports = [
-    /etc/nixos/hardware-configuration.nix
-    ../configs/common.nix
-    ../configs/docker.nix
-    ../configs/user.nix
-  ];
+  imports =
+    [ /etc/nixos/hardware-configuration.nix ../configs/common-server.nix ];
 
   boot.loader.grub = {
     enable = true;
     version = 2;
     device = "/dev/sda"; # or "nodev" for efi only
-  };
-
-  fileSystems."/export/docker" = {
-    device = "/home/alex/docker";
-    options = [ "bind" ];
   };
 
   time.timeZone = "Europe/Berlin";
@@ -491,31 +467,6 @@ in {
       ];
     };
   };
-
-  # users.users.monero = {
-  #   isSystemUser = true;
-  #   group = "monero";
-  #   description = "Monero daemon user";
-  #   home = "/var/lib/monero";
-  #   createHome = true;
-  # };
-
-  # users.groups.monero = { };
-
-  # systemd.services.monero = {
-  #   description = "monero daemon";
-  #   after = [ "network.target" ];
-  #   wantedBy = [ "multi-user.target" ];
-
-  #   serviceConfig = {
-  #     User = "monero";
-  #     Group = "monero";
-  #     ExecStart =
-  #       "${unstable.pkgs.monero-cli}/bin/monerod --config-file=${configFile} --non-interactive";
-  #     Restart = "always";
-  #     SuccessExitStatus = [ 0 1 ];
-  #   };
-  # };
 
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
