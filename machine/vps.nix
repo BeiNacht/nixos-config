@@ -2,6 +2,22 @@
 let
   secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+
+  configFile = pkgs.writeText "monero.conf" ''
+    log-file=/dev/stdout
+    data-dir=/var/lib/monero
+    rpc-bind-ip=127.0.0.1
+    rpc-bind-port=18081
+    enforce-dns-checkpointing=true
+    enable-dns-blocklist=true # Block known-malicious nodes
+    no-igd=true # Disable UPnP port mapping
+    no-zmq=true # ZMQ configuration
+
+    # bandwidth settings
+    out-peers=32 # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
+    in-peers=32 # The default is unlimited; we prefer to put a cap on this
+  '';
 in {
   imports = [
     /etc/nixos/hardware-configuration.nix
@@ -10,21 +26,21 @@ in {
     ../configs/user.nix
   ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
-
-  networking.hostName = "vps"; # Define your hostname.
+  boot.loader.grub = {
+    enable = true;
+    version = 2;
+    device = "/dev/sda"; # or "nodev" for efi only
+  };
 
   fileSystems."/export/docker" = {
     device = "/home/alex/docker";
     options = [ "bind" ];
   };
 
-  # Set your time zone.
   time.timeZone = "Europe/Berlin";
+
   networking = {
+    hostName = "vps"; # Define your hostname.
     useDHCP = false;
     #    defaultGateway = {
     #     "address" = "gw.contabo.net";
@@ -61,7 +77,7 @@ in {
           {
             publicKey = secrets.wireguard-mini-public;
             presharedKey = secrets.wireguard-preshared;
-            allowedIPs = [ "10.100.0.3/32" ];
+            allowedIPs = [ "10.100.0.3/32" "192.168.178.0/24" ];
           }
           {
             publicKey = secrets.wireguard-mbp-public;
@@ -81,7 +97,6 @@ in {
         ];
       };
     };
-
     nat = {
       enable = true;
       externalInterface = "ens18";
@@ -89,19 +104,42 @@ in {
     };
     firewall = {
       allowPing = true;
-      allowedTCPPorts = [ 80 443 22000 ];
-      allowedUDPPorts = [ 80 443 51820 ];
-      interfaces.wg0 = { allowedTCPPorts = [ 61208 19999 2049 ]; };
+      allowedTCPPorts = [
+        80 # web
+        443 # web
+        9898 # i2p
+        9899
+        18080
+        22000 # syncthing
+      ];
+      allowedUDPPorts = [
+        80 # web
+        443 # web
+        9898 # i2p
+        51820 # wireguard
+      ];
+      interfaces.wg0 = {
+        allowedTCPPorts = [
+          19999 # netdata
+          2049
+          4444 # i2p http proxy
+          61208 # foo
+          7070 # i2p control
+          7654 # i2p torrent
+        ];
+      };
       # extraCommands = ''
       #   iptables -A nixos-fw -p tcp --source 10.100.0.0/24 --dport 19999:19999 -j nixos-fw-accept
       # '';
     };
   };
 
-  environment.systemPackages = with pkgs; [ goaccess ];
+  environment.systemPackages = with pkgs; [ goaccess xd nyx ];
 
-  programs.mtr.enable = true;
-  programs.fuse.userAllowOther = true;
+  programs = {
+    mtr.enable = true;
+    fuse.userAllowOther = true;
+  };
 
   security.acme.defaults.email = "webmaster@szczepan.ski";
   security.acme.acceptTerms = true;
@@ -128,6 +166,7 @@ in {
         "szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
+          globalRedirect = "www.linkedin.com/in/alexander-szczepanski-0254967b";
           #root = "/var/www/myhost.org";
         };
         "nextcloud.szczepan.ski" = {
@@ -208,6 +247,11 @@ in {
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:9091/"; }; };
         };
+        "photoprism.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = { "/" = { proxyPass = "http://127.0.0.1:2342/"; }; };
+        };
         "syncthing.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
@@ -233,7 +277,7 @@ in {
           enableACME = true;
           locations = {
             "/" = {
-              proxyPass = "http://10.100.0.6:8123/";
+              proxyPass = "http://10.100.0.3:8123/";
               proxyWebsockets = true;
             };
           };
@@ -246,6 +290,24 @@ in {
             "/" = { root = "/var/www/goaccess"; };
             "/ws" = {
               proxyPass = "http://127.0.0.1:7890/";
+              proxyWebsockets = true;
+            };
+          };
+        };
+        "vaultwarden.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://127.0.0.1:8092/";
+              proxyWebsockets = true;
+            };
+            "/notifications/hub" = {
+              proxyPass = "http://127.0.0.1:3012";
+              proxyWebsockets = true;
+            };
+            "/notifications/hub/negotiate" = {
+              proxyPass = "http://127.0.0.1:8092/";
               proxyWebsockets = true;
             };
           };
@@ -270,32 +332,113 @@ in {
       };
     };
 
-    samba = {
-      enable = false;
-      openFirewall = true;
-
-      # This adds to the [global] section:
-      extraConfig = ''
-        browseable = yes
-        smb encrypt = required
-      '';
-
-      shares = {
-        homes = {
-          browseable =
-            "no"; # note: each home will be browseable; the "homes" share will not.
-          "read only" = "no";
-          "guest ok" = "no";
-        };
-      };
-    };
-
     nfs.server = {
       enable = false;
       exports = ''
         /export         10.100.0.0/24(rw,fsid=0,no_subtree_check)
         /export/docker  10.100.0.0/24(rw,nohide,insecure,no_subtree_check)
       '';
+    };
+
+    # vaultwarden = {
+    #   enable = true;
+    #   config = {
+    #     domain = "https://vaultwarden.szczepan.ski";
+    #     signupsAllowed = false;
+    #     rocketPort = 8092;
+    #     rocketAddress = "127.0.0.1";
+    #     # adminToken =
+    #     #   "jCehRECvxqWmXKMZx3dgtVEdJuqUxXoODEagItTPptBizG9SGQLCpTqjZoBM4ZDa";
+    #     websocketEnabled = true;
+    #     websocketAddress = "127.0.0.1";
+    #     websocketPort = 3012;
+    #   };
+    # };
+
+    # bitcoind.main = { enable = false; };
+    # monero = {
+    #   enable = true;
+    #   # limits = { threads = 4; };
+    #   rpc = {
+    #     user = "alex";
+    #     password = secrets.moneroUserPassword;
+    #     #address = "10.100.0.1";
+    #   };
+    #   limits = {
+    #     download = 1048576;
+    #     upload = 1048576;
+    #   };
+    #   extraConfig = ''
+    #     enforce-dns-checkpointing=true
+    #     enable-dns-blocklist=true # Block known-malicious nodes
+    #     no-igd=true # Disable UPnP port mapping
+    #     no-zmq=true # ZMQ configuration
+
+    #     # bandwidth settings
+    #     out-peers=32 # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
+    #     in-peers=32 # The default is unlimited; we prefer to put a cap on this
+    #   '';
+    # };
+
+    i2pd = {
+      enable = true;
+      ifname = "ens18";
+      address = "207.180.220.97";
+      # TCP & UDP
+      port = 9898;
+      #   myEep = {
+      #     enable = true;
+      #     keys = "myEep-keys.dat";
+      #     inPort = 80;
+      #     address = "::1";
+      #     destination = "::1";
+      #     port = 8081;
+      #     # inbound.length = 1;
+      #     # outbound.length = 1;
+      #   };
+      # };
+      # websocket = {
+      #   enable = true;
+      #   address = "10.100.0.1";
+      # };
+      proto = {
+        http = {
+          enable = true;
+          address = "10.100.0.1";
+        };
+
+        httpProxy = {
+          enable = true;
+          address = "10.100.0.1";
+        };
+
+        socksProxy = {
+          enable = true;
+          address = "10.100.0.1";
+        };
+
+        i2cp = {
+          enable = true;
+          address = "10.100.0.1";
+        };
+
+        sam = { enable = true; };
+      };
+
+      enableIPv4 = true;
+      enableIPv6 = true;
+    };
+
+    tor = {
+      enable = true;
+      # relay = {
+      #   enable = true;
+      #   role = "private-bridge";
+      # };
+      settings = {
+        ORPort = 9001;
+        ControlPort = 9051;
+      };
     };
 
     fail2ban = {
@@ -330,21 +473,49 @@ in {
         passphrase = secrets.borg-key;
       };
       extraCreateArgs =
-        "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
+        "--stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
-      paths = "/home/alex";
+      paths = [ "/home/alex" "/var/lib" ];
       repo = secrets.borg-repo;
       startAt = "daily";
-      # user = "alex";
       prune.keep = {
         daily = 7;
         weekly = 4;
         monthly = 6;
       };
-      extraPruneArgs = "--save-space --list --stats";
-      exclude = map (x: paths + "/" + x) be.borg-exclude;
+      extraPruneArgs = "--save-space --stats";
+      exclude = [
+        "/home/alex/docker/jellyfin/data"
+        "/home/alex/.cache"
+        "/var/lib/monero"
+      ];
     };
   };
+
+  # users.users.monero = {
+  #   isSystemUser = true;
+  #   group = "monero";
+  #   description = "Monero daemon user";
+  #   home = "/var/lib/monero";
+  #   createHome = true;
+  # };
+
+  # users.groups.monero = { };
+
+  # systemd.services.monero = {
+  #   description = "monero daemon";
+  #   after = [ "network.target" ];
+  #   wantedBy = [ "multi-user.target" ];
+
+  #   serviceConfig = {
+  #     User = "monero";
+  #     Group = "monero";
+  #     ExecStart =
+  #       "${unstable.pkgs.monero-cli}/bin/monerod --config-file=${configFile} --non-interactive";
+  #     Restart = "always";
+  #     SuccessExitStatus = [ 0 1 ];
+  #   };
+  # };
 
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
