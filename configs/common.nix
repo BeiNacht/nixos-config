@@ -22,8 +22,6 @@ in {
         "10MB"
         "-listen"
         "127.0.0.1:53"
-        "-forwarder"
-        secrets.nextdnsforwarder
         "-report-client-info"
       ];
     };
