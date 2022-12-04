@@ -70,6 +70,16 @@ in {
             presharedKey = secrets.wireguard-preshared;
             allowedIPs = [ "10.100.0.6/32" ];
           }
+          {
+            publicKey = secrets.wireguard-vps2-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.50/32" ];
+          }
+          {
+            publicKey = secrets.wireguard-vps3-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.100/32" ];
+          }
         ];
       };
     };
@@ -471,5 +481,5 @@ in {
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
 
-  system.stateVersion = "22.05";
+  system.stateVersion = "22.11";
 }
