@@ -68,5 +68,5 @@ in {
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
 
-  system.stateVersion = "22.05";
+  system.stateVersion = "22.11";
 }
