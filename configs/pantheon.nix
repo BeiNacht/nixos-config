@@ -2,6 +2,8 @@
 
 {
   programs.pantheon-tweaks.enable = true;
+  programs.evolution.enable = true;
+
   services = {
     xserver = {
       enable = true;

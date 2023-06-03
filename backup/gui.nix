@@ -3,18 +3,16 @@ let
   unstable = import <nixos-unstable> {
     config = {
       allowUnfree = true;
-      chromium.commandLineArgs = "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
+      chromium.commandLineArgs =
+        "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
     };
   };
-in
-{
+in {
   nixpkgs.config.allowUnfree = true;
 
   networking = {
     firewall.enable = false;
-    networkmanager = {
-      enable = true;
-    };
+    networkmanager = { enable = true; };
   };
 
   environment.systemPackages = with unstable.pkgs; [
@@ -32,9 +30,7 @@ in
   programs = {
     dconf.enable = true;
     adb.enable = true;
-    ssh = {
-      startAgent = true;
-    };
+    ssh = { startAgent = true; };
     gnupg.agent = {
       enable = true;
       pinentryFlavor = "curses";
@@ -69,10 +65,7 @@ in
         "AlternateErrorPagesEnabled" = false;
         "UrlKeyedAnonymizedDataCollectionEnabled" = false;
         "SpellcheckEnabled" = true;
-        "SpellcheckLanguage" = [
-          "de"
-          "en-US"
-        ];
+        "SpellcheckLanguage" = [ "de" "en-US" ];
         "CloudPrintSubmitEnabled" = false;
       };
     };
@@ -126,5 +119,4 @@ in
       apiUrl = "https://etesync.szczepan.ski/";
     };
   };
-
 }

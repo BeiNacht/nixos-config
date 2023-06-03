@@ -1,53 +1,74 @@
 { config, pkgs, lib, ... }:
 
-let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in
-{
-  imports =
-    [
-      /etc/nixos/hardware-configuration.nix
-      ../configs/gui.nix
-      ../configs/common.nix
-      ../configs/user.nix
-      ../configs/user-gui.nix
-    ];
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+in {
+  imports = [
+    /etc/nixos/hardware-configuration.nix
+    # ../configs/pantheon.nix
+    ../configs/common.nix
+    ../configs/user.nix
+    ../configs/docker.nix
+    #      ../configs/user-gui.nix
+  ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/vda"; # or "nodev" for efi only
   networking.hostName = "nixos-vm"; # Define your hostname.
-  # Set your time zone.
   time.timeZone = "Europe/Berlin";
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.enp1s0.useDHCP = true;
+  networking.interfaces.enp0s1.useDHCP = true;
 
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  # };
+  services = {
+    # k3s = {
+    #   enable = true;
+    #   role = "server";
+    # };
+#    qemuGuest.enable = true;
+#    spice-vdagentd.enable = true;
+    # etesync-dav = {
+    #   enable = true;
+    #   apiUrl = "https://etesync.szczepan.ski/";
+    # };
 
-  # environment.variables = {
-  #   XDG_CURRENT_DESKTOP = "MATE";
-  # };
+#    xserver = {
+#      enable = false;
+#      displayManager = {
+#        gdm = {
+#          enable = true;
+          # greeters.pantheon.enable = true;
+        };
+#      };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-  services.xserver.enable = true;
-  services.xserver.desktopManager.pantheon.enable = true;
-  services.xserver.displayManager.lightdm.greeters.pantheon.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
+#      desktopManager.gnome.enable = true;
+#      layout = "us";
 
-  system.stateVersion = "21.05";
+      # Enable touchpad support.
+#      libinput.enable = true;
+#      updateDbusEnvironment = true;
+#    };
+#  };
+
+#  programs.evolution.enable = true;
+
+#  environment.gnome.excludePackages = (with pkgs; [ gnome-photos gnome-tour ])
+#    ++ (with pkgs.gnome; [
+#      cheese # webcam tool
+#      gnome-music
+#      gnome-terminal
+#      gedit # text editor
+#      epiphany # web browser
+#      geary # email reader
+#      evince # document viewer
+#      gnome-characters
+#      totem # video player
+#      iagno # go game
+#      hitori # sudoku game
+#      atomix # puzzle game
+#    ]);
+
+  system.stateVersion = "23.05";
 }

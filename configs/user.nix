@@ -47,7 +47,7 @@ in {
       stateVersion = "22.05";
       packages = with unstable.pkgs; [
         atop
-        bpytop
+        btop
         broot
         dfc
         exa
