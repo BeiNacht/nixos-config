@@ -8,8 +8,10 @@ in {
     tuptime.enable = true;
     openssh = {
       enable = true;
-      permitRootLogin = "no";
-      passwordAuthentication = false;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+      };
       openFirewall = true;
       extraConfig = "StreamLocalBindUnlink yes";
     };
@@ -80,7 +82,7 @@ in {
   nix.settings = { auto-optimise-store = true; };
 
   boot = {
-    tmpOnTmpfs = true;
+    tmp.useTmpfs = true;
     kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
     kernel.sysctl = { "vm.max_map_count" = 262144; };

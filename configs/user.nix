@@ -30,6 +30,8 @@ in {
     };
   };
 
+  programs.zsh.enable = true;
+
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
 
