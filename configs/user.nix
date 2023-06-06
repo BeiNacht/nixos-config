@@ -2,7 +2,8 @@
 let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
   secrets = import ./secrets.nix;
-in {
+in
+{
   imports = [ <home-manager/nixos> ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -46,7 +47,7 @@ in {
     ];
 
     home = {
-      stateVersion = "22.05";
+      stateVersion = "23.05";
       packages = with unstable.pkgs; [
         atop
         btop

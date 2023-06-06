@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 
-with builtins; let
+with builtins;
+let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
   rofiPin = import
     (pkgs.fetchFromGitHub {
@@ -27,7 +28,7 @@ in
         baobab
         barrier
         keepassxc
-        ponymix #rofi-default
+        ponymix
         mullvad-vpn
         dracula-theme
         deadbeef
@@ -43,11 +44,7 @@ in
       };
     };
 
-    services = {
-      syncthing = {
-        enable = true;
-      };
-    };
+    services = { syncthing = { enable = true; }; };
 
     programs = {
       vscode = {

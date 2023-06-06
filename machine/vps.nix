@@ -3,13 +3,13 @@ let
   secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in {
+in
+{
   imports =
     [ /etc/nixos/hardware-configuration.nix ../configs/common-server.nix ];
 
   boot.loader.grub = {
     enable = true;
-    version = 2;
     device = "/dev/sda"; # or "nodev" for efi only
   };
 
@@ -120,7 +120,7 @@ in {
     };
   };
 
-  environment.systemPackages = with pkgs; [ goaccess xd nyx ];
+  environment.systemPackages = with pkgs; [ goaccess xd nyx mkp224o ];
 
   programs = {
     mtr.enable = true;
@@ -152,8 +152,12 @@ in {
         "szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          globalRedirect = "www.linkedin.com/in/alexander-szczepanski-0254967b";
-          #root = "/var/www/myhost.org";
+          globalRedirect = "alexander.szczepan.ski";
+        };
+        "alexander.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          root = "/var/www/alexander.szczepan.ski";
         };
         "nextcloud.szczepan.ski" = {
           forceSSL = true;
@@ -198,26 +202,11 @@ in {
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:8083/"; }; };
         };
-        # "mail.szczepan.ski" = {
-        #   forceSSL = true;
-        #   enableACME = true;
-        #   locations = { "/" = { proxyPass = "http://127.0.0.1:8084/"; }; };
-        # };
-        # "git.szczepan.ski" = {
-        #   forceSSL = true;
-        #   enableACME = true;
-        #   locations = { "/" = { proxyPass = "http://127.0.0.1:49154/"; }; };
-        # };
         "jellyfin.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:8085/"; }; };
         };
-        # "file-manager.szczepan.ski" = {
-        #   forceSSL = true;
-        #   enableACME = true;
-        #   locations = { "/" = { proxyPass = "http://127.0.0.1:8088/"; }; };
-        # };
         "webdav.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
@@ -232,11 +221,6 @@ in {
           forceSSL = true;
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:9091/"; }; };
-        };
-        "photoprism.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:2342/"; }; };
         };
         "syncthing.szczepan.ski" = {
           forceSSL = true;
@@ -308,7 +292,7 @@ in {
       settings = {
         address = "127.0.0.1";
         port = 8090;
-        scope = "/home/alex/docker/transmission-wireguard/downloads";
+        scope = "/home/alex/docker/";
         modify = true;
         auth = true;
         users = [{
@@ -326,45 +310,20 @@ in {
       '';
     };
 
-    # vaultwarden = {
-    #   enable = true;
-    #   config = {
-    #     domain = "https://vaultwarden.szczepan.ski";
-    #     signupsAllowed = false;
-    #     rocketPort = 8092;
-    #     rocketAddress = "127.0.0.1";
-    #     # adminToken =
-    #     #   "jCehRECvxqWmXKMZx3dgtVEdJuqUxXoODEagItTPptBizG9SGQLCpTqjZoBM4ZDa";
-    #     websocketEnabled = true;
-    #     websocketAddress = "127.0.0.1";
-    #     websocketPort = 3012;
-    #   };
-    # };
-
-    # bitcoind.main = { enable = false; };
-    # monero = {
-    #   enable = true;
-    #   # limits = { threads = 4; };
-    #   rpc = {
-    #     user = "alex";
-    #     password = secrets.moneroUserPassword;
-    #     #address = "10.100.0.1";
-    #   };
-    #   limits = {
-    #     download = 1048576;
-    #     upload = 1048576;
-    #   };
-    #   extraConfig = ''
-    #     enforce-dns-checkpointing=true
-    #     enable-dns-blocklist=true # Block known-malicious nodes
-    #     no-igd=true # Disable UPnP port mapping
-    #     no-zmq=true # ZMQ configuration
-
-    #     # bandwidth settings
-    #     out-peers=32 # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
-    #     in-peers=32 # The default is unlimited; we prefer to put a cap on this
-    #   '';
-    # };
+    vaultwarden = {
+      enable = true;
+      config = {
+        domain = "https://vaultwarden.szczepan.ski";
+        signupsAllowed = false;
+        rocketPort = 8092;
+        rocketAddress = "127.0.0.1";
+        # adminToken =
+        #   "jCehRECvxqWmXKMZx3dgtVEdJuqUxXoODEagItTPptBizG9SGQLCpTqjZoBM4ZDa";
+        websocketEnabled = true;
+        websocketAddress = "127.0.0.1";
+        websocketPort = 3012;
+      };
+    };
 
     i2pd = {
       enable = true;
@@ -372,17 +331,7 @@ in {
       address = "207.180.220.97";
       # TCP & UDP
       port = 9898;
-      #   myEep = {
-      #     enable = true;
-      #     keys = "myEep-keys.dat";
-      #     inPort = 80;
-      #     address = "::1";
-      #     destination = "::1";
-      #     port = 8081;
-      #     # inbound.length = 1;
-      #     # outbound.length = 1;
-      #   };
-      # };
+      ntcp2.port = 9899;
       # websocket = {
       #   enable = true;
       #   address = "10.100.0.1";
@@ -411,8 +360,40 @@ in {
         sam = { enable = true; };
       };
 
+      inTunnels = {
+        foo = {
+          enable = true;
+          # keys = "foo-keys.dat";
+          inPort = 80;
+          address = "127.0.0.1";
+          destination = "127.0.0.1";
+          port = 8008;
+        };
+        foo2 = {
+          enable = true;
+          # keys = "foo-keys.dat";
+          inPort = 80;
+          address = "127.0.0.1";
+          destination = "127.0.0.1";
+          port = 8009;
+        };
+      };
+
       enableIPv4 = true;
       enableIPv6 = true;
+    };
+
+    icecast = {
+      enable = true;
+      hostname = "254ryojirydttsaealusydhwyjfe2rpschdaduok4czhg45of6ua.b32.i2p";
+      listen = {
+        port = 13337;
+        address = "127.0.0.1";
+      };
+      admin = {
+        user = "alex";
+        password = "AaOnwDoZnspv8MszCpZZ1KuR9xXJWIE5";
+      };
     };
 
     tor = {
@@ -421,9 +402,38 @@ in {
       #   enable = true;
       #   role = "private-bridge";
       # };
+      # settings = {
+      #   ORPort = 9001;
+      #   ControlPort = 9051;
+      # };
+      openFirewall = true;
+      enableGeoIP = false;
+      relay.onionServices = {
+        foo = {
+          version = 3;
+          map = [{
+            port = 80;
+            target = {
+              addr = "127.0.0.1";
+              port = 8008;
+            };
+          }];
+        };
+        foo2 = {
+          version = 3;
+          map = [{
+            port = 80;
+            target = {
+              addr = "127.0.0.1";
+              port = 8009;
+            };
+          }];
+        };
+      };
       settings = {
-        ORPort = 9001;
-        ControlPort = 9051;
+        ClientUseIPv4 = true;
+        ClientUseIPv6 = false;
+        ClientPreferIPv6ORPort = false;
       };
     };
 
@@ -467,7 +477,7 @@ in {
       prune.keep = {
         daily = 7;
         weekly = 4;
-        monthly = 6;
+        monthly = 3;
       };
       extraPruneArgs = "--save-space --stats";
       exclude = [
@@ -481,5 +491,5 @@ in {
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
 
-  system.stateVersion = "22.11";
+  system.stateVersion = "23.05";
 }

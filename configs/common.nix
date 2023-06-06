@@ -50,6 +50,9 @@ in {
     borgbackup
     btrfs-progs
     cargo
+    dog
+    du-dust
+    duf
     gnupg
     gocryptfs
     graphviz
@@ -63,13 +66,14 @@ in {
     man-pages
     mlocate
     nethogs
+    nil
     nix-du
     nix-tree
+    nixpkgs-fmt
     nmap
     nodejs
     parallel
     pciutils
-    # plocate
     ruby
     unixtools.xxd
     unzip

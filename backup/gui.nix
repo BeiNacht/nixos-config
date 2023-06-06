@@ -3,20 +3,21 @@ let
   unstable = import <nixos-unstable> {
     config = {
       allowUnfree = true;
-      chromium.commandLineArgs =
-        "--enable-features=WebUIDarkMode,NativeNotifications,VaapiVideoDecoder --ignore-gpu-blocklist --use-gl=desktop --force-dark-mode --disk-cache-dir=/tmp/cache";
     };
   };
-in {
+in
+{
   nixpkgs.config.allowUnfree = true;
 
   networking = {
     firewall.enable = false;
-    networkmanager = { enable = true; };
+    networkmanager = {
+      enable = true;
+    };
   };
 
   environment.systemPackages = with unstable.pkgs; [
-    chromium
+    brave
     fswebcam
     glxinfo
     gparted
@@ -30,44 +31,13 @@ in {
   programs = {
     dconf.enable = true;
     adb.enable = true;
-    ssh = { startAgent = true; };
+    ssh = {
+      startAgent = true;
+    };
     gnupg.agent = {
       enable = true;
       pinentryFlavor = "curses";
       # enableSSHSupport = true;
-    };
-    chromium = {
-      enable = true;
-      extensions = [
-        # "cbnipbdpgcncaghphljjicfgmkonflee" # Axel Springer Blocker
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-        "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
-        "oboonakemofpalcgghocfoadofidjkkk" # KeePassXC-Browser
-        "fploionmjgeclbkemipmkogoaohcdbig" # Page load time
-        "egnjhciaieeiiohknchakcodbpgjnchh" # Tab Wrangler
-        "fnaicdffflnofjppbagibeoednhnbjhg" # Floccus bookmarks
-        "mmpokgfcmbkfdeibafoafkiijdbfblfg" # Merge Windows
-        "gppongmhjkpfnbhagpmjfkannfbllamg" # Wappalyzer
-        "nljkibfhlpcnanjgbnlnbjecgicbjkge" # DownThemAll!
-        "lckanjgmijmafbedllaakclkaicjfmnk" # Clearurls
-        "njdfdhgcmkocbgbhcioffdbicglldapd" # LocalCDN
-        "jinjaccalgkegednnccohejagnlnfdag" # Violentmonkey
-      ];
-      extraOpts = {
-        "BrowserSignin" = 0;
-        "SyncDisabled" = true;
-        "PasswordManagerEnabled" = false;
-        "AutofillAddressEnabled" = true;
-        "AutofillCreditCardEnabled" = false;
-        "BuiltInDnsClientEnabled" = false;
-        "MetricsReportingEnabled" = true;
-        "SearchSuggestEnabled" = false;
-        "AlternateErrorPagesEnabled" = false;
-        "UrlKeyedAnonymizedDataCollectionEnabled" = false;
-        "SpellcheckEnabled" = true;
-        "SpellcheckLanguage" = [ "de" "en-US" ];
-        "CloudPrintSubmitEnabled" = false;
-      };
     };
   };
 
