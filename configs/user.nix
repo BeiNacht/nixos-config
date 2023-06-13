@@ -39,12 +39,12 @@ in
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.alex = { pkgs, ... }: {
-    imports = [
-      "${
-        fetchTarball
-        "https://github.com/msteen/nixos-vscode-server/tarball/master"
-      }/modules/vscode-server/home.nix"
-    ];
+#    imports = [
+#      "${
+#        fetchTarball
+#        "https://github.com/msteen/nixos-vscode-server/tarball/master"
+#      }/modules/vscode-server/home.nix"
+#    ];
 
     home = {
       stateVersion = "23.05";
@@ -189,6 +189,6 @@ in
       # };
     };
 
-    services.vscode-server.enable = true;
+#    services.vscode-server.enable = true;
   };
 }

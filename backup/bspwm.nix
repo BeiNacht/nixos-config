@@ -47,7 +47,14 @@ in
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
+
     home = {
+      file = {
+        ".bin/rofi-default-sink.sh" = {
+          executable = true;
+          source = ../home/bin/rofi-default-sink.sh;
+        };
+      };
       packages = with unstable.pkgs; [
         arandr
         evince
@@ -58,6 +65,62 @@ in
         libnotify
         gnome.cheese
       ];
+    };
+
+    xdg.desktopEntries = {
+      defaultSink = {
+        name = "Default Sink";
+        exec = "/home/alex/.bin/rofi-default-sink.sh";
+        terminal = false;
+      };
+    };
+
+    programs = {
+      rofi = {
+        enable = true;
+        font = "Liberation Sans Regular 20";
+        package = rofiPin.rofi;
+        extraConfig = {
+          modi = "drun,window";
+          show-icons = true;
+          color-normal = "#00000000, #a6a6a6, #00000000, #a6a6a6, #000000";
+          color-window = "#dd000000, #a6a6a6, #a6a6a6";
+          separator-style = "solid";
+          padding = 50;
+          lines = 10;
+          borderWidth = 2;
+          hide-scrollbar = true;
+        };
+      };
+
+      kitty = {
+        enable = true;
+        extraConfig = ''
+          enable_audio_bell false
+
+          background            #000000
+          foreground            #e9e9e9
+          cursor                #e9e9e9
+          selection_background  #424242
+          color0                #000000
+          color8                #000000
+          color1                #d44d53
+          color9                #d44d53
+          color2                #b9c949
+          color10               #b9c949
+          color3                #e6c446
+          color11               #e6c446
+          color4                #79a6da
+          color12               #79a6da
+          color5                #c396d7
+          color13               #c396d7
+          color6                #70c0b1
+          color14               #70c0b1
+          color7                #fffefe
+          color15               #fffefe
+          selection_foreground #000000
+        '';
+      };
     };
 
     gtk = {

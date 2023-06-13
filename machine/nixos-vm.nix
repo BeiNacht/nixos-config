@@ -4,11 +4,12 @@ let unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in {
   imports = [
     /etc/nixos/hardware-configuration.nix
-    # ../configs/pantheon.nix
     ../configs/common.nix
     ../configs/user.nix
     ../configs/docker.nix
-    #      ../configs/user-gui.nix
+    ../configs/pantheon.nix
+    ../configs/gui.nix
+    ../configs/user-gui.nix
   ];
 
   networking.hostName = "nixos-vm"; # Define your hostname.
@@ -22,53 +23,30 @@ in {
   networking.useDHCP = false;
   networking.interfaces.enp0s1.useDHCP = true;
 
+  hardware.parallels.enable = true;
+  programs.nix-ld.enable = true;
+
+
   services = {
-    # k3s = {
-    #   enable = true;
-    #   role = "server";
-    # };
-#    qemuGuest.enable = true;
-#    spice-vdagentd.enable = true;
-    # etesync-dav = {
-    #   enable = true;
-    #   apiUrl = "https://etesync.szczepan.ski/";
-    # };
+    k3s = {
+      enable = true;
+      role = "server";
+    };
+  };
 
-#    xserver = {
-#      enable = false;
-#      displayManager = {
-#        gdm = {
-#          enable = true;
-          # greeters.pantheon.enable = true;
-        };
-#      };
+   environment.pantheon.excludePackages = (with pkgs.pantheon; [
+        elementary-calculator
+        # elementary-calendar
+        elementary-camera
+        elementary-code
+        elementary-music
+        # elementary-photos
+        # elementary-screenshot
+        # elementary-tasks
+        elementary-videos
+        epiphany
+     ]);
 
-#      desktopManager.gnome.enable = true;
-#      layout = "us";
-
-      # Enable touchpad support.
-#      libinput.enable = true;
-#      updateDbusEnvironment = true;
-#    };
-#  };
-
-#  programs.evolution.enable = true;
-
-#  environment.gnome.excludePackages = (with pkgs; [ gnome-photos gnome-tour ])
-#    ++ (with pkgs.gnome; [
-#      cheese # webcam tool
-#      gnome-music
-#      gnome-terminal
-#      gedit # text editor
-#      epiphany # web browser
-#      geary # email reader
-#      evince # document viewer
-#      gnome-characters
-#      totem # video player
-#      iagno # go game
-#      hitori # sudoku game
-#      atomix # puzzle game
-#    ]);
 
   system.stateVersion = "23.05";
 }

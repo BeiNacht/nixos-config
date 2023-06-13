@@ -7,6 +7,7 @@
   services = {
     xserver = {
       enable = true;
+      excludePackages = [ pkgs.xterm ];
       displayManager = {
         lightdm = {
           enable = true;
