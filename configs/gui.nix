@@ -41,37 +41,37 @@ in
     };
   };
 
-  # fonts = {
-  #   enableDefaultFonts = true;
-  #   fontDir.enable = true;
+  fonts = {
+    enableDefaultFonts = true;
+    fontDir.enable = true;
 
-  #   fonts = with pkgs; [
-  #     # (nerdfonts.override { fonts = [ "Liberation" ]; })
-  #     nerdfonts
-  #     corefonts
-  #     # google-fonts
-  #     liberation_ttf
-  #     noto-fonts
-  #     noto-fonts-cjk
-  #     noto-fonts-emoji
-  #     noto-fonts-extra
+    fonts = with pkgs; [
+      # (nerdfonts.override { fonts = [ "Liberation" ]; })
+      nerdfonts
+      corefonts
+      google-fonts
+      liberation_ttf
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      noto-fonts-extra
 
-  #     open-sans
-  #     stix-two
-  #     twemoji-color-font
-  #   ];
+      open-sans
+      stix-two
+      twemoji-color-font
+    ];
 
-  #   # fontconfig = {
-  #   #   enable = true;
-  #   #   antialias = true;
-  #   #   defaultFonts = {
-  #   #     # monospace = [ "Fira Mono" ];
-  #   #     serif = [ "Linux Libertine" ];
-  #   #     sansSerif = [ "Open Sans" ];
-  #   #     emoji = [ "Twitter Color Emoji" ];
-  #   #   };
-  #   # };
-  # };
+    # fontconfig = {
+    #   enable = true;
+    #   antialias = true;
+    #   defaultFonts = {
+    #     # monospace = [ "Fira Mono" ];
+    #     serif = [ "Linux Libertine" ];
+    #     sansSerif = [ "Open Sans" ];
+    #     emoji = [ "Twitter Color Emoji" ];
+    #   };
+    # };
+  };
 
   hardware.bluetooth.enable = true;
   hardware.sane.enable = true;

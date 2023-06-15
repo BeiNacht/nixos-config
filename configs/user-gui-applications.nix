@@ -1,7 +1,20 @@
 { config, pkgs, lib, ... }:
 
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  unstable = import <nixos-unstable> {
+    config.allowUnfree = true;
+    config.permittedInsecurePackages = [
+      "electron-12.2.3"
+    ];
+    config.packageOverrides = pkgs: {
+      steam = pkgs.steam.override {
+        extraPkgs = pkgs: with unstable.pkgs; [
+          gamescope
+          mangohud
+        ];
+      };
+    };
+  };
 in
 {
   imports = [ <home-manager/nixos> ];
@@ -9,31 +22,31 @@ in
   home-manager.users.alex = { pkgs, ... }: {
     home = {
       packages = with unstable.pkgs; [
-        bitwarden
-        cura
-        cypress
+        brave
+        chromium
+        # bitwarden
+        # cura
+        czkawka
         discord
-        etcher
+        # etcher
         firefox
-        font-manager
-        freecad
-        fslint
-        homebank
+        # font-manager
+        # freecad
+        # homebank
         insomnia
-        kdenlive
+        # kdenlive
         libreoffice
         lutris
-        # mangohud
         meld
         # obs-studio
         pinta
-        prusa-slicer
-        rpi-imager
+        # prusa-slicer
+        # rpi-imager
         signal-desktop
+        steam
         solaar
         spotify
-        steam
-        teams
+        # teams
         virtmanager
         vulkan-tools
         wine
