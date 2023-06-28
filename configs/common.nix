@@ -6,6 +6,7 @@ in {
   services = {
     vnstat.enable = true;
     tuptime.enable = true;
+    locate.enable = true;
     openssh = {
       enable = true;
       settings = {
@@ -64,7 +65,6 @@ in {
     lsd
     lsof
     man-pages
-    mlocate
     nethogs
     nil
     nix-du

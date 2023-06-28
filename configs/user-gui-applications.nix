@@ -11,47 +11,50 @@ let
         extraPkgs = pkgs: with unstable.pkgs; [
           gamescope
           mangohud
+          ncurses6
         ];
       };
+      lutris = pkgs.lutris.override {
+        extraPkgs = pkgs: with unstable.pkgs; [
+          gamescope
+          mangohud
+        ];
+      };
+
     };
   };
 in
 {
-  imports = [ <home-manager/nixos> ];
-
-  home-manager.users.alex = { pkgs, ... }: {
-    home = {
-      packages = with unstable.pkgs; [
-        brave
-        chromium
-        # bitwarden
-        # cura
-        czkawka
-        discord
-        # etcher
-        firefox
-        # font-manager
-        # freecad
-        # homebank
-        insomnia
-        # kdenlive
-        libreoffice
-        lutris
-        meld
-        # obs-studio
-        pinta
-        # prusa-slicer
-        # rpi-imager
-        signal-desktop
-        steam
-        solaar
-        spotify
-        # teams
-        virtmanager
-        vulkan-tools
-        wine
-        winetricks
-      ];
-    };
+  programs.steam = {
+    enable = true;
+    package = unstable.pkgs.steam;
   };
+
+  environment.systemPackages = with unstable.pkgs; [
+    brave
+    catfish
+    chromium
+    czkawka # fslint before
+    discord
+    espeak-ng
+    firefox
+    handbrake
+    insomnia
+    libreoffice
+    librewolf
+    lutris
+    meld
+    nextcloud-client
+    pinta
+    signal-desktop
+    solaar
+    remmina
+    spotify
+    tor-browser-bundle-bin
+    virtmanager
+    vulkan-tools
+    wine
+    winetricks
+
+  ];
 }

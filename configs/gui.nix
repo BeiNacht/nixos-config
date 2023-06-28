@@ -17,14 +17,10 @@ in
   };
 
   environment.systemPackages = with unstable.pkgs; [
-    # brave
-    # fswebcam
     glxinfo
     gparted
     libsecret
-    # networkmanager-openconnect
     # openconnect
-    # pulseaudio-ctl
     gnome.simple-scan
   ];
 
@@ -51,6 +47,7 @@ in
       corefonts
       google-fonts
       liberation_ttf
+      gyre-fonts
       noto-fonts
       noto-fonts-cjk
       noto-fonts-emoji
@@ -77,13 +74,9 @@ in
   hardware.sane.enable = true;
 
   services = {
-    # mullvad-vpn.enable = true;
+    mullvad-vpn.enable = true;
     gvfs.enable = true;
     # udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-    printing = {
-      enable = true;
-      drivers = [ pkgs.brlaser ];
-    };
     etesync-dav = {
       enable = true;
       apiUrl = "https://etesync.szczepan.ski/";

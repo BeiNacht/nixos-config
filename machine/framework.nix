@@ -1,5 +1,5 @@
 { config, pkgs, lib, ... }:
-let
+let secrets = import ../configs/secrets.nix;
 in
 {
   imports =
@@ -32,8 +32,32 @@ in
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
 
+  # nixpkgs.localSystem = {
+  #   gcc.arch = "alderlake";
+  #   gcc.tune = "alderlake";
+  #   system = "x86_64-linux";
+  # };
+  nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
+#  programs.nix-ld.enable = true;
 
-  networking.hostName = "framework"; # Define your hostname.
+  networking = {
+    hostName = "framework";
+    wireguard.interfaces = {
+      wg0 = {
+        ips = [ "10.100.0.7/24" ];
+        privateKey = secrets.wireguard-framework-private;
+
+        peers = [{
+          publicKey = secrets.wireguard-vps-public;
+          presharedKey = secrets.wireguard-preshared;
+          allowedIPs = [ "10.100.0.0/24" ];
+          endpoint = "szczepan.ski:51820";
+          persistentKeepalive = 25;
+        }];
+      };
+    };
+  };
+
   time.timeZone = "Europe/Berlin";
 
   hardware = {
@@ -60,16 +84,8 @@ in
 
   services = {
     power-profiles-daemon.enable = true;
-    auto-cpufreq.enable = true;
-
-    # # Enable fractional scaling
-    # xserver.desktopManager.gnome = {
-    #   extraGSettingsOverrides = ''
-    #     [org.gnome.mutter]
-    #     experimental-features=['scale-monitor-framebuffer']
-    #   '';
-    #   extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
-    # };
+    auto-cpufreq.enable = false;
+    thermald.enable = false;
   };
 
   powerManagement = {
@@ -81,39 +97,32 @@ in
     DefaultTimeoutStopSec=10s
   '';
 
-  # # Set display settings with 150% fractional scaling
-  # systemd.tmpfiles.rules = [
-  #   "L+ /run/gdm/.config/monitors.xml - - - - ${pkgs.writeText "gdm-monitors.xml" ''
-  #     <monitors version="2">
-  #       <configuration>
-  #         <logicalmonitor>
-  #           <x>0</x>
-  #           <y>0</y>
-  #           <scale>1.5009980201721191</scale>
-  #           <primary>yes</primary>
-  #           <monitor>
-  #             <monitorspec>
-  #               <connector>eDP-1</connector>
-  #               <vendor>BOE</vendor>
-  #               <product>0x095f</product>
-  #               <serial>0x00000000</serial>
-  #             </monitorspec>
-  #             <mode>
-  #               <width>2256</width>
-  #               <height>1504</height>
-  #               <rate>59.999</rate>
-  #             </mode>
-  #           </monitor>
-  #         </logicalmonitor>
-  #       </configuration>
-  #     </monitors>
-  #   ''}"
-  # ];
-
   environment.systemPackages = with pkgs; [
     intel-gpu-tools
-    powertop
   ];
+
+  # Set up deep sleep + hibernation
+  swapDevices = [
+    { device = "/swapfile"; }
+  ];
+
+  # Partition swapfile is on (after LUKS decryption)
+  boot.resumeDevice = "/dev/disk/by-uuid/ab1126e8-ae5a-4313-a520-4dc267fea528";
+
+  # Resume Offset is offset of swapfile
+  # https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
+  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=128563200" ];
+
+  # Suspend-then-hibernate everywhere
+  services.logind = {
+    lidSwitch = "suspend-then-hibernate";
+    extraConfig = ''
+      HandlePowerKey=suspend-then-hibernate
+      IdleAction=suspend-then-hibernate
+      IdleActionSec=2m
+    '';
+  };
+  systemd.sleep.extraConfig = "HibernateDelaySec=60m";
 
   system.stateVersion = "23.05";
 }

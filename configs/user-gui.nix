@@ -28,19 +28,6 @@ in
       vscode = {
         enable = true;
         package = unstable.pkgs.vscode;
-        # extensions = with unstable.pkgs.vscode-extensions; [
-        #   bbenoist.nix
-        #   eamodio.gitlens
-        #   editorconfig.editorconfig
-        #   ms-azuretools.vscode-docker
-        #   # ms-vsliveshare.vsliveshare
-        #   # ms-vscode.cpptools
-        #   mskelton.one-dark-theme
-        #   ms-kubernetes-tools.vscode-kubernetes-tools
-        #   ryu1kn.partial-diff
-        #   jnoortheen.nix-ide
-        #   brettm12345.nixfmt-vscode
-        # ];
       };
 
 

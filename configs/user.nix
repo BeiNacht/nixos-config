@@ -94,19 +94,9 @@ in
         forwardAgent = true;
 
         matchBlocks."szczepan.ski" = { hostname = "207.180.220.97"; };
-
-        matchBlocks."nixos-vm" = {
-          hostname = "192.168.122.222";
-          remoteForwards = [{
-            bind.address = "/run/user/1000/gnupg/S.gpg-agent";
-            host.address = "/run/user/1000/gnupg/S.gpg-agent";
-          }];
-        };
-
-        matchBlocks."mini" = { hostname = "192.168.0.101"; };
-
+        matchBlocks."mini" = { hostname = "10.100.0.3"; };
+        matchBlocks."thinkpad" = { hostname = "10.100.0.8"; };
         matchBlocks."pi" = { hostname = "192.168.1.143"; };
-
         matchBlocks."router" = {
           hostname = "192.168.1.1";
           user = "root";
