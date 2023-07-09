@@ -38,7 +38,7 @@ in
   #   system = "x86_64-linux";
   # };
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
-#  programs.nix-ld.enable = true;
+  #  programs.nix-ld.enable = true;
 
   networking = {
     hostName = "framework";
@@ -63,6 +63,7 @@ in
   hardware = {
     enableAllFirmware = true;
     cpu.intel.updateMicrocode = true;
+
     opengl = {
       enable = true;
       driSupport32Bit = true;
@@ -73,19 +74,20 @@ in
         libvdpau-va-gl
       ];
     };
+    pulseaudio.enable = false;
   };
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio = {
-    enable = true;
-    support32Bit = true;
-  };
-
+  # Bring in some audio
+  security.rtkit.enable = true;
+  # rtkit is optional but recommended
   services = {
     power-profiles-daemon.enable = true;
-    auto-cpufreq.enable = false;
-    thermald.enable = false;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
   };
 
   powerManagement = {

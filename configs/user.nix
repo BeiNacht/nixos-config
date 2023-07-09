@@ -71,6 +71,13 @@ in
         tealdeer
         unrar
         yt-dlp
+
+        gnumake
+        pkg-config
+        libftdi
+        libusb1
+        gcc
+        coreboot-toolchain.arm
       ];
       sessionPath = [ "$HOME/.npm-packages" "$HOME/.bin" ];
       file = {
@@ -96,7 +103,9 @@ in
         matchBlocks."szczepan.ski" = { hostname = "207.180.220.97"; };
         matchBlocks."mini" = { hostname = "10.100.0.3"; };
         matchBlocks."thinkpad" = { hostname = "10.100.0.8"; };
-        matchBlocks."pi" = { hostname = "192.168.1.143"; };
+        matchBlocks."pi" = { hostname = "10.100.0.6"; };
+        matchBlocks."vps2" = { hostname = "10.100.0.50"; };
+        matchBlocks."vps3" = { hostname = "10.100.0.100"; };
         matchBlocks."router" = {
           hostname = "192.168.1.1";
           user = "root";
