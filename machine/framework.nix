@@ -1,21 +1,25 @@
 { config, pkgs, lib, ... }:
-let secrets = import ../configs/secrets.nix;
+let
+  unstable = import <nixos-unstable> {};
+  secrets = import ../configs/secrets.nix;
+  wireguard = import ../configs/wireguard.nix;
 in
 {
-  imports =
-    [
-      <nixos-hardware/framework/12th-gen-intel>
-      /etc/nixos/hardware-configuration.nix
-      ../configs/gui.nix
-      ../configs/docker.nix
-      ../configs/libvirt.nix
-      ../configs/common.nix
-      ../configs/user.nix
-      ../configs/user-gui.nix
-      ../configs/user-gui-applications.nix
-      ../configs/pantheon.nix
-      <home-manager/nixos>
-    ];
+  imports = [
+    <nixos-hardware/framework/12th-gen-intel>
+    <home-manager/nixos>
+    /etc/nixos/hardware-configuration.nix
+    ../configs/gui.nix
+    ../configs/docker.nix
+    ../configs/libvirt.nix
+    ../configs/common.nix
+    ../configs/games.nix
+    ../configs/browser.nix
+    ../configs/user.nix
+    ../configs/user-gui.nix
+    ../configs/gnome.nix
+    /home/alex/Workspace/fw-fanctrl-nix/service.nix
+  ];
 
   boot = {
     initrd.systemd.enable = true;
@@ -37,6 +41,7 @@ in
   #   gcc.tune = "alderlake";
   #   system = "x86_64-linux";
   # };
+
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
   #  programs.nix-ld.enable = true;
 
@@ -48,7 +53,7 @@ in
         privateKey = secrets.wireguard-framework-private;
 
         peers = [{
-          publicKey = secrets.wireguard-vps-public;
+          publicKey = wireguard.wireguard-vps-public;
           presharedKey = secrets.wireguard-preshared;
           allowedIPs = [ "10.100.0.0/24" ];
           endpoint = "szczepan.ski:51820";
@@ -82,6 +87,8 @@ in
   # rtkit is optional but recommended
   services = {
     power-profiles-daemon.enable = true;
+    fw-fanctrl.enable = true;
+    thermald.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -99,9 +106,21 @@ in
     DefaultTimeoutStopSec=10s
   '';
 
-  environment.systemPackages = with pkgs; [
-    intel-gpu-tools
-  ];
+  programs.kdeconnect.enable = true;
+  environment.systemPackages =
+    with unstable.pkgs; [
+      cinnamon.warpinator
+      psensor
+      gnumake
+      pkg-config
+      libftdi
+      libusb1
+      gcc
+      # coreboot-toolchain.arm
+      intel-gpu-tools
+      msr-tools
+      (import ("/home/alex/Workspace/fw-ectool/default.nix"))
+    ];
 
   # Set up deep sleep + hibernation
   swapDevices = [

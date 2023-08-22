@@ -9,5 +9,5 @@
     spiceUSBRedirection.enable = true;
   };
 
-  environment.systemPackages = with pkgs; [ proot ];
+  environment.systemPackages = with pkgs; [ proot virtiofsd ];
 }

@@ -61,7 +61,7 @@
     gnome.gnome-system-monitor
     indicator-application-gtk3
     monitor
-    ulauncher
+    gnome.eog
   ];
 
   environment.pantheon.excludePackages = with pkgs.pantheon; [

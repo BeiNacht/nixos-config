@@ -39,6 +39,7 @@ in
       libinput.enable = true;
       updateDbusEnvironment = true;
     };
+    udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
   };
 
   environment.systemPackages = with unstable.pkgs; [

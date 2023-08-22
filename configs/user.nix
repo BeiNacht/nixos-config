@@ -71,13 +71,6 @@ in
         tealdeer
         unrar
         yt-dlp
-
-        gnumake
-        pkg-config
-        libftdi
-        libusb1
-        gcc
-        coreboot-toolchain.arm
       ];
       sessionPath = [ "$HOME/.npm-packages" "$HOME/.bin" ];
       file = {
@@ -183,11 +176,6 @@ in
       };
 
       tmux = { enable = true; };
-
-      # exa = {
-      #   enable = true;
-      #   enableAliases = true;
-      # };
     };
 
 #    services.vscode-server.enable = true;

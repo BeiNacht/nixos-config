@@ -31,6 +31,7 @@
     whitesur-gtk-theme
     whitesur-icon-theme
     moka-icon-theme
+    pantheon.elementary-icon-theme
   ];
 
   environment.gnome.excludePackages = (with pkgs; [ gnome-tour ])
@@ -45,6 +46,7 @@
     hitori # sudoku game
     atomix # puzzle game
   ]);
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
 
   # services.gpg-agent.pinentryFlavor = lib.mkDefault "gnome3";
 

@@ -20,7 +20,6 @@ in
     glxinfo
     gparted
     libsecret
-    # openconnect
     gnome.simple-scan
   ];
 
@@ -76,7 +75,6 @@ in
   services = {
     mullvad-vpn.enable = true;
     gvfs.enable = true;
-    # udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
     etesync-dav = {
       enable = true;
       apiUrl = "https://etesync.szczepan.ski/";

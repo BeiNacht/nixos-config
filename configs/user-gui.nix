@@ -7,21 +7,29 @@ in
 {
   imports = [ <home-manager/nixos> ];
 
+  environment.systemPackages = with unstable.pkgs; [
+    catfish
+    czkawka # fslint before
+    discord
+    espeak-ng
+    handbrake
+    insomnia
+    libreoffice
+    meld
+    nextcloud-client
+    pinta
+    signal-desktop
+    solaar
+    remmina
+    spotify
+    baobab
+    keepassxc
+    ponymix
+    grsync
+    virtmanager
+  ];
+
   home-manager.users.alex = { pkgs, ... }: {
-    home = {
-      packages = with unstable.pkgs; [
-        baobab
-        # barrier
-        keepassxc
-        ponymix
-        # mullvad-vpn
-        # dracula-theme
-        # deadbeef
-        grsync
-      ];
-    };
-
-
     services = { syncthing = { enable = true; }; };
 
     programs = {
@@ -29,7 +37,6 @@ in
         enable = true;
         package = unstable.pkgs.vscode;
       };
-
 
       mpv = {
         enable = true;
