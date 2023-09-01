@@ -27,7 +27,10 @@ in
   };
 
   environment.systemPackages = with unstable.pkgs; [
+    goverlay
     lutris
+    protontricks
+    protonup-qt
     vulkan-tools
     wine
     winetricks

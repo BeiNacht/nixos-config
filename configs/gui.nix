@@ -21,6 +21,7 @@ in
     gparted
     libsecret
     gnome.simple-scan
+    telegram-desktop
   ];
 
   programs = {
@@ -46,6 +47,7 @@ in
       corefonts
       google-fonts
       liberation_ttf
+      libertinus
       gyre-fonts
       noto-fonts
       noto-fonts-cjk

@@ -17,7 +17,7 @@ in
     ../configs/browser.nix
     ../configs/user.nix
     ../configs/user-gui.nix
-    ../configs/gnome.nix
+    ../configs/pantheon.nix
     /home/alex/Workspace/fw-fanctrl-nix/service.nix
   ];
 
@@ -88,7 +88,6 @@ in
   services = {
     power-profiles-daemon.enable = true;
     fw-fanctrl.enable = true;
-    thermald.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;
