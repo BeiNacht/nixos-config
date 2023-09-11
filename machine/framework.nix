@@ -9,15 +9,15 @@ in
     <nixos-hardware/framework/12th-gen-intel>
     <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
-    ../configs/gui.nix
-    ../configs/docker.nix
-    ../configs/libvirt.nix
-    ../configs/common.nix
-    ../configs/games.nix
     ../configs/browser.nix
-    ../configs/user.nix
-    ../configs/user-gui.nix
+    ../configs/common.nix
+    ../configs/docker.nix
+    ../configs/games.nix
+    ../configs/gui.nix
+    ../configs/libvirt.nix
     ../configs/pantheon.nix
+    ../configs/user-gui.nix
+    ../configs/user.nix
     /home/alex/Workspace/fw-fanctrl-nix/service.nix
   ];
 
@@ -66,7 +66,7 @@ in
   time.timeZone = "Europe/Berlin";
 
   hardware = {
-    enableAllFirmware = true;
+    enableAllFirmware = true;   
     cpu.intel.updateMicrocode = true;
 
     opengl = {

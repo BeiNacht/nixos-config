@@ -55,7 +55,7 @@ in
         btop
         broot
         dfc
-        exa
+        eza
         ffmpeg
         git-secret
         glances
@@ -169,9 +169,9 @@ in
           brightness-power-save =
             "echo 2300 | sudo tee /sys/class/backlight/intel_backlight/brightness";
           ff = "find . -type f -iname";
-          l = "exa --group-directories-first -l -g";
-          ll = "exa --group-directories-first -l -g";
-          la = "exa --group-directories-first -l -g -a";
+          l = "eza --group-directories-first -l -g";
+          ll = "eza --group-directories-first -l -g";
+          la = "eza --group-directories-first -l -g -a";
         };
       };
 
