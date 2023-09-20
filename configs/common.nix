@@ -49,6 +49,7 @@ in {
   environment.systemPackages = with pkgs; [
     ack
     borgbackup
+    borgmatic
     btrfs-progs
     cargo
     dog

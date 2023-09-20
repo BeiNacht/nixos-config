@@ -8,7 +8,7 @@ in
   imports = [ <home-manager/nixos> ];
 
   environment.systemPackages = with unstable.pkgs; [
-    catfish
+    xfce.catfish
     czkawka # fslint before
     discord
     espeak-ng
@@ -26,7 +26,7 @@ in
     keepassxc
     ponymix
     grsync
-    virtmanager
+    virt-manager
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
