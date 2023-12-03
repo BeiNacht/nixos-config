@@ -12,5 +12,6 @@
     docker-compose
     lazydocker
     minikube
+    lazydocker
   ];
 }
