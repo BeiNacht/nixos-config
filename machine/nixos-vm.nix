@@ -34,18 +34,18 @@ in {
     };
   };
 
-   environment.pantheon.excludePackages = (with pkgs.pantheon; [
-        elementary-calculator
-        # elementary-calendar
-        elementary-camera
-        elementary-code
-        elementary-music
-        # elementary-photos
-        # elementary-screenshot
-        # elementary-tasks
-        elementary-videos
-        epiphany
-     ]);
+  environment.pantheon.excludePackages = (with pkgs.pantheon; [
+    elementary-calculator
+    # elementary-calendar
+    elementary-camera
+    elementary-code
+    elementary-music
+    # elementary-photos
+    # elementary-screenshot
+    # elementary-tasks
+    elementary-videos
+    epiphany
+  ]);
 
 
   system.stateVersion = "23.05";

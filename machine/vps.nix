@@ -71,6 +71,17 @@ in
             allowedIPs = [ "10.100.0.6/32" ];
           }
           {
+            publicKey = secrets.wireguard-framework-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.7/32" ];
+          }
+          {
+            publicKey = secrets.wireguard-thinkpad-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.8/32" ];
+          }
+
+          {
             publicKey = secrets.wireguard-vps2-public;
             presharedKey = secrets.wireguard-preshared;
             allowedIPs = [ "10.100.0.50/32" ];
@@ -120,7 +131,14 @@ in
     };
   };
 
-  environment.systemPackages = with pkgs; [ goaccess xd nyx mkp224o ];
+  environment.systemPackages = with pkgs; [
+    goaccess
+    xd
+    nyx
+    mkp224o
+    progress
+  ];
+
 
   programs = {
     mtr.enable = true;
@@ -379,6 +397,7 @@ in
         };
       };
 
+      logLevel = "error";
       enableIPv4 = true;
       enableIPv6 = true;
     };
@@ -394,6 +413,10 @@ in
         user = "alex";
         password = "AaOnwDoZnspv8MszCpZZ1KuR9xXJWIE5";
       };
+    };
+
+    davfs2 = {
+      enable = true;
     };
 
     tor = {
@@ -439,17 +462,18 @@ in
 
     fail2ban = {
       enable = true;
+      bantime = "7d";
 
-      jails.DEFAULT = ''
-        bantime  = 7d
-      '';
-
-      jails.sshd = ''
-        filter = sshd
-        maxretry = 4
-        action   = iptables[name=ssh, port=ssh, protocol=tcp]
-        enabled  = true
-      '';
+      jails = {
+        sshd = {
+          settings = {
+            filter = "sshd";
+            maxretry = 4;
+            action = ''iptables[name=ssh, port=ssh, protocol=tcp]'';
+            enabled = true;
+          };
+        };
+      };
     };
 
     netdata.enable = true;
@@ -486,10 +510,24 @@ in
         "/var/lib/monero"
       ];
     };
+
+    autofs = {
+      enable = true;
+      autoMaster =
+        let
+          mapConf = pkgs.writeText "auto" ''
+            nextcloud -fstype=davfs,conf=/path/to/davfs/conf,uid=myuid :https\:nextcloud.domain/remote.php/webdav/
+          '';
+        in
+        ''
+          /home/directory/mounts file:${mapConf}
+        '';
+    };
+
   };
 
   # Limit stack size to reduce memory usage
   systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }
