@@ -16,44 +16,44 @@ in
       #../configs/user-gui.nix
       #../configs/user-gui-applications.nix
       #../configs/bspwm.nix
-      #../configs/pantheon.nix
+      ../configs/pantheon.nix
       <home-manager/nixos>
     ];
 
   boot = {
-    initrd = {
-      preLVMCommands = lib.mkBefore 400 "sleep 1";
-      availableKernelModules = [ "e1000e" ];
-      systemd.enable = true;
-      luks.forceLuksSupportInInitrd = true;
-      network = {
-        enable = true;
-        ssh = {
-          enable = true;
-          port = 22;
-          authorizedKeys = [
-            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDPSzeNjfkz7/B/18TcJxxmNFUhvTKoieBcexdzebWH7oncvyBXNRJp8vAqSIVFLzz5UUFQNFuilggs8/N48U84acmFOxlbUmxlkf8KZgeB/G6uQ8ncQh6M1HNNPH+9apTURgfctr7eEZe9seLIEBISQLXB2Sf3F1ogfDj25S8kH9RM4wM1/jDFK5IecWHScKxwQPmCoXeGE1LEJq6nkQLXMDsWhSihtWouaTxSR0p7/wp/Rqt/hzLEWj8e3+qLMc5JrrdaWksupUCysme7CnSfGSzNUv9RKiRCTFofYPT9tbRn5JzdpQ55v22S6OvmmXUHjST1MOzI8MpVPZCCqd/ZQ1E+gErFiMwjG4sn/xxdPK9/jbQaXMjLklbKtR+C5090Ew2u2kj78jqGk/8COhF1MXh/9qjcG+C51uD1AS9d410kfjPwkaUt4U2KktDMQ942nWywrvIWM0Gt2kgDLYotsy/70q/aTJ8bvaCoWoDOGmpWcyNNBalz4OYYGI2Z0WHrVTs0FpzSk/XeQz0OLkmueoh5GDGd8zrfO6Nf5LWI17aWGRePTpQP5mJIg6jC3j8/QVrthEP6QyIIkZsnfsmvSiMWVfXqEy1BxVlu3T6aLffaj679KCsxY+mx5mTH2hwd4ZdbSI4F0GCIt+WGaFhHs2V3ZQitoEZuraRPEc4HGw== alexander@szczepan.ski"
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
-          ];
-          hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
-        };
-        postCommands = let
-          # I use a LUKS 2 label. Replace this with your disk device's path.
-          disk = "/dev/disk/by-label/nixos";
-        in ''
-          echo 'cryptsetup open ${disk} root --type luks && echo > /tmp/continue' >> /root/.profile
-          echo 'starting sshd...'
-        '';
-      };
-      postDeviceCommands = ''
-        echo 'waiting for root device to be opened...'
-        mkfifo /tmp/continue
-        cat /tmp/continue
-      '';
-    };
+    # initrd = {
+    #   preLVMCommands = lib.mkBefore 400 "sleep 1";
+    #   availableKernelModules = [ "e1000e" ];
+    #   systemd.enable = true;
+    #   luks.forceLuksSupportInInitrd = true;
+    #   network = {
+    #     enable = true;
+    #     ssh = {
+    #       enable = true;
+    #       port = 22;
+    #       authorizedKeys = [
+    #         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDPSzeNjfkz7/B/18TcJxxmNFUhvTKoieBcexdzebWH7oncvyBXNRJp8vAqSIVFLzz5UUFQNFuilggs8/N48U84acmFOxlbUmxlkf8KZgeB/G6uQ8ncQh6M1HNNPH+9apTURgfctr7eEZe9seLIEBISQLXB2Sf3F1ogfDj25S8kH9RM4wM1/jDFK5IecWHScKxwQPmCoXeGE1LEJq6nkQLXMDsWhSihtWouaTxSR0p7/wp/Rqt/hzLEWj8e3+qLMc5JrrdaWksupUCysme7CnSfGSzNUv9RKiRCTFofYPT9tbRn5JzdpQ55v22S6OvmmXUHjST1MOzI8MpVPZCCqd/ZQ1E+gErFiMwjG4sn/xxdPK9/jbQaXMjLklbKtR+C5090Ew2u2kj78jqGk/8COhF1MXh/9qjcG+C51uD1AS9d410kfjPwkaUt4U2KktDMQ942nWywrvIWM0Gt2kgDLYotsy/70q/aTJ8bvaCoWoDOGmpWcyNNBalz4OYYGI2Z0WHrVTs0FpzSk/XeQz0OLkmueoh5GDGd8zrfO6Nf5LWI17aWGRePTpQP5mJIg6jC3j8/QVrthEP6QyIIkZsnfsmvSiMWVfXqEy1BxVlu3T6aLffaj679KCsxY+mx5mTH2hwd4ZdbSI4F0GCIt+WGaFhHs2V3ZQitoEZuraRPEc4HGw== alexander@szczepan.ski"
+    #         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
+    #       ];
+    #       hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
+    #     };
+    #     postCommands = let
+    #       # I use a LUKS 2 label. Replace this with your disk device's path.
+    #       disk = "/dev/disk/by-label/nixos";
+    #     in ''
+    #       echo 'cryptsetup open ${disk} root --type luks && echo > /tmp/continue' >> /root/.profile
+    #       echo 'starting sshd...'
+    #     '';
+    #   };
+    #   postDeviceCommands = ''
+    #     echo 'waiting for root device to be opened...'
+    #     mkfifo /tmp/continue
+    #     cat /tmp/continue
+    #   '';
+    # };
     loader = {
       systemd-boot = {
-	enable = true;
+        enable = true;
         configurationLimit = 10;
       	editor = false;
       };
@@ -61,10 +61,10 @@ in
         canTouchEfiVariables = false;
       };
     };
-  #  plymouth.enable = true;
+    plymouth.enable = true;
   };
 
-  boot.initrd.luks.devices."nixos".preLVM = true;
+  # boot.initrd.luks.devices."nixos".preLVM = true;
 
   time.timeZone = "Europe/Berlin";
 
@@ -101,19 +101,35 @@ in
   };
 
   # Enable sound.
+  
+  # hardware.pulseaudio = {
+  #   enable = true;
+  #   support32Bit = true;
+  #   daemon = {
+  #     config = {
+  #       avoid-resampling = "yes";
+  #     };
+  #   };
+  #   configFile = pkgs.runCommand "default.pa" { } ''
+  #     sed 's/module-udev-detect$/module-udev-detect tsched=0/' \
+  #       ${pkgs.pulseaudio}/etc/pulse/default.pa > $out
+  #   '';
+  # };
+
   sound.enable = true;
-  hardware.pulseaudio = {
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
     enable = true;
-    support32Bit = true;
-    daemon = {
-      config = {
-        avoid-resampling = "yes";
-      };
-    };
-    configFile = pkgs.runCommand "default.pa" { } ''
-      sed 's/module-udev-detect$/module-udev-detect tsched=0/' \
-        ${pkgs.pulseaudio}/etc/pulse/default.pa > $out
-    '';
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
   };
 
   services = {
@@ -129,15 +145,15 @@ in
         [ 7 93 32767 ]
       ];
     };
-    xserver = {
-	enable = true;
-  	displayManager.sddm.enable = true;
-	desktopManager.plasma5.enable = true;
-    };
-    xrdp = {
-	enable = true;
-        defaultWindowManager = "startplasma-x11";
-    };
+    # xserver = {
+    #   enable = true;
+    #   displayManager.sddm.enable = true;
+    #   desktopManager.plasma5.enable = true;
+    # };
+    # xrdp = {
+    #   enable = true;
+    #   defaultWindowManager = "startplasma-x11";
+    # };
     power-profiles-daemon.enable = false;
     auto-cpufreq.enable = true;
     tlp.enable = false;
