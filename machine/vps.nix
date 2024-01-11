@@ -80,7 +80,11 @@ in
             presharedKey = secrets.wireguard-preshared;
             allowedIPs = [ "10.100.0.8/32" ];
           }
-
+          {
+            publicKey = secrets.wireguard-a53-public;
+            # presharedKey = secrets.wireguard-preshared;
+            allowedIPs = [ "10.100.0.9/32" ];
+          }
           {
             publicKey = secrets.wireguard-vps2-public;
             presharedKey = secrets.wireguard-preshared;
