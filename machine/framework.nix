@@ -6,7 +6,7 @@ let
 in
 {
   imports = [
-    <nixos-hardware/framework/12th-gen-intel>
+    <nixos-hardware/framework/13-inch/12th-gen-intel>
     <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
     ../configs/browser.nix
@@ -66,7 +66,7 @@ in
   time.timeZone = "Europe/Berlin";
 
   hardware = {
-    enableAllFirmware = true;   
+    enableAllFirmware = true;
     cpu.intel.updateMicrocode = true;
 
     opengl = {
@@ -74,9 +74,9 @@ in
       driSupport32Bit = true;
       extraPackages = with pkgs; [
         intel-media-driver # LIBVA_DRIVER_NAME=iHD
-        vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-        vaapiVdpau
-        libvdpau-va-gl
+       # vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+       # vaapiVdpau
+       # libvdpau-va-gl
       ];
     };
     pulseaudio.enable = false;
@@ -144,5 +144,5 @@ in
   };
   systemd.sleep.extraConfig = "HibernateDelaySec=60m";
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }

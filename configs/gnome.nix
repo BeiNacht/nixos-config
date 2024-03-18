@@ -29,9 +29,7 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.vitals
     gnomeExtensions.dash-to-dock
-    whitesur-gtk-theme
-    whitesur-icon-theme
-    moka-icon-theme
+    gnomeExtensions.syncthing-indicator
     pantheon.elementary-icon-theme
   ];
 
