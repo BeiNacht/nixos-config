@@ -1,6 +1,11 @@
 { config, pkgs, lib, ... }:
 let
-  unstable = import <nixos-unstable> {};
+  unstable = import <nixos-unstable> {
+    config = {
+      allowUnfree = true;
+    };
+  };
+  be = import ../configs/borg-exclude.nix;
   secrets = import ../configs/secrets.nix;
   wireguard = import ../configs/wireguard.nix;
 in
@@ -24,7 +29,13 @@ in
   boot = {
     initrd.systemd.enable = true;
     loader = {
-      systemd-boot.enable = true;
+      #      systemd-boot.enable = true;
+      grub = {
+        enable = true;
+        device = "nodev";
+        useOSProber = true;
+        efiSupport = true;
+      };
       efi = {
         canTouchEfiVariables = true;
       };
@@ -66,6 +77,7 @@ in
   time.timeZone = "Europe/Berlin";
 
   hardware = {
+    keyboard.qmk.enable = true;
     enableAllFirmware = true;
     cpu.intel.updateMicrocode = true;
 
@@ -74,9 +86,6 @@ in
       driSupport32Bit = true;
       extraPackages = with pkgs; [
         intel-media-driver # LIBVA_DRIVER_NAME=iHD
-       # vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-       # vaapiVdpau
-       # libvdpau-va-gl
       ];
     };
     pulseaudio.enable = false;
@@ -94,6 +103,27 @@ in
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+
+    borgbackup.jobs.home = rec {
+      compression = "auto,zstd";
+      encryption = {
+        mode = "repokey-blake2";
+        passphrase = secrets.borg-key;
+      };
+      extraCreateArgs =
+        "--stats --verbose --checkpoint-interval 600 --exclude-caches";
+      environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
+      paths = [ "/home/alex" "/var/lib" ];
+      repo = secrets.borg-repo;
+      startAt = "daily";
+      prune.keep = {
+        daily = 7;
+        weekly = 4;
+        monthly = 6;
+      };
+      extraPruneArgs = "--save-space --list --stats";
+      exclude = map (x: "/home/alex/" + x) be.borg-exclude;
+    };
   };
 
   powerManagement = {
@@ -108,8 +138,10 @@ in
   programs.kdeconnect.enable = true;
   environment.systemPackages =
     with unstable.pkgs; [
+      rustdesk
       cinnamon.warpinator
       psensor
+      veracrypt
       gnumake
       pkg-config
       libftdi
@@ -122,16 +154,17 @@ in
     ];
 
   # Set up deep sleep + hibernation
-  swapDevices = [
-    { device = "/swapfile"; }
-  ];
+  swapDevices = [{
+    device = "/swapfile";
+    size = 64 * 1024;
+  }];
 
   # Partition swapfile is on (after LUKS decryption)
-  boot.resumeDevice = "/dev/disk/by-uuid/ab1126e8-ae5a-4313-a520-4dc267fea528";
+  boot.resumeDevice = "/dev/disk/by-uuid/642b9f1c-f8ed-4bdf-baa4-465409942c2e";
 
   # Resume Offset is offset of swapfile
   # https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
-  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=128563200" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=7604224" ];
 
   # Suspend-then-hibernate everywhere
   services.logind = {
@@ -143,6 +176,13 @@ in
     '';
   };
   systemd.sleep.extraConfig = "HibernateDelaySec=60m";
+
+  home-manager.users.alex.services.barrier.client = {
+    enable = true;
+    enableCrypto = false;
+    name = "framework";
+    server = "192.168.0.168:24800";
+  };
 
   system.stateVersion = "23.11";
 }

@@ -24,7 +24,6 @@ in
     spotify
     baobab
     keepassxc
-    ponymix
     grsync
     virt-manager
   ];

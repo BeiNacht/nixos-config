@@ -42,15 +42,15 @@ in
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.alex = { pkgs, ... }: {
-#    imports = [
-#      "${
-#        fetchTarball
-#        "https://github.com/msteen/nixos-vscode-server/tarball/master"
-#      }/modules/vscode-server/home.nix"
-#    ];
+    imports = [
+      "${
+        fetchTarball
+        "https://github.com/msteen/nixos-vscode-server/tarball/master"
+      }/modules/vscode-server/home.nix"
+    ];
 
     home = {
-      stateVersion = "23.05";
+      stateVersion = "23.11";
       packages = with unstable.pkgs; [
         atop
         btop
@@ -64,7 +64,7 @@ in
         kubectl
         ncdu
         neofetch
-        nixfmt
+        nixfmt-classic
         pstree
         qrencode
         ranger
@@ -179,6 +179,6 @@ in
       tmux = { enable = true; };
     };
 
-#    services.vscode-server.enable = true;
+    services.vscode-server.enable = true;
   };
 }

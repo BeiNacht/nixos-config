@@ -44,17 +44,17 @@ in
     };
 
 
-    loader = {
-      grub = {
-        enable = true;
-        device = "nodev";
-        efiSupport = true;
-        gfxmodeEfi = "1024x768";
-        configurationLimit = 5;
-      };
+    # loader = {
+    #   grub = {
+    #     enable = true;
+    #     device = "nodev";
+    #     efiSupport = true;
+    #     gfxmodeEfi = "1024x768";
+    #     configurationLimit = 5;
+    #   };
 
-      efi.canTouchEfiVariables = true;
-    };
+    #   efi.canTouchEfiVariables = true;
+    # };
 
     initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;

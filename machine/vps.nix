@@ -143,7 +143,6 @@ in
     progress
   ];
 
-
   programs = {
     mtr.enable = true;
     fuse.userAllowOther = true;
