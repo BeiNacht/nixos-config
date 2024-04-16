@@ -8,5 +8,4 @@
   wireguard-vps2-public = "fzWLlrK4RqbgBpjQLLwKxGI92aidpZUksjZ6FIrFmEE=";
   wireguard-vps3-public = "qfE7vQ+XavOMKgSYxa/me40auoEV3ip/vbiSzjMKgXc=";
   wireguard-a53-public = "ebXyBQkOYw8zK2KXAs0NKn2h1Fu53ScysJS/hFhTix4=";
-
 }

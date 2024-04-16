@@ -82,7 +82,7 @@ in
           }
           {
             publicKey = secrets.wireguard-a53-public;
-            # presharedKey = secrets.wireguard-preshared;
+            presharedKey = secrets.wireguard-preshared;
             allowedIPs = [ "10.100.0.9/32" ];
           }
           {
@@ -111,12 +111,18 @@ in
         9898 # i2p
         9899
         18080
+        21115 #Rustdesk
+        21116 #Rustdesk
+        21117 #Rustdesk
+        21118 #Rustdesk
+        21119 #Rustdesk
         22000 # syncthing
       ];
       allowedUDPPorts = [
         80 # web
         443 # web
         9898 # i2p
+        21116 # Rustdesk
         51820 # wireguard
       ];
       interfaces.wg0 = {
@@ -502,12 +508,13 @@ in
       repo = secrets.borg-repo;
       startAt = "daily";
       prune.keep = {
-        daily = 7;
-        weekly = 4;
-        monthly = 3;
+        daily = 4;
+        weekly = 2;
+        monthly = 2;
       };
       extraPruneArgs = "--save-space --stats";
       exclude = [
+        "/home/alex/storagebox"
         "/home/alex/docker/jellyfin/data"
         "/home/alex/.cache"
         "/var/lib/monero"

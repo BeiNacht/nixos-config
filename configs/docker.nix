@@ -13,5 +13,6 @@
     lazydocker
     minikube
     lazydocker
+    dive
   ];
 }
