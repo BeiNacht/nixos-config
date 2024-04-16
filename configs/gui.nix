@@ -30,11 +30,11 @@ in
     ssh = {
       startAgent = true;
     };
-    gnupg.agent = {
-      enable = true;
-      pinentryFlavor = "curses";
-      # enableSSHSupport = true;
-    };
+    # gnupg.agent = {
+    #   enable = true;
+    #   pinentryFlavor = "curses";
+    #   # enableSSHSupport = true;
+    # };
   };
 
   fonts = {
@@ -75,11 +75,11 @@ in
   hardware.sane.enable = true;
 
   services = {
-    mullvad-vpn.enable = true;
+    # mullvad-vpn.enable = true;
     gvfs.enable = true;
-    etesync-dav = {
-      enable = true;
-      apiUrl = "https://etesync.szczepan.ski/";
-    };
+    # etesync-dav = {
+    #   enable = true;
+    #   apiUrl = "https://etesync.szczepan.ski/";
+    # };
   };
 }
