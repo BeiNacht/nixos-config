@@ -18,6 +18,7 @@ in {
         "docker"
         "networkmanager"
         "libvirtd"
+        "qemu-libvirtd"
         "kvm"
         "lp"
         "nginx"
