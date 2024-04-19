@@ -20,7 +20,7 @@ in
     ../configs/games.nix
     ../configs/gui.nix
     ../configs/libvirt.nix
-    ../configs/pantheon.nix
+    ../configs/plasma.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     /home/alex/Workspace/fw-fanctrl-nix/service.nix

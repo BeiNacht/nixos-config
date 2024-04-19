@@ -54,8 +54,8 @@
   # App indicator
   environment.pathsToLink = [ "/libexec" ];
   environment.systemPackages = with pkgs; [
-    blackbox-terminal
-    cinnamon.nemo-with-extensions
+    # blackbox-terminal
+    # cinnamon.nemo-with-extensions
     gnome-online-accounts
     gnome.gnome-control-center
     gnome.gnome-system-monitor
