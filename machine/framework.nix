@@ -1,15 +1,10 @@
 { config, pkgs, lib, ... }:
 let
-  unstable = import <nixos-unstable> {
-    config = {
-      allowUnfree = true;
-    };
-  };
+  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
   be = import ../configs/borg-exclude.nix;
   secrets = import ../configs/secrets.nix;
   wireguard = import ../configs/wireguard.nix;
-in
-{
+in {
   imports = [
     <nixos-hardware/framework/13-inch/12th-gen-intel>
     <home-manager/nixos>
@@ -36,9 +31,7 @@ in
         useOSProber = true;
         efiSupport = true;
       };
-      efi = {
-        canTouchEfiVariables = true;
-      };
+      efi = { canTouchEfiVariables = true; };
     };
     plymouth.enable = true;
   };
@@ -53,8 +46,8 @@ in
   #   system = "x86_64-linux";
   # };
 
-  nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
-  #  programs.nix-ld.enable = true;
+  nix.settings.system-features =
+    [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
 
   networking = {
     hostName = "framework";
@@ -84,9 +77,7 @@ in
     opengl = {
       enable = true;
       driSupport32Bit = true;
-      extraPackages = with pkgs; [
-        intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      ];
+      extraPackages = with pkgs; [ intel-media-driver ];
     };
     pulseaudio.enable = false;
   };
@@ -135,23 +126,21 @@ in
     DefaultTimeoutStopSec=10s
   '';
 
-  programs.kdeconnect.enable = true;
-  environment.systemPackages =
-    with unstable.pkgs; [
-      rustdesk
-      cinnamon.warpinator
-      psensor
-      veracrypt
-      gnumake
-      pkg-config
-      libftdi
-      libusb1
-      gcc
-      # coreboot-toolchain.arm
-      intel-gpu-tools
-      msr-tools
-      (import ("/home/alex/Workspace/fw-ectool/default.nix"))
-    ];
+  environment.systemPackages = with unstable.pkgs; [
+    rustdesk
+    cinnamon.warpinator
+    psensor
+    veracrypt
+    gnumake
+    pkg-config
+    libftdi
+    libusb1
+    gcc
+    # coreboot-toolchain.arm
+    intel-gpu-tools
+    msr-tools
+    (import ("/home/alex/Workspace/fw-ectool/default.nix"))
+  ];
 
   # Set up deep sleep + hibernation
   swapDevices = [{
@@ -160,11 +149,11 @@ in
   }];
 
   # Partition swapfile is on (after LUKS decryption)
-  boot.resumeDevice = "/dev/disk/by-uuid/642b9f1c-f8ed-4bdf-baa4-465409942c2e";
+  boot.resumeDevice = "/dev/disk/by-uuid/e5472308-de8b-4e60-91f4-4e7f194dad76";
 
   # Resume Offset is offset of swapfile
   # https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
-  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=7604224" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=40241152" ];
 
   # Suspend-then-hibernate everywhere
   services.logind = {

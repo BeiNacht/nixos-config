@@ -2,8 +2,7 @@
 let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
   secrets = import ./secrets.nix;
-in
-{
+in {
   imports = [ <home-manager/nixos> ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -35,7 +34,10 @@ in
     };
   };
 
-  programs.zsh.enable = true;
+  programs = {
+    zsh.enable = true;
+    nix-ld.enable = true;
+  };
 
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
@@ -43,13 +45,6 @@ in
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.alex = { pkgs, ... }: {
-    imports = [
-      "${
-        fetchTarball
-        "https://github.com/msteen/nixos-vscode-server/tarball/master"
-      }/modules/vscode-server/home.nix"
-    ];
-
     home = {
       stateVersion = "23.11";
       packages = with unstable.pkgs; [
@@ -179,7 +174,5 @@ in
 
       tmux = { enable = true; };
     };
-
-    services.vscode-server.enable = true;
   };
 }

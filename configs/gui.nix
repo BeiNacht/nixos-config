@@ -21,7 +21,6 @@ in
     gparted
     libsecret
     gnome.simple-scan
-    telegram-desktop
   ];
 
   programs = {
