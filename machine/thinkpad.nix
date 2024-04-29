@@ -8,15 +8,13 @@ in
     [
       <nixos-hardware/lenovo/thinkpad/x1-extreme>
       /etc/nixos/hardware-configuration.nix
-      ../configs/gui.nix
-      ../configs/docker.nix
-      ../configs/libvirt.nix
       ../configs/common.nix
+      ../configs/docker.nix
+      ../configs/gui.nix
+      ../configs/libvirt.nix
+      ../configs/plasma.nix
+      ../configs/user-gui.nix
       ../configs/user.nix
-      #../configs/user-gui.nix
-      #../configs/user-gui-applications.nix
-      #../configs/bspwm.nix
-      ../configs/pantheon.nix
       <home-manager/nixos>
     ];
 
@@ -176,5 +174,5 @@ in
 
   powerManagement.powertop.enable = true;
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }
