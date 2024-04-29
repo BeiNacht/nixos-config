@@ -26,10 +26,11 @@ in
     keepassxc
     grsync
     virt-manager
+    rustdesk
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
-    services = { syncthing = { enable = true; }; };
+    # services = { syncthing = { enable = true; }; };
 
     programs = {
       vscode = {
