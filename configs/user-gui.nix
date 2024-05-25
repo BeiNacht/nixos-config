@@ -1,11 +1,77 @@
 { config, pkgs, lib, ... }:
-
-with builtins;
 let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in
 {
   imports = [ <home-manager/nixos> ];
+  networking = {
+    firewall.enable = false;
+    networkmanager = {
+      enable = true;
+    };
+  };
+
+  fonts = {
+    enableDefaultPackages = true;
+    fontDir.enable = true;
+
+    packages = with pkgs; [
+      # (nerdfonts.override { fonts = [ "Liberation" ]; })
+      nerdfonts
+      corefonts
+      google-fonts
+      liberation_ttf
+      libertinus
+      gyre-fonts
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      noto-fonts-extra
+
+      open-sans
+      stix-two
+      twemoji-color-font
+    ];
+
+    # fontconfig = {
+    #   enable = true;
+    #   antialias = true;
+    #   defaultFonts = {
+    #     # monospace = [ "Fira Mono" ];
+    #     serif = [ "Linux Libertine" ];
+    #     sansSerif = [ "Open Sans" ];
+    #     emoji = [ "Twitter Color Emoji" ];
+    #   };
+    # };
+  };
+
+  hardware = {
+    bluetooth.enable = true;
+    sane.enable = true;
+  };
+
+  services = {
+    gvfs.enable = true;
+    # mullvad-vpn.enable = true;
+
+    # etesync-dav = {
+    #   enable = true;
+    #   apiUrl = "https://etesync.szczepan.ski/";
+    # };
+  };
+
+  programs = {
+    adb.enable = true;
+    ssh = {
+      startAgent = true;
+    };
+    # dconf.enable = true;
+    # gnupg.agent = {
+    #   enable = true;
+    #   pinentryFlavor = "curses";
+    #   # enableSSHSupport = true;
+    # };
+  };
 
   environment.systemPackages = with unstable.pkgs; [
     xfce.catfish
@@ -14,7 +80,6 @@ in
     espeak-ng
     handbrake
     insomnia
-    libreoffice
     meld
     nextcloud-client
     pinta
@@ -27,11 +92,13 @@ in
     grsync
     virt-manager
     rustdesk
+    glxinfo
+    gparted
+    gnome.simple-scan
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
     # services = { syncthing = { enable = true; }; };
-
     programs = {
       vscode = {
         enable = true;
@@ -44,14 +111,6 @@ in
           hwdec = "auto-safe";
           vo = "gpu";
           profile = "gpu-hq";
-        };
-      };
-
-      git = {
-        extraConfig = {
-          credential.helper = "${
-              pkgs.git.override { withLibsecret = true; }
-            }/bin/git-credential-libsecret";
         };
       };
 

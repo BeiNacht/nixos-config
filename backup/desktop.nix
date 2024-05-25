@@ -9,7 +9,6 @@ in
   imports =
     [
       /etc/nixos/hardware-configuration.nix
-      ../configs/gui.nix
       ../configs/docker.nix
       ../configs/libvirt.nix
       ../configs/common.nix

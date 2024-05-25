@@ -11,7 +11,6 @@ in
     ../configs/common.nix
     ../configs/docker.nix
     ../configs/games.nix
-    ../configs/gui.nix
     ../configs/libvirt.nix
     ../configs/pantheon.nix
     ../configs/user-gui.nix

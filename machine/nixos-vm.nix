@@ -8,7 +8,6 @@ in {
     ../configs/user.nix
     ../configs/docker.nix
     ../configs/pantheon.nix
-    ../configs/gui.nix
     ../configs/user-gui.nix
   ];
 

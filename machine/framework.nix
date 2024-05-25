@@ -4,7 +4,8 @@ let
   be = import ../configs/borg-exclude.nix;
   secrets = import ../configs/secrets.nix;
   wireguard = import ../configs/wireguard.nix;
-in {
+in
+{
   imports = [
     <nixos-hardware/framework/13-inch/12th-gen-intel>
     <home-manager/nixos>
@@ -13,7 +14,6 @@ in {
     ../configs/common.nix
     ../configs/docker.nix
     ../configs/games.nix
-    ../configs/gui.nix
     ../configs/libvirt.nix
     ../configs/plasma.nix
     ../configs/user-gui.nix
@@ -24,20 +24,22 @@ in {
   boot = {
     initrd.systemd.enable = true;
     loader = {
-      #      systemd-boot.enable = true;
-      grub = {
-        enable = true;
-        device = "nodev";
-        useOSProber = true;
-        efiSupport = true;
-      };
+#      grub = {
+#        enable = true;
+#        device = "nodev";
+#        useOSProber = true;
+#        efiSupport = true;
+#      };
+      systemd-boot.enable = true;
       efi = { canTouchEfiVariables = true; };
     };
     plymouth.enable = true;
   };
 
+  nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    intel-vaapi-driver =
+      pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
 
   # nixpkgs.localSystem = {
@@ -45,6 +47,8 @@ in {
   #   gcc.tune = "alderlake";
   #   system = "x86_64-linux";
   # };
+
+  # nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   nix.settings.system-features =
     [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
@@ -77,7 +81,7 @@ in {
     opengl = {
       enable = true;
       driSupport32Bit = true;
-      extraPackages = with pkgs; [ intel-media-driver ];
+      extraPackages = with pkgs; [ intel-media-driver intel-vaapi-driver ];
     };
     pulseaudio.enable = false;
   };
@@ -87,7 +91,18 @@ in {
   # rtkit is optional but recommended
   services = {
     power-profiles-daemon.enable = true;
-    fw-fanctrl.enable = true;
+    colord.enable = true;
+
+    fw-fanctrl = {
+      enable = true;
+      configJsonPath = "/home/alex/nixos-config/config.json";
+    };
+
+    xserver.displayManager.autoLogin = {
+      enable = true;
+      user = "alex";
+    };
+
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -115,6 +130,8 @@ in {
       extraPruneArgs = "--save-space --list --stats";
       exclude = map (x: "/home/alex/" + x) be.borg-exclude;
     };
+
+    tailscale.enable = true;
   };
 
   powerManagement = {
@@ -125,6 +142,8 @@ in {
   systemd.extraConfig = ''
     DefaultTimeoutStopSec=10s
   '';
+
+  # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
   environment.systemPackages = with unstable.pkgs; [
     rustdesk
@@ -149,11 +168,11 @@ in {
   }];
 
   # Partition swapfile is on (after LUKS decryption)
-  boot.resumeDevice = "/dev/disk/by-uuid/e5472308-de8b-4e60-91f4-4e7f194dad76";
+  boot.resumeDevice = "/dev/disk/by-uuid/5549d49d-165e-4a45-973e-6a32a63e31be";
 
   # Resume Offset is offset of swapfile
   # https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
-  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=40241152" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=190937088" ];
 
   # Suspend-then-hibernate everywhere
   services.logind = {
@@ -164,7 +183,7 @@ in {
       IdleActionSec=2m
     '';
   };
-  systemd.sleep.extraConfig = "HibernateDelaySec=60m";
+  systemd.sleep.extraConfig = "HibernateDelaySec=20m";
 
   home-manager.users.alex.services.barrier.client = {
     enable = true;

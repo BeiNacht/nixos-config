@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }:
-
 {
   virtualisation = {
     libvirtd = {
@@ -10,7 +9,7 @@
         ovmf = {
           enable = true;
           packages = [
-            (pkgs.unstable.OVMF.override {
+            (pkgs.OVMF.override {
               secureBoot = true;
               tpmSupport = true;
             }).fd

@@ -32,14 +32,14 @@
   };
 
   systemd.user.services = {
-    monitor = {
-      description = "indicator-monitor";
-      wantedBy = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
-      serviceConfig = {
-        ExecStart = "${pkgs.monitor}/bin/com.github.stsdc.monitor";
-      };
-    };
+    # monitor = {
+    #   description = "indicator-monitor";
+    #   wantedBy = [ "graphical-session.target" ];
+    #   partOf = [ "graphical-session.target" ];
+    #   serviceConfig = {
+    #     ExecStart = "${pkgs.monitor}/bin/com.github.stsdc.monitor";
+    #   };
+    # };
 
     indicatorapp = {
       description = "indicator-application-gtk3";

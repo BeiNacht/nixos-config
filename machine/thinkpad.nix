@@ -10,7 +10,6 @@ in
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/docker.nix
-      ../configs/gui.nix
       ../configs/libvirt.nix
       ../configs/plasma.nix
       ../configs/user-gui.nix
@@ -99,7 +98,7 @@ in
   };
 
   # Enable sound.
-  
+
   # hardware.pulseaudio = {
   #   enable = true;
   #   support32Bit = true;

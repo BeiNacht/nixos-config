@@ -29,8 +29,12 @@
     gnomeExtensions.blur-my-shell
     gnomeExtensions.vitals
     gnomeExtensions.dash-to-dock
-    gnomeExtensions.syncthing-indicator
+    # gnomeExtensions.syncthing-indicator
     pantheon.elementary-icon-theme
+
+    flat-remix-icon-theme
+    flat-remix-gtk
+    flat-remix-gnome
   ];
 
   environment.gnome.excludePackages = (with pkgs; [ gnome-tour ])

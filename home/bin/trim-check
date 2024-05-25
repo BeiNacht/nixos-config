@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+#
+# This script is provided "as is" without warranty of any kind, either expressed or implied, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+#
+# License GPL2
+#
+# by desgua 2014/04/29
+
+function CLEAN {
+cd "$pasta"
+[ -f test-trim-by-desgua ] && rm test-trim-by-desgua && echo "Temp file removed"
+echo "Goodbye"
+exit 0
+}
+
+trap 'echo ; echo "Aborted." ; CLEAN; echo ; exit 0' INT HUP
+
+if [[ "$(echo $USER)" != "root" ]]; then
+
+read -n 1 -p 'Become root? [Y/n]' a
+    if [[ $a == "Y" || $a == "y" || $a == "" ]]; then
+        sudo $0 $1
+        exit 0
+    else
+        echo "
+        This script needs root privilege.
+        "
+        exit 1
+
+    fi
+
+fi
+
+
+name=$(echo $0 | sed 's/.*\///')
+if [ $# -ne 1 ]; then
+
+echo "
+Usage: $name /folder/to/test/
+
+"
+exit 1
+fi
+
+pasta=$1
+
+read -n 1 -p 'Use fstrim? [y/N]' a
+if [[ $a == "Y" || $a == "y" ]]; then
+    fs=1
+fi
+
+method=
+while [[ "$method" != "1" && "$method" != "2" ]]; do
+read -n 1 -s -p 'Choose a method:
+[1] hdparm (will fail in LUKS on LVM)
+[2] filefrag (warning: you may have to force quit - close the terminal - in some cases of success trim if you see an output that never ends)
+' method
+done
+
+function SDATEST {
+disk=$(fdisk -l | grep /dev/nvme0n1)
+if [ "$disk" == "" ]; then
+echo "
+fdisk did not found /dev/nvme0n1
+"
+exit 1
+fi
+}
+
+function TEST {
+echo "Entrying /" ; echo
+cd $pasta
+echo "Creating the file test-trim-by-desgua at $pasta" ; echo
+dd if=/dev/urandom of=test-trim-by-desgua count=10 bs=512k
+echo "Syncing and sleeping 2 seconds." ; echo
+sync
+sleep 2
+
+hdparm --fibmap test-trim-by-desgua
+lbab=$(hdparm --fibmap test-trim-by-desgua | tail -n1 | awk '{ print $2 }')
+
+echo "As you can see, the file was created and its LBA begins at $lbab" ; echo
+
+echo "Syncing and sleeping 2 seconds." ; echo
+sync
+sleep 2
+
+echo "Removing file test-trim-by-desgua" ; echo
+rm test-trim-by-desgua
+
+trap 'echo ; echo ; echo "Aborted." ; echo ; exit 0' INT
+echo "Syncing and sleeping 2 seconds." ; echo
+sync
+sleep 2
+
+if [[ "$fs" == "1" ]]; then
+    echo "fstrim $pasta && sleep 2" ; echo
+    fstrim $pasta
+    sleep 2
+fi
+
+echo "This is readed from sector $lbab: "
+hdparm --read-sector $lbab /dev/nvme0n1
+
+pass=$(hdparm --read-sector $lbab /dev/nvme0n1 | grep "0000 0000 0000 0000")
+
+if [[ $pass == "" ]]; then
+    echo "
+Trim failed...
+You should see only 0000 0000 0000 0000 ...
+"
+else
+    echo "Success!!!"
+fi
+exit 0
+
+}
+
+function LUKSTEST {
+# Reference: https://unix.stackexchange.com/questions/85865/trim-with-lvm-and-dm-crypt#
+echo 1 > /proc/sys/vm/drop_caches
+cd $pasta
+echo "Creating a \"yes\" file."
+yes | dd iflag=fullblock bs=1M count=1 of=test-trim-by-desgua
+
+#position=`filefrag -s -v test-trim-by-desgua | grep "eof" | awk '{ print $3 }'`
+position=`filefrag -s -v test-trim-by-desgua | grep "eof" | sed 's| ||g ; s|.*255:|| ; s|\.\..*||'`
+[[ "$position" == "" ]] && echo "Could not find the position of the file. Are you on a LUKS on LVM?" && CLEAN;
+
+device=`df test-trim-by-desgua | grep "dev/" | awk '{ print $1 }'`
+
+yes=`dd bs=4096 skip=$position count=256 if=$device | hexdump -C`
+
+echo "In the next line you should see a pattern like:
+00000000  79 0a 79 0a 79 0a 79 0a  79 0a 79 0a 79 0a 79 0a  |y.y.y.y.y.y.y.y.|
+$yes
+"
+
+if [[ "`echo "$yes" | grep "y.y.y"`" == "" ]]; then
+    echo "The pattern could not be checked. Something went wrong. Exiting."
+    CLEAN;
+else
+    echo "Pattern confirmed."
+fi
+
+echo "Removing the temp file."
+rm test-trim-by-desgua
+
+echo "Syncing."
+sync
+sleep 1
+
+if [[ "$fs" == "1" ]]; then
+    echo "fstrim -v $pasta && sleep 2" ; echo
+    fstrim -v $pasta
+    sleep 2
+fi
+
+# Drop cache
+echo 1 > /proc/sys/vm/drop_caches
+
+echo "In the next line you should **NOT** see a yes pattern like:
+00000000  79 0a 79 0a 79 0a 79 0a  79 0a 79 0a 79 0a 79 0a  |y.y.y.y.y.y.y.y.|
+If you see, then trim is not working:
+`dd bs=4096 skip=$position count=256 if=$device | hexdump -C`"
+
+yes=`dd bs=4096 skip=$position count=256 if=$device | hexdump -C`
+if [[ "`echo "$yes" | grep "y.y.y"`" != "" ]]; then
+    echo "TRIM not working."
+else
+    echo "TRIM is working!"
+fi
+CLEAN;
+}
+
+if [[ "$method" == "1" ]]; then
+    SDATEST;
+    TEST;
+elif [[ "$method" == "2" ]]; then
+    LUKSTEST;
+fi
+exit 0

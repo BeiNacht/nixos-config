@@ -15,7 +15,6 @@ in
     [
       <nixos-hardware/lenovo/thinkpad/x1-extreme>
       /etc/nixos/hardware-configuration.nix
-      ../configs/gui.nix
       ../configs/docker.nix
       ../configs/libvirt.nix
       ../configs/common.nix
