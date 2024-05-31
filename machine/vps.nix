@@ -6,7 +6,10 @@ let
 in
 {
   imports =
-    [ /etc/nixos/hardware-configuration.nix ../configs/common-server.nix ];
+    [
+      /etc/nixos/hardware-configuration.nix
+      ../configs/common-server.nix
+    ];
 
   boot.loader.grub = {
     enable = true;
@@ -22,6 +25,10 @@ in
     #     "address" = "gw.contabo.net";
     #     "interface" = "ens18";
     #    };
+    defaultGateway6 = {
+      address = "fe80::1";
+      interface = "ens18";
+    };
     interfaces.ens18 = {
       useDHCP = true;
       #      ipv4.addresses = [ {
@@ -107,10 +114,12 @@ in
       allowPing = true;
       allowedTCPPorts = [
         80 # web
+        222 # SSH for gitea
         443 # web
         9898 # i2p
         9899
         18080
+        21114 #Rustdesk
         21115 #Rustdesk
         21116 #Rustdesk
         21117 #Rustdesk
@@ -121,6 +130,7 @@ in
       allowedUDPPorts = [
         80 # web
         443 # web
+        3478 # headscale
         9898 # i2p
         21116 # Rustdesk
         51820 # wireguard
@@ -147,15 +157,19 @@ in
     nyx
     mkp224o
     progress
+    headscale
   ];
 
   programs = {
     mtr.enable = true;
     fuse.userAllowOther = true;
+    nix-ld.enable = true;
   };
 
-  security.acme.defaults.email = "webmaster@szczepan.ski";
-  security.acme.acceptTerms = true;
+  security.acme = {
+    defaults.email = "webmaster@szczepan.ski";
+    acceptTerms = true;
+  };
 
   services = {
     nginx = {
@@ -177,6 +191,11 @@ in
 
       virtualHosts = {
         "szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          globalRedirect = "alexander.szczepan.ski";
+        };
+        "ipv6.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
           globalRedirect = "alexander.szczepan.ski";
@@ -204,6 +223,11 @@ in
             };
           };
         };
+        # "nextcloud.ipv6.szczepan.ski" = {
+        #   forceSSL = true;
+        #   enableACME = true;
+        #   globalRedirect = "nextcloud.szczepan.ski";
+        # };
         "firefly.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
@@ -244,10 +268,25 @@ in
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:8091/"; }; };
         };
+        "git.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = { "/" = { proxyPass = "http://127.0.0.1:8084/"; }; };
+        };
         "torrents.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:9091/"; }; };
+        };
+        "headscale.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://127.0.0.1:8088/";
+              proxyWebsockets = true;
+            };
+          };
         };
         "syncthing.szczepan.ski" = {
           forceSSL = true;
@@ -312,6 +351,31 @@ in
       };
     };
 
+    headscale = {
+      enable = true;
+      address = "127.0.0.1";
+      port = 8088;
+      # dns = { baseDomain = "example.com"; };
+      settings = {
+        logtail.enabled = false;
+        server_url = "https://headscale.szczepan.ski";
+        ip_prefixes = [
+          "100.64.0.0/10"
+        ];
+        dns_config = {
+          base_domain = "szczepan.ski";
+          magic_dns = true;
+          domains = [ "headscale.szczepan.ski" ];
+          nameservers = [
+            "1.1.1.1"
+            "9.9.9.9"
+          ];
+        };
+      };
+    };
+
+    tailscale.enable = true;
+
     webdav = {
       enable = true;
       user = "alex";
@@ -353,7 +417,7 @@ in
     };
 
     i2pd = {
-      enable = true;
+      enable = false;
       ifname = "ens18";
       address = "207.180.220.97";
       # TCP & UDP
@@ -412,7 +476,7 @@ in
     };
 
     icecast = {
-      enable = true;
+      enable = false;
       hostname = "254ryojirydttsaealusydhwyjfe2rpschdaduok4czhg45of6ua.b32.i2p";
       listen = {
         port = 13337;
@@ -514,6 +578,7 @@ in
       };
       extraPruneArgs = "--save-space --stats";
       exclude = [
+        "/home/alex/storage"
         "/home/alex/storagebox"
         "/home/alex/docker/jellyfin/data"
         "/home/alex/.cache"
@@ -536,8 +601,21 @@ in
 
   };
 
-  # Limit stack size to reduce memory usage
-  systemd.services.fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
+  systemd.services = {
+    # Limit stack size to reduce memory usage
+    fail2ban.serviceConfig.LimitSTACK = 256 * 1024;
+
+    goaccess = {
+      description = "GoAccess real-time web log analysis";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      script = "${pkgs.gzip}/bin/zcat -f /var/log/nginx/access.* | ${pkgs.goaccess}/bin/goaccess - -o /var/www/goaccess/index.html --log-format='%v %h %^[%d:%t %^]%^\"%r\" %s %b \"%R\" \"%u\"' --real-time-html --ws-url=wss://goaccess.szczepan.ski:443/ws --port 7890 --time-format \"%H:%M:%S\" --date-format \"%d/%b/%Y\"";
+      # serviceConfig = {
+      #   ExecStart = "${pkgs.bash}/bin/bash -c "${pkgs.gzip}/bin/zcat -f /var/log/nginx/access.* | ${pkgs.goaccess}/bin/goaccess -o /var/www/goaccess/index.html --log-format='%v %h %^[%d:%t %^]%^\"%r\" %s %b \"%R\" \"%u\"' --real-time-html --ws-url=wss://goaccess.szczepan.ski:443/ws --port 7890 --time-format \"%H:%M:%S\" --date-format \"%d/%b/%Y\"'";
+      #   # ExecStop = "/bin/kill -9 ${MAINPID}";
+      # };
+    };
+  };
 
   system.stateVersion = "23.11";
 }

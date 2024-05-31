@@ -12,7 +12,6 @@
     docker-compose
     lazydocker
     minikube
-    lazydocker
     dive
   ];
 }
