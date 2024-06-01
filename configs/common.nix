@@ -87,6 +87,7 @@ in {
     lsd
     lsof
     man-pages
+    man-pages-posix
     nethogs
     nil
     nix-du

@@ -16,6 +16,7 @@ in
     ../configs/games.nix
     ../configs/libvirt.nix
     ../configs/plasma.nix
+    # ../configs/pantheon.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     /home/alex/Workspace/fw-fanctrl-nix/service.nix
@@ -98,7 +99,7 @@ in
       configJsonPath = "/home/alex/nixos-config/config.json";
     };
 
-    xserver.displayManager.autoLogin = {
+    displayManager.autoLogin = {
       enable = true;
       user = "alex";
     };
@@ -192,5 +193,5 @@ in
     server = "192.168.0.168:24800";
   };
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 }

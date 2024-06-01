@@ -49,7 +49,7 @@ in {
     home = {
       stateVersion = "23.11";
       packages = with unstable.pkgs; [
-        atop
+        # atop
         btop
         broot
         dfc
@@ -69,6 +69,8 @@ in {
         tealdeer
         unrar
         yt-dlp
+
+        nix-output-monitor
       ];
       sessionPath = [ "$HOME/.npm-packages" "$HOME/.bin" ];
       file = {
