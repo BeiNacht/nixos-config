@@ -47,7 +47,7 @@ in {
 
   home-manager.users.alex = { pkgs, ... }: {
     home = {
-      stateVersion = "23.11";
+      stateVersion = "24.05";
       packages = with unstable.pkgs; [
         # atop
         btop
@@ -135,7 +135,7 @@ in {
 
       zsh = {
         enable = true;
-        enableAutosuggestions = true;
+        autosuggestion.enable = true;
         enableCompletion = true;
         syntaxHighlighting.enable = true;
         oh-my-zsh = {
