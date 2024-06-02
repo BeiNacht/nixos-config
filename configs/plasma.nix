@@ -38,4 +38,9 @@
     #   updateDbusEnvironment = true;
     # };
   };
+
+  environment.systemPackages = with pkgs; [
+    catppuccin-kde
+    sweet-nova
+  ];
 }

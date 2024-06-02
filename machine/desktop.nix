@@ -3,6 +3,7 @@
 let
   secrets = import ../configs/secrets.nix;
   wireguard = import ../configs/wireguard.nix;
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in
 {
   imports = [
@@ -12,7 +13,7 @@ in
     ../configs/docker.nix
     ../configs/games.nix
     ../configs/libvirt.nix
-    ../configs/pantheon.nix
+    ../configs/plasma.nix
     ../configs/user-gui.nix
     ../configs/user.nix
   ];
@@ -25,43 +26,39 @@ in
   #  options = [ "noatime" "discard" ];
   # };
 
-  # nixpkgs.localSystem = {
-  #   gcc.arch = "znver2";
-  #   gcc.tune = "znver2";
-  #   system = "x86_64-linux";
-  # };
+  #  nixpkgs.localSystem = {
+  #    gcc.arch = "znver2";
+  #    gcc.tune = "znver2";
+  #    system = "x86_64-linux";
+  #  };
 
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-znver2" ];
 
+  nixpkgs.config.allowUnfree = true;
+
   boot = {
-   initrd.systemd.enable = true;
+    initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
-      efi = {
-        canTouchEfiVariables = true;
-      };
+      efi = { canTouchEfiVariables = true; };
     };
-
-
-    # loader = {
-    #   grub = {
-    #     enable = true;
-    #     device = "nodev";
-    #     efiSupport = true;
-    #     gfxmodeEfi = "1024x768";
-    #     configurationLimit = 5;
-    #   };
-
-    #   efi.canTouchEfiVariables = true;
-    # };
 
     initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;
 
-    extraModulePackages = with pkgs.linuxPackages_lqx; [ it87 ];
-    kernelModules = [ "it87" "v4l2loopback" ];
-    kernelPackages = pkgs.linuxPackages_lqx;
+    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
+    kernelModules = [ "it87" ];
+    kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
     supportedFilesystems = [ "ntfs" ];
+  };
+
+  systemd.services = {
+    monitor = {
+      description = "AMDGPU Control Daemon";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "multi-user.target" ];
+      serviceConfig = { ExecStart = "${unstable.pkgs.lact}/bin/lact daemon"; };
+    };
   };
 
   networking = {
@@ -89,43 +86,52 @@ in
     keyMap = "us";
   };
 
+  environment.systemPackages = with unstable.pkgs; [
+    rustdesk
+    unigine-valley
+    unigine-superposition
+    lact
+    amdgpu_top
+  ];
+
   hardware = {
+    keyboard.qmk.enable = true;
+    enableAllFirmware = true;
+    xone.enable = true;
     cpu.amd.updateMicrocode = true;
 
+    bluetooth.enable = true;
     opengl = {
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
         rocm-opencl-icd
         rocm-opencl-runtime
-        # amdvlk
+        amdvlk
       ];
-      # extraPackages32 = with pkgs; [
-      #   driversi686Linux.amdvlk
-      # ];
+      extraPackages32 = with pkgs; [
+        driversi686Linux.amdvlk
+      ];
     };
 
     fancontrol = {
       enable = true;
       config = ''
         INTERVAL=10
-        DEVPATH=hwmon2=devices/platform/it87.656
-        DEVNAME=hwmon2=it8665
-        FCTEMPS=hwmon2/pwm3=hwmon2/temp1_input hwmon2/pwm2=hwmon2/temp1_input hwmon2/pwm1=hwmon2/temp1_input
-        FCFANS=hwmon2/pwm3=hwmon2/fan2_input hwmon2/pwm2=hwmon2/fan1_input hwmon2/pwm1=
-        MINTEMP=hwmon2/pwm3=60 hwmon2/pwm2=60 hwmon2/pwm1=60
-        MAXTEMP=hwmon2/pwm3=75 hwmon2/pwm2=75 hwmon2/pwm1=75
-        MINSTART=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
-        MINSTOP=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
-        MINPWM=hwmon2/pwm1=51 hwmon2/pwm2=51 hwmon2/pwm3=51
-        MAXPWM=hwmon2/pwm3=127 hwmon2/pwm2=204
+        DEVPATH=hwmon3=devices/platform/it87.656
+        DEVNAME=hwmon3=it8665
+        FCTEMPS=hwmon3/pwm3=hwmon3/temp1_input hwmon3/pwm2=hwmon3/temp1_input hwmon3/pwm1=hwmon3/temp1_input
+        FCFANS=hwmon3/pwm3=hwmon3/fan2_input hwmon3/pwm2=hwmon3/fan1_input hwmon3/pwm1=
+        MINTEMP=hwmon3/pwm3=60 hwmon3/pwm2=60 hwmon3/pwm1=60
+        MAXTEMP=hwmon3/pwm3=75 hwmon3/pwm2=75 hwmon3/pwm1=75
+        MINSTART=hwmon3/pwm3=51 hwmon3/pwm2=51 hwmon3/pwm1=51
+        MINSTOP=hwmon3/pwm3=51 hwmon3/pwm2=51 hwmon3/pwm1=51
+        MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=51 hwmon3/pwm3=51
+        MAXPWM=hwmon3/pwm3=127 hwmon3/pwm2=204
       '';
     };
 
-    pulseaudio = {
-      enable = true;
-      support32Bit = true;
-    };
+    pulseaudio.enable = false;
   };
 
   sound.enable = true;
@@ -134,10 +140,19 @@ in
     netdata.enable = true;
     printing.enable = true;
     xserver.videoDrivers = [ "amdgpu" ];
-    # xserver.deviceSection = ''
-    #   Option "TearFree" "true"
-    # '';
-    # hardware.xow.enable = true;
+
+    displayManager.autoLogin = {
+      enable = true;
+      user = "alex";
+    };
+
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+
     # borgbackup.jobs.home = rec {
     #   compression = "auto,zstd";
     #   encryption = {
@@ -167,6 +182,5 @@ in
     server = "192.168.0.168:24800";
   };
 
-
-  system.stateVersion = "23.05";
+  system.stateVersion = "24.05";
 }
