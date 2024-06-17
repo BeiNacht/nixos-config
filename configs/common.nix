@@ -3,6 +3,16 @@ let secrets = import ./secrets.nix;
 in {
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
+  programs = {
+    nh = {
+      enable = true;
+      # clean = {
+      #   enable = true;
+      #   extraArgs = "--keep-since 14d --keep 5";
+      # };
+    };
+  };
+
   services = {
     vnstat.enable = true;
     tuptime.enable = true;
@@ -104,7 +114,10 @@ in {
     wget
   ];
 
-  nix.settings = { auto-optimise-store = true; };
+  nix.settings = {
+    auto-optimise-store = true;
+    experimental-features = [ "nix-command" ];
+  };
 
   boot = {
     tmp.useTmpfs = true;

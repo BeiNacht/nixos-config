@@ -23,12 +23,13 @@
         ];
       };
 
-      layout = "us";
+      xkb.layout = "us";
 
-      # Enable touchpad support.
-      libinput.enable = true;
       updateDbusEnvironment = true;
     };
+
+    # Enable touchpad support.
+    libinput.enable = true;
   };
 
   systemd.user.services = {

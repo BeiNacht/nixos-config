@@ -15,8 +15,7 @@ in
     ../configs/docker.nix
     ../configs/games.nix
     ../configs/libvirt.nix
-    ../configs/plasma.nix
-    # ../configs/pantheon.nix
+    ../configs/pantheon.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     /home/alex/Workspace/fw-fanctrl-nix/service.nix
@@ -25,22 +24,18 @@ in
   boot = {
     initrd.systemd.enable = true;
     loader = {
-#      grub = {
-#        enable = true;
-#        device = "nodev";
-#        useOSProber = true;
-#        efiSupport = true;
-#      };
       systemd-boot.enable = true;
       efi = { canTouchEfiVariables = true; };
     };
     plymouth.enable = true;
   };
 
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.packageOverrides = pkgs: {
-    intel-vaapi-driver =
-      pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  nixpkgs.config = {
+    allowUnfree = true;
+    packageOverrides = pkgs: {
+      intel-vaapi-driver =
+        pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+    };
   };
 
   # nixpkgs.localSystem = {
@@ -49,10 +44,7 @@ in
   #   system = "x86_64-linux";
   # };
 
-  # nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
-  nix.settings.system-features =
-    [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
+  nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
 
   networking = {
     hostName = "framework";
@@ -99,10 +91,10 @@ in
       configJsonPath = "/home/alex/nixos-config/config.json";
     };
 
-    displayManager.autoLogin = {
-      enable = true;
-      user = "alex";
-    };
+#    displayManager.autoLogin = {
+#      enable = true;
+#      user = "alex";
+#    };
 
     pipewire = {
       enable = true;
