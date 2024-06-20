@@ -1,6 +1,5 @@
 { config, pkgs, lib, ... }:
-let secrets = import ./secrets.nix;
-in {
+{
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
   programs = {
