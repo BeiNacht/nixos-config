@@ -107,6 +107,7 @@
     parallel
     pciutils
     ruby
+    progress
     unixtools.xxd
     unzip
     usbutils
@@ -119,7 +120,7 @@
   };
 
   boot = {
-    tmp.useTmpfs = true;
+    tmp.useTmpfs = false;
     kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
     kernel.sysctl = { "vm.max_map_count" = 262144; };
