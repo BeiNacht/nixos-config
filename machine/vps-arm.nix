@@ -10,6 +10,13 @@ in
       ../configs/common.nix
       ../configs/docker.nix
       ../configs/user.nix
+
+      ../services/adguardhome.nix
+      ../services/frigate.nix
+      ../services/gitea.nix
+      ../services/nextcloud.nix
+      ../services/rustdesk-server.nix
+      ../services/uptime-kuma.nix
     ];
 
   boot.loader = {
@@ -30,7 +37,7 @@ in
     interfaces.enp7s0 = {
       useDHCP = true;
       ipv6.addresses = [{
-        address = "2a0a:4cc0:1:124c::";
+        address = "2a0a:4cc0:1:124c::1";
         prefixLength = 64;
       }];
     };
@@ -38,26 +45,16 @@ in
       allowPing = true;
       allowedTCPPorts = [
         80 # web
-        222 # SSH for gitea
+        # 222 # SSH for gitea
         443 # web
-        9898 # i2p
-        9899
-        18080
-        21114 #Rustdesk
-        21115 #Rustdesk
-        21116 #Rustdesk
-        21117 #Rustdesk
-        21118 #Rustdesk
-        21119 #Rustdesk
-        22000 # syncthing
+        # 9898 # i2p
       ];
       allowedUDPPorts = [
         80 # web
         443 # web
         3478 # headscale
-        9898 # i2p
-        21116 # Rustdesk
-        51820 # wireguard
+        # 9898 # i2p
+        # 51820 # wireguard
       ];
     };
   };
@@ -66,8 +63,6 @@ in
     goaccess
     xd
     nyx
-    mkp224o
-    progress
     headscale
   ];
 
@@ -80,6 +75,8 @@ in
     defaults.email = "webmaster@szczepan.ski";
     acceptTerms = true;
   };
+
+  # environment.etc."nextcloud-admin-pass".text = "PWD";
 
   services = {
     nginx = {
@@ -100,38 +97,24 @@ in
       '';
 
       virtualHosts = {
-        "git.v220240679185274666.nicesrv.de" = {
+        ${config.services.gitea.settings.server.DOMAIN} = {
           forceSSL = true;
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:3001/"; }; };
         };
-      };
-    };
 
-    postgresql = {
-      enable = true;
-      ensureDatabases = [ config.services.gitea.user ];
-      ensureUsers = [{
-        name = config.services.gitea.database.user;
-        ensureDBOwnership = true;
-        # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGES";
-      }];
-    };
-
-    gitea = {
-      enable = true;
-      appName = "My awesome Gitea server"; # Give the site a name
-      database = {
-        type = "postgres";
-        password = "REMOVED_OLD_PASSWORD_FROM_HISTORY";
-      };
-      settings = {
-        server = {
-          DOMAIN = "git.v220240679185274666.nicesrv.de";
-          ROOT_URL = "https://git.v220240679185274666.nicesrv.de/";
-          HTTP_PORT = 3001;
+        ${config.services.nextcloud.hostName} = {
+          forceSSL = true;
+          enableACME = true;
         };
-        service.DISABLE_REGISTRATION = true;
+
+        ${config.services.adguardhome.settings.tls.server_name} = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = { proxyPass = "https://127.0.0.1:3003/"; };
+          };
+        };
       };
     };
 
