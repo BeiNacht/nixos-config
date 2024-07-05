@@ -91,7 +91,7 @@ in
     keepassxc
     grsync
     virt-manager
-    rustdesk
+    rustdesk-flutter
     glxinfo
     gparted
     gnome.simple-scan

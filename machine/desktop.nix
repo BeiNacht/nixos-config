@@ -87,7 +87,6 @@ in
   };
 
   environment.systemPackages = with unstable.pkgs; [
-    rustdesk
     unigine-valley
     unigine-superposition
     lact
