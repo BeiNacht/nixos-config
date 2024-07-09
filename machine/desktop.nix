@@ -18,14 +18,6 @@ in
     ../configs/user.nix
   ];
 
-  # fileSystems."/".options = [ "noatime" "discard" ];
-  # fileSystems."/boot".options = [ "noatime" "discard" ];
-  # fileSystems."/mnt/second" = {
-  #  device = "/dev/disk/by-uuid/49c04c91-752d-4dff-b4d9-40a0b9a7bf7c";
-  #  fsType = "ext4";
-  #  options = [ "noatime" "discard" ];
-  # };
-
   #  nixpkgs.localSystem = {
   #    gcc.arch = "znver2";
   #    gcc.tune = "znver2";
@@ -46,7 +38,7 @@ in
     initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;
 
-    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
+    extraModulePackages = with pkgs.linuxPackages; [ it87 zenpower ];
     kernelModules = [ "it87" ];
     kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
     supportedFilesystems = [ "ntfs" ];
@@ -72,7 +64,7 @@ in
           publicKey = wireguard.wireguard-vps-public;
           presharedKey = secrets.wireguard-preshared;
           allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "szczepan.ski:51820";
+          endpoint = "old.szczepan.ski:51820";
           persistentKeepalive = 25;
         }];
       };
@@ -103,14 +95,14 @@ in
     opengl = {
       driSupport = true;
       driSupport32Bit = true;
-      extraPackages = with pkgs; [
-        rocm-opencl-icd
-        rocm-opencl-runtime
-        amdvlk
-      ];
-      extraPackages32 = with pkgs; [
-        driversi686Linux.amdvlk
-      ];
+      # extraPackages = with pkgs; [
+      #   rocm-opencl-icd
+      #   rocm-opencl-runtime
+      #   amdvlk
+      # ];
+      # extraPackages32 = with pkgs; [
+      #   driversi686Linux.amdvlk
+      # ];
     };
 
     fancontrol = {

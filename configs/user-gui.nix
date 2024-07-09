@@ -1,14 +1,10 @@
 { config, pkgs, lib, ... }:
-let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in
-{
+let unstable = import <nixos-unstable> { config.allowUnfree = true; };
+in {
   imports = [ <home-manager/nixos> ];
   networking = {
     firewall.enable = false;
-    networkmanager = {
-      enable = true;
-    };
+    networkmanager = { enable = true; };
   };
 
   fonts = {
@@ -62,9 +58,7 @@ in
 
   programs = {
     adb.enable = true;
-    ssh = {
-      startAgent = true;
-    };
+    ssh = { startAgent = true; };
     # dconf.enable = true;
     # gnupg.agent = {
     #   enable = true;
@@ -94,7 +88,7 @@ in
     rustdesk-flutter
     glxinfo
     gparted
-    gnome.simple-scan
+    simple-scan
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
