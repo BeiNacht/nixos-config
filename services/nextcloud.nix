@@ -1,6 +1,15 @@
 { config, lib, pkgs, ... }:
 {
   services = {
+    nginx = {
+      virtualHosts = {
+        ${config.services.nextcloud.hostName} = {
+          forceSSL = true;
+          enableACME = true;
+        };
+      };
+    };
+
     postgresql = {
       enable = true;
       ensureDatabases = [
@@ -17,7 +26,7 @@
 
     nextcloud = {
       enable = true;
-      hostName = "nextcloud.v220240679185274666.nicesrv.de";
+      hostName = "nextcloud.szczepan.ski";
 
       # Need to manually increment with every major upgrade.
       package = pkgs.nextcloud29;
@@ -58,12 +67,26 @@
           previewgenerator
           tasks
           unroundedcorners;
+        # user_migration = pkgs.fetchNextcloudApp {
+        #   sha256 = "sha256-OwALAM/WPJ4gXHQado0njfJL+ciDsvfbPjqGWk23Pm8=";
+        #   url = "https://github.com/nextcloud-releases/user_migration/releases/download/v6.0.0/user_migration-v6.0.0.tar.gz";
+        #   license = "agpl3Plus";
+        # };
+      };
+
+      phpOptions = {
+        "opcache.interned_strings_buffer" = "64";
       };
 
       settings = {
         overwriteProtocol = "https";
         default_phone_region = "DE";
         log_type = "file";
+        "memories.exiftool" = "${lib.getExe pkgs.exiftool}";
+        "memories.vod.ffmpeg" = "${lib.getExe pkgs.ffmpeg-headless}";
+        "memories.vod.ffprobe" = "${pkgs.ffmpeg-headless}/bin/ffprobe";
+        "overwrite.cli.url" = "${config.services.nextcloud.hostName}";
+        "maintenance_window_start" = "1";
       };
 
       config = {
@@ -72,5 +95,9 @@
         adminpassFile = "/var/nextcloud-admin-pass";
       };
     };
+  };
+
+  systemd.services.nextcloud-cron = {
+    path = [ pkgs.perl ];
   };
 }

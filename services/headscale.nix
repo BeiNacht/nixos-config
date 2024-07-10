@@ -1,6 +1,24 @@
 { config, lib, pkgs, ... }:
 {
+  environment.systemPackages = with pkgs; [ headscale ];
+
   services = {
+    nginx = {
+      virtualHosts = {
+        # ${config.services.headscale.settings.dns_config.domains} = {
+        "headscale.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://127.0.0.1:8088/";
+              proxyWebsockets = true;
+            };
+          };
+        };
+      };
+    };
+
     headscale = {
       enable = true;
       address = "127.0.0.1";
