@@ -4,20 +4,21 @@ let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in
 {
-  imports =
-    [
-      /etc/nixos/hardware-configuration.nix
-      ../configs/common.nix
-      ../configs/docker.nix
-      ../configs/user.nix
+  imports = [
+    /etc/nixos/hardware-configuration.nix
+    ../configs/common.nix
+    ../configs/docker.nix
+    ../configs/user.nix
 
-      ../services/adguardhome.nix
-      ../services/frigate.nix
-      ../services/gitea.nix
-      ../services/nextcloud.nix
-      ../services/rustdesk-server.nix
-      ../services/uptime-kuma.nix
-    ];
+    ../services/adguardhome.nix
+    ../services/frigate.nix
+    ../services/gitea.nix
+    ../services/nextcloud.nix
+    ../services/rustdesk-server.nix
+    ../services/uptime-kuma.nix
+    ../services/headscale.nix
+    ../services/goaccess.nix
+  ];
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -97,17 +98,6 @@ in
       '';
 
       virtualHosts = {
-        ${config.services.gitea.settings.server.DOMAIN} = {
-          forceSSL = true;
-          enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:3001/"; }; };
-        };
-
-        ${config.services.nextcloud.hostName} = {
-          forceSSL = true;
-          enableACME = true;
-        };
-
         ${config.services.adguardhome.settings.tls.server_name} = {
           forceSSL = true;
           enableACME = true;
@@ -115,6 +105,18 @@ in
             "/" = { proxyPass = "https://127.0.0.1:3003/"; };
           };
         };
+
+        "homeassistant.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://mini.main.szczepan.ski:8123/";
+              proxyWebsockets = true;
+            };
+          };
+        };
+
       };
     };
 

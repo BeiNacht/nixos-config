@@ -1,6 +1,16 @@
 { config, lib, pkgs, ... }:
 {
   services = {
+    nginx = {
+      virtualHosts = {
+        ${config.services.gitea.settings.server.DOMAIN} = {
+          forceSSL = true;
+          enableACME = true;
+          locations = { "/" = { proxyPass = "http://127.0.0.1:3001/"; }; };
+        };
+      };
+    };
+
     postgresql = {
       enable = true;
       ensureDatabases = [
@@ -23,8 +33,8 @@
       };
       settings = {
         server = {
-          DOMAIN = "git.v220240679185274666.nicesrv.de";
-          ROOT_URL = "https://git.v220240679185274666.nicesrv.de/";
+          DOMAIN = "git.szczepan.ski";
+          ROOT_URL = "https://git.szczepan.ski/";
           HTTP_PORT = 3001;
           HTTP_ADDR = "127.0.0.1";
         };
