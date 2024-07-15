@@ -2,6 +2,7 @@
 
 let
   secrets = import ../configs/secrets.nix;
+  be = import ../configs/borg-exclude.nix;
   wireguard = import ../configs/wireguard.nix;
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in
@@ -35,13 +36,14 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
-    initrd.kernelModules = [ "amdgpu" ];
+    # initrd.kernelModules = [ "amdgpu" ];
     plymouth.enable = true;
 
     extraModulePackages = with pkgs.linuxPackages; [ it87 zenpower ];
-    kernelModules = [ "it87" ];
+    kernelModules = [ "it87" "zenpower" ];
     kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
     supportedFilesystems = [ "ntfs" ];
+    blacklistedKernelModules = [ "k10temp" ];
   };
 
   systemd.services = {
@@ -56,19 +58,19 @@ in
   networking = {
     hostName = "desktop";
     useDHCP = false;
-    wireguard.interfaces = {
-      wg0 = {
-        ips = [ "10.100.0.2/24" ];
-        privateKey = secrets.wireguard-desktop-private;
-        peers = [{
-          publicKey = wireguard.wireguard-vps-public;
-          presharedKey = secrets.wireguard-preshared;
-          allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "old.szczepan.ski:51820";
-          persistentKeepalive = 25;
-        }];
-      };
-    };
+    # wireguard.interfaces = {
+    #   wg0 = {
+    #     ips = [ "10.100.0.2/24" ];
+    #     privateKey = secrets.wireguard-desktop-private;
+    #     peers = [{
+    #       publicKey = wireguard.wireguard-vps-public;
+    #       presharedKey = secrets.wireguard-preshared;
+    #       allowedIPs = [ "10.100.0.0/24" ];
+    #       endpoint = "old.szczepan.ski:51820";
+    #       persistentKeepalive = 25;
+    #     }];
+    #   };
+    # };
   };
 
   time.timeZone = "Europe/Berlin";
@@ -83,6 +85,8 @@ in
     unigine-superposition
     lact
     amdgpu_top
+    python3
+    python311Packages.tkinter
   ];
 
   hardware = {
@@ -109,16 +113,16 @@ in
       enable = true;
       config = ''
         INTERVAL=10
-        DEVPATH=hwmon3=devices/platform/it87.656
-        DEVNAME=hwmon3=it8665
-        FCTEMPS=hwmon3/pwm3=hwmon3/temp1_input hwmon3/pwm2=hwmon3/temp1_input hwmon3/pwm1=hwmon3/temp1_input
-        FCFANS=hwmon3/pwm3=hwmon3/fan2_input hwmon3/pwm2=hwmon3/fan1_input hwmon3/pwm1=
-        MINTEMP=hwmon3/pwm3=60 hwmon3/pwm2=60 hwmon3/pwm1=60
-        MAXTEMP=hwmon3/pwm3=75 hwmon3/pwm2=75 hwmon3/pwm1=75
-        MINSTART=hwmon3/pwm3=51 hwmon3/pwm2=51 hwmon3/pwm1=51
-        MINSTOP=hwmon3/pwm3=51 hwmon3/pwm2=51 hwmon3/pwm1=51
-        MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=51 hwmon3/pwm3=51
-        MAXPWM=hwmon3/pwm3=127 hwmon3/pwm2=204
+        DEVPATH=hwmon2=devices/platform/it87.656
+        DEVNAME=hwmon2=it8665
+        FCTEMPS=hwmon2/pwm3=hwmon2/temp1_input hwmon2/pwm2=hwmon2/temp1_input hwmon2/pwm1=hwmon2/temp1_input
+        FCFANS=hwmon2/pwm3=hwmon2/fan2_input hwmon2/pwm2=hwmon2/fan1_input hwmon2/pwm1=
+        MINTEMP=hwmon2/pwm3=60 hwmon2/pwm2=60 hwmon2/pwm1=60
+        MAXTEMP=hwmon2/pwm3=75 hwmon2/pwm2=75 hwmon2/pwm1=75
+        MINSTART=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
+        MINSTOP=hwmon2/pwm3=51 hwmon2/pwm2=51 hwmon2/pwm1=51
+        MINPWM=hwmon2/pwm1=51 hwmon2/pwm2=51 hwmon2/pwm3=51
+        MAXPWM=hwmon2/pwm3=127 hwmon2/pwm2=204
       '';
     };
 
@@ -128,9 +132,10 @@ in
   sound.enable = true;
 
   services = {
+    power-profiles-daemon.enable = true;
     netdata.enable = true;
     printing.enable = true;
-    xserver.videoDrivers = [ "amdgpu" ];
+    # xserver.videoDrivers = [ "amdgpu" ];
 
     displayManager.autoLogin = {
       enable = true;
@@ -144,26 +149,28 @@ in
       pulse.enable = true;
     };
 
-    # borgbackup.jobs.home = rec {
-    #   compression = "auto,zstd";
-    #   encryption = {
-    #     mode = "repokey-blake2";
-    #     passphrase = secrets.borg-key;
-    #   };
-    #   extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-    #   environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_rsa";
-    #   paths = "/home/alex";
-    #   repo = secrets.borg-repo;
-    #   startAt = "daily";
-    #   user = "alex";
-    #   prune.keep = {
-    #     daily = 7;
-    #     weekly = 4;
-    #     monthly = 6;
-    #   };
-    #   extraPruneArgs = "--save-space --list --stats";
-    #   exclude = map (x: paths + "/" + x) be.borg-exclude;
-    # };
+    tailscale.enable = true;
+
+    borgbackup.jobs.home = rec {
+      compression = "auto,zstd";
+      encryption = {
+        mode = "repokey-blake2";
+        passphrase = secrets.borg-key;
+      };
+      extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
+      environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_ed25519";
+      paths = "/home/alex";
+      repo = secrets.borg-repo;
+      startAt = "daily";
+      user = "alex";
+      prune.keep = {
+        daily = 7;
+        weekly = 4;
+        monthly = 6;
+      };
+      extraPruneArgs = "--save-space --list --stats";
+      exclude = map (x: paths + "/" + x) be.borg-exclude;
+    };
   };
 
   home-manager.users.alex.services.barrier.client = {
