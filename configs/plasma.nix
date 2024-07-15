@@ -5,7 +5,7 @@
   };
 
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    # plasma-browser-integration
+    plasma-browser-integration
     konsole
     oxygen
     kate
@@ -17,7 +17,10 @@
     desktopManager.plasma6.enable = true;
     displayManager = {
       defaultSession = "plasmax11";
-      sddm = { enable = true; };
+      sddm = {
+        enable = true;
+        # wayland.enable = true;
+      };
     };
 
     xserver = {
