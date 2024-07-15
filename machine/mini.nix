@@ -30,8 +30,12 @@ in {
     hostName = "mini";
     useDHCP = false;
     firewall = { enable = false; };
-    interfaces.enp3s0.useDHCP = true;
-    interfaces.wlp0s20u1u1.useDHCP = true;
+    interfaces = {
+      enp3s0.useDHCP = true;
+      wlp0s20u1u1.useDHCP = true;
+    };
+    
+    nftables.enable = true;
     wireguard.interfaces = {
       wg0 = {
         ips = [ "10.100.0.3/24" ];
@@ -41,7 +45,7 @@ in {
           publicKey = secrets.wireguard-vps-public;
           presharedKey = secrets.wireguard-preshared;
           allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "207.180.220.97:51820";
+          endpoint = "[2a02:c207:3008:1547::1]:51820";
           persistentKeepalive = 25;
         }];
 
@@ -56,11 +60,11 @@ in {
       };
     };
 
-    nat = {
-      enable = true;
-      externalInterface = "wlp0s20u1u1";
-      internalInterfaces = [ "wg0" ];
-    };
+    # nat = {
+    #   enable = true;
+    #   externalInterface = "enp3s0";
+    #   internalInterfaces = [ "tailscale0" ];
+    # };
 
     wireless = {
       enable = true;
@@ -88,15 +92,6 @@ in {
     #   role = "server";
     # };
 
-    ddclient = {
-      enable = true;
-      verbose = true;
-      server = "dyndns.strato.com/nic/update";
-      username = "beinacht.org";
-      passwordFile = "/home/alex/nixos-config/ddclient.conf";
-      domains = [ "home.beinacht.org" ];
-    };
-
     # printing = {
     #   enable = true;
     #   drivers = [ pkgs.brlaser ];
@@ -115,6 +110,12 @@ in {
     #   publish.enable = true;
     #   publish.userServices = true;
     # };
+
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+      extraUpFlags = "--advertise-exit-node --login-server=https://headscale.szczepan.ski";
+    };
 
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
@@ -140,11 +141,32 @@ in {
 
   };
 
+  # systemd.services.tailscale-autoconnect = {
+  #   description = "Automatic connection to Tailscale";
+
+  #   # make sure tailscale is running before trying to connect to tailscale
+  #   after = [ "network-pre.target" "tailscale.service" ];
+  #   wants = [ "network-pre.target" "tailscale.service" ];
+  #   wantedBy = [ "multi-user.target" ];
+
+  #   # set this service as a oneshot job
+  #   serviceConfig.Type = "oneshot";
+
+  #   # have the job run this shell script
+  #   script = with pkgs; ''
+  #     # wait for tailscaled to settle
+  #     sleep 2
+
+  #     # otherwise authenticate with tailscale
+  #     ${tailscale}/bin/tailscale up --advertise-exit-node --login-server=https://headscale.szczepan.ski
+  #   '';
+  # };
+
   powerManagement = {
     enable = true;
     powertop.enable = true;
-    cpuFreqGovernor = "powersave";
+    # cpuFreqGovernor = "powersave";
   };
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 }

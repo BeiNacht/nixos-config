@@ -1,4 +1,7 @@
 { config, pkgs, lib, ... }:
+# let
+#   unstable = import <nixos-unstable> { config.allowUnfree = true; };
+# in
 {
   virtualisation = {
     libvirtd = {
@@ -10,6 +13,7 @@
           enable = true;
           packages = [
             (pkgs.OVMF.override {
+            # (unstable.pkgs.OVMF.override {
               secureBoot = true;
               tpmSupport = true;
             }).fd
