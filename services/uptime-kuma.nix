@@ -11,7 +11,7 @@
 
     nginx = {
       virtualHosts = {
-        "uptime-kuma.v220240679185274666.nicesrv.de" = {
+        "uptime.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
           locations = { "/" = { proxyPass = "http://127.0.0.1:4000/"; }; };

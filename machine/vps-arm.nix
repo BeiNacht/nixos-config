@@ -1,5 +1,6 @@
 { config, lib, pkgs, ... }:
 let
+  secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in
@@ -77,8 +78,6 @@ in
     acceptTerms = true;
   };
 
-  # environment.etc."nextcloud-admin-pass".text = "PWD";
-
   services = {
     nginx = {
       enable = true;
@@ -139,6 +138,30 @@ in
           };
         };
       };
+    };
+
+    borgbackup.jobs.home = rec {
+      compression = "auto,zstd";
+      encryption = {
+        mode = "repokey-blake2";
+        passphrase = secrets.borg-key;
+      };
+      extraCreateArgs =
+        "--stats --verbose --checkpoint-interval 600 --exclude-caches";
+      environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
+      paths = [ "/home/alex" "/var/lib" ];
+      repo = secrets.borg-repo;
+      startAt = "daily";
+      prune.keep = {
+        daily = 4;
+        weekly = 2;
+        monthly = 2;
+      };
+      extraPruneArgs = "--save-space --stats";
+      exclude = [
+        "/home/alex/mounted"
+        "/home/alex/.cache"
+      ];
     };
   };
 
