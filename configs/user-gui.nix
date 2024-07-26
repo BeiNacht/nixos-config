@@ -68,27 +68,26 @@ in {
   };
 
   environment.systemPackages = with unstable.pkgs; [
-    xfce.catfish
+    alacritty
+    baobab
     czkawka # fslint before
-    discord
-    espeak-ng
+    # discord
+    # espeak-ng
+    gparted
+    grsync
     handbrake
     insomnia
+    keepassxc
     meld
     nextcloud-client
     pinta
-    signal-desktop
-    solaar
-    remmina
-    spotify
-    baobab
-    keepassxc
-    grsync
-    virt-manager
+    # remmina
     rustdesk-flutter
-    glxinfo
-    gparted
     simple-scan
+    # signal-desktop
+    # solaar
+    # spotify
+    virt-manager
   ];
 
   home-manager.users.alex = { pkgs, ... }: {

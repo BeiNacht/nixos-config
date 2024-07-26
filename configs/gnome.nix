@@ -13,35 +13,40 @@
       };
 
       desktopManager.gnome.enable = true;
-      layout = "us";
+      xkb.layout = "us";
 
-      # Enable touchpad support.
-      libinput.enable = true;
       updateDbusEnvironment = true;
     };
+
+    # Enable touchpad support.
+    libinput.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
-    blackbox-terminal
+    # blackbox-terminal
     gnome.gnome-power-manager
     gnome.gnome-tweaks
     gnomeExtensions.appindicator
     gnomeExtensions.blur-my-shell
     gnomeExtensions.vitals
     gnomeExtensions.dash-to-dock
-    # gnomeExtensions.syncthing-indicator
+    gnomeExtensions.caffeine
+    gnomeExtensions.user-themes
+
     pantheon.elementary-icon-theme
 
-    flat-remix-icon-theme
-    flat-remix-gtk
-    flat-remix-gnome
+    # flat-remix-icon-theme
+    # flat-remix-gtk
+    # flat-remix-gnome
+    # juno-theme
+
+    trayscale
   ];
 
-  environment.gnome.excludePackages = (with pkgs; [ gnome-tour ])
+  environment.gnome.excludePackages = (with pkgs; [ gnome-tour gedit ])
     ++ (with pkgs.gnome; [
     cheese # webcam tool
     gnome-music
-    gedit # text editor
     epiphany # web browser
     gnome-characters
     totem # video player

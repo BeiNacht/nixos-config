@@ -94,7 +94,7 @@ in {
         serverAliveInterval = 60;
         forwardAgent = true;
 
-        matchBlocks."szczepan.ski" = { hostname = "207.180.220.97"; };
+        matchBlocks."szczepan.ski" = { hostname = "szczepan.ski"; };
         matchBlocks."mini" = { hostname = "10.100.0.3"; };
         matchBlocks."thinkpad" = { hostname = "10.100.0.8"; };
         matchBlocks."pi" = { hostname = "10.100.0.6"; };
