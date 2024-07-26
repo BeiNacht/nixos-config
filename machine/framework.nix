@@ -15,7 +15,7 @@ in
     ../configs/docker.nix
     ../configs/games.nix
     ../configs/libvirt.nix
-    ../configs/pantheon.nix
+    ../configs/plasma-wayland.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     /home/alex/Workspace/fw-fanctrl-nix/service.nix
@@ -57,7 +57,7 @@ in
           publicKey = wireguard.wireguard-vps-public;
           presharedKey = secrets.wireguard-preshared;
           allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "szczepan.ski:51820";
+          endpoint = "old.szczepan.ski:51820";
           persistentKeepalive = 25;
         }];
       };
@@ -70,6 +70,10 @@ in
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
     cpu.intel.updateMicrocode = true;
+    openrazer = {
+      enable = true;
+      users = [ "alex" ];
+    };
 
     opengl = {
       enable = true;
@@ -86,21 +90,48 @@ in
     power-profiles-daemon.enable = true;
     colord.enable = true;
 
+    fwupd.enable = true;
+
     fw-fanctrl = {
       enable = true;
       configJsonPath = "/home/alex/nixos-config/config.json";
     };
 
-#    displayManager.autoLogin = {
-#      enable = true;
-#      user = "alex";
-#    };
+    # displayManager.autoLogin = {
+    #   enable = true;
+    #   user = "alex";
+    # };
 
     pipewire = {
       enable = true;
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+    };
+
+    samba = {
+      enable = true;
+      securityType = "user";
+      extraConfig = ''
+        workgroup = WORKGROUP
+        server string = server
+        netbios name = server
+        security = user
+        guest account = nobody
+        map to guest = bad user
+        logging = systemd
+        max log size = 50
+      '';
+      shares = {
+        storage = {
+          path = "/home/alex/storage";
+          browseable = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+      };
     };
 
     borgbackup.jobs.home = rec {
@@ -139,8 +170,8 @@ in
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
   environment.systemPackages = with unstable.pkgs; [
-    rustdesk
-    cinnamon.warpinator
+    # rustdesk
+    # cinnamon.warpinator
     psensor
     veracrypt
     gnumake
@@ -151,6 +182,8 @@ in
     # coreboot-toolchain.arm
     intel-gpu-tools
     msr-tools
+    quota
+    homebank
     (import ("/home/alex/Workspace/fw-ectool/default.nix"))
   ];
 
@@ -176,7 +209,7 @@ in
       IdleActionSec=2m
     '';
   };
-  systemd.sleep.extraConfig = "HibernateDelaySec=20m";
+  systemd.sleep.extraConfig = "HibernateDelaySec=60m";
 
   home-manager.users.alex.services.barrier.client = {
     enable = true;

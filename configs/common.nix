@@ -25,18 +25,6 @@
       openFirewall = true;
       extraConfig = "StreamLocalBindUnlink yes";
     };
-    # nextdns = {
-    #   enable = true;
-    #   arguments = [
-    #     "-config"
-    #     secrets.nextdnshash
-    #     "-cache-size"
-    #     "10MB"
-    #     "-listen"
-    #     "127.0.0.1:53"
-    #     "-report-client-info"
-    #   ];
-    # };
 
     dnscrypt-proxy2 = {
       enable = true;
@@ -62,7 +50,7 @@
   };
 
   networking = {
-    nameservers = [ "127.0.0.1" "::1" ];
+    nameservers = [ "127.0.0.1" ];
     # hosts = {
     #   "207.180.220.97" = [ "szczepan.ski" ];
     #   "10.100.0.1" = [ "vps.wg" ];
