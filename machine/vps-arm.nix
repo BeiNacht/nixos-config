@@ -46,20 +46,22 @@ in
     firewall = {
       allowPing = true;
       allowedTCPPorts = [
-        80 # web
-        # 222 # SSH for gitea
-        443 # web
-        # 9898 # i2p
+        53 # adguardhome DNS
+        80 # nginxs
+        443 # nginx
+        853 # adguardhome DoT
       ];
       allowedUDPPorts = [
-        80 # web
-        443 # web
+        53 # adguardhome
+        80 # nginx
+        443 # nginx
+        853 # adguardhome DoT
         3478 # headscale
-        # 9898 # i2p
-        # 51820 # wireguard
       ];
     };
   };
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = with pkgs; [
     goaccess
@@ -79,6 +81,8 @@ in
   };
 
   services = {
+    dnscrypt-proxy2.enable = lib.mkForce false;
+
     nginx = {
       enable = true;
 
@@ -97,11 +101,19 @@ in
       '';
 
       virtualHosts = {
-        ${config.services.adguardhome.settings.tls.server_name} = {
+        "szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
+          globalRedirect = "alexander.szczepan.ski";
+        };
+        "alexander.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          root = "/var/www/alexander.szczepan.ski";
           locations = {
-            "/" = { proxyPass = "https://127.0.0.1:3003/"; };
+            "/" = {
+              tryFiles = "$uri $uri.html $uri/ =404";
+            };
           };
         };
 
@@ -122,6 +134,7 @@ in
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
+      openFirewall = true;
     };
 
     fail2ban = {

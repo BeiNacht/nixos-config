@@ -1,13 +1,24 @@
 { config, lib, pkgs, ... }:
 let
   unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  secrets = import ../configs/secrets.nix;
 in
 {
   services = {
+    nginx = {
+      virtualHosts = {
+        "frigate.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          basicAuth = { alex = secrets.frigate-password; };
+        };
+      };
+    };
+
     frigate = {
       enable = true;
       package = unstable.pkgs.frigate;
-      hostname = "100.64.0.7";
+      hostname = "frigate.szczepan.ski";
 
       settings = {
         logger = {
@@ -24,12 +35,32 @@ in
           num_threads = 4;
         };
 
-        # ffmpeg.hwaccel_args = "preset-vaapi";
-
         cameras = {
-          home = {
+          # home = {
+          #   ffmpeg.inputs = [{
+          #     path = "rtsp://admin:REMOVED@192.168.178.34:554/H.264";
+          #     # input_args = "preset-rtsp-restream";
+          #     # roles = [ "record" "detect" ];
+          #     roles = [ "record" ];
+          #   }];
+
+          #   record = {
+          #     enabled = true;
+          #     retain = {
+          #       days = 7;
+          #       mode = "all";
+          #     };
+          #     # events = {
+          #     #   retain = {
+          #     #     default = 14;
+          #     #   };
+          #     # };
+          #   };
+          # };
+
+          garage = {
             ffmpeg.inputs = [{
-              path = "rtsp://admin:REMOVED@192.168.178.34:554/H.264";
+              path = "rtsp://admin:REMOVED@192.168.178.42:554/H.264";
               # input_args = "preset-rtsp-restream";
               # roles = [ "record" "detect" ];
               roles = [ "record" ];
@@ -41,14 +72,14 @@ in
                 days = 7;
                 mode = "all";
               };
-              # events = {
-              #   retain = {
-              #     default = 14;
-              #   };
-              # };
+              events = {
+                retain = {
+                  default = 14;
+                };
+              };
             };
-
           };
+
         };
       };
     };
