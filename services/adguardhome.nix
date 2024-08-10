@@ -1,29 +1,53 @@
 { config, pkgs, lib, ... }:
+let
+  dns-domain = "dns.szczepan.ski";
+in
 {
+  security.acme.certs.${dns-domain}.postRun =
+    ''
+      cp fullchain.pem /var/lib/AdGuardHome/chain.pem \
+        && cp key.pem /var/lib/AdGuardHome/key.pem \
+        && chown adguardhome:adguardhome /var/lib/AdGuardHome/chain.pem \
+        && chown adguardhome:adguardhome /var/lib/AdGuardHome/key.pem
+    '';
+
   services = {
+    nginx = {
+      virtualHosts = {
+        ${dns-domain} = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = { proxyPass = "https://127.0.0.1:3003/"; };
+          };
+        };
+      };
+    };
+
     adguardhome = {
       enable = true;
-      # mutableSettings = true;
+      mutableSettings = true;
       host = "127.0.0.1";
       port = 3002;
       settings = {
         users = [{
           name = "alex";
-          password = "$2a$10$g5byXeV9EsVAhUdmso5hv.MkeMi0XGKbEejzx0Y4xmucAg1BNGKoi";
+          password = "$2y$10$UhKvi4oztTfULWlIKnQhveORKXpIKCqpawJ/skSBAH96Njn4YDhTC";
         }];
         dns = {
           bind_hots = [
-            "127.0.0.1"
+            "0.0.0.0"
           ];
-          port = 54;
+          port = 53;
           upstream_dns = [
-            # Example config with quad9
-            "9.9.9.9"
-            "149.112.112.112"
-            # Uncomment the following to use a local DNS service (e.g. Unbound)
-            # Additionally replace the address & port as needed
-            # "127.0.0.1:5335"
+            "https://dns.quad9.net/dns-query"
+            "sdns://AgcAAAAAAAAADTk0LjE0MC4xNC4xNDAgmjo09yfeubylEAPZzpw5-PJ92cUkKQHCurGkTmNaAhkNOTQuMTQwLjE0LjE0MAovZG5zLXF1ZXJ5"
+            "tls://one.one.one.one"
+            "tls://dns.google"
           ];
+          cache_size = 4194304;
+          cache_ttl_min = 2400;
+          cache_ttl_max = 84600;
         };
         filtering = {
           protection_enabled = true;
@@ -38,16 +62,16 @@
           enabled = true;
         };
         tls = {
-          server_name = "dns.v220240679185274666.nicesrv.de";
+          server_name = dns-domain;
           enabled = true;
-          allow_unencrypted_doh = true;
+          allow_unencrypted_doh = false;
           port_dns_over_tls = 853;
           port_dns_over_quic = 0;
           port_https = 3003;
           certificate_chain = "";
           private_key = "";
-          certificate_path = "/var/lib/chain.pem";
-          private_key_path = "/var/lib/key.pem";
+          certificate_path = "/var/lib/AdGuardHome/chain.pem";
+          private_key_path = "/var/lib/AdGuardHome/key.pem";
         };
         # The following notation uses map
         # to not have to manually create {enabled = true; url = "";} for every filter
