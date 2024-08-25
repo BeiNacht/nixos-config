@@ -27,7 +27,6 @@ in
       systemd-boot.enable = true;
       efi = { canTouchEfiVariables = true; };
     };
-    plymouth.enable = true;
   };
 
   nixpkgs.config = {
@@ -48,20 +47,20 @@ in
 
   networking = {
     hostName = "framework";
-    wireguard.interfaces = {
-      wg0 = {
-        ips = [ "10.100.0.7/24" ];
-        privateKey = secrets.wireguard-framework-private;
+    # wireguard.interfaces = {
+    #   wg0 = {
+    #     ips = [ "10.100.0.7/24" ];
+    #     privateKey = secrets.wireguard-framework-private;
 
-        peers = [{
-          publicKey = wireguard.wireguard-vps-public;
-          presharedKey = secrets.wireguard-preshared;
-          allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "old.szczepan.ski:51820";
-          persistentKeepalive = 25;
-        }];
-      };
-    };
+    #     peers = [{
+    #       publicKey = wireguard.wireguard-vps-public;
+    #       presharedKey = secrets.wireguard-preshared;
+    #       allowedIPs = [ "10.100.0.0/24" ];
+    #       endpoint = "old.szczepan.ski:51820";
+    #       persistentKeepalive = 25;
+    #     }];
+    #   };
+    # };
   };
 
   time.timeZone = "Europe/Berlin";
@@ -87,6 +86,7 @@ in
   security.rtkit.enable = true;
   # rtkit is optional but recommended
   services = {
+    # foldingathome.enable = true;
     power-profiles-daemon.enable = true;
     colord.enable = true;
 
@@ -170,8 +170,6 @@ in
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
   environment.systemPackages = with unstable.pkgs; [
-    # rustdesk
-    # cinnamon.warpinator
     psensor
     veracrypt
     gnumake
@@ -179,11 +177,15 @@ in
     libftdi
     libusb1
     gcc
-    # coreboot-toolchain.arm
     intel-gpu-tools
     msr-tools
     quota
+    mergerfs
+    snapraid
+    gparted
     homebank
+    # fahviewer
+    # fahcontrol
     (import ("/home/alex/Workspace/fw-ectool/default.nix"))
   ];
 
