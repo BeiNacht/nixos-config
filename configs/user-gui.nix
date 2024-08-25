@@ -69,11 +69,11 @@ in {
 
   environment.systemPackages = with unstable.pkgs; [
     alacritty
-    baobab
+    # baobab
+    # gparted
     czkawka # fslint before
     # discord
     # espeak-ng
-    gparted
     grsync
     handbrake
     insomnia

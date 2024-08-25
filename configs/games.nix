@@ -32,5 +32,6 @@ in
     vulkan-tools
     wine
     winetricks
+    pcsx2
   ];
 }
