@@ -46,15 +46,10 @@ in {
     sane.enable = true;
   };
 
-  services = {
-    gvfs.enable = true;
-    # mullvad-vpn.enable = true;
-
-    # etesync-dav = {
-    #   enable = true;
-    #   apiUrl = "https://etesync.szczepan.ski/";
-    # };
-  };
+  # services = {
+  #   gvfs.enable = true;
+  #   mullvad-vpn.enable = true;
+  # };
 
   programs = {
     adb.enable = true;
@@ -69,24 +64,17 @@ in {
 
   environment.systemPackages = with unstable.pkgs; [
     alacritty
-    # baobab
-    # gparted
     czkawka # fslint before
-    # discord
-    # espeak-ng
     grsync
     handbrake
     insomnia
     keepassxc
     meld
+    exfatprogs
     nextcloud-client
     pinta
-    # remmina
     rustdesk-flutter
     simple-scan
-    # signal-desktop
-    # solaar
-    # spotify
     virt-manager
   ];
 
@@ -109,6 +97,7 @@ in {
 
       kitty = {
         enable = true;
+        package = unstable.pkgs.kitty;
         extraConfig = ''
           enable_audio_bell false
 

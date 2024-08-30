@@ -51,16 +51,10 @@ in {
       stateVersion = "24.05";
       packages = with unstable.pkgs; [
         # atop
-        btop
         broot
-        dfc
-        eza
         ffmpeg
         git-secret
-        glances
-        htop
         kubectl
-        ncdu
         neofetch
         nixfmt-classic
         pstree

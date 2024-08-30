@@ -13,5 +13,7 @@
     lazydocker
     minikube
     dive
+
+    distrobox
   ];
 }

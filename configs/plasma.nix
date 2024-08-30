@@ -23,6 +23,7 @@
       krusader
       ktimetracker
       kdiff3
+      kdiskmark
     ];
   };
 

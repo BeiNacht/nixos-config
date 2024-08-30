@@ -14,7 +14,6 @@ in
       ../configs/plasma.nix
       ../configs/user-gui.nix
       ../configs/user.nix
-      <home-manager/nixos>
     ];
 
   boot = {

@@ -1,4 +1,7 @@
 { config, pkgs, lib, ... }:
+let
+  unstable = import <nixos-unstable> {};
+in
 {
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
@@ -16,6 +19,7 @@
     vnstat.enable = true;
     tuptime.enable = true;
     locate.enable = true;
+
     openssh = {
       enable = true;
       settings = {
@@ -51,28 +55,35 @@
 
   networking = {
     nameservers = [ "127.0.0.1" ];
-    # hosts = {
-    #   "207.180.220.97" = [ "szczepan.ski" ];
-    #   "10.100.0.1" = [ "vps.wg" ];
-    #   "10.100.0.2" = [ "desktop.wg" ];
-    #   "10.100.0.3" = [ "mini.wg" ];
-    # };
     # If using dhcpcd:
     dhcpcd.extraConfig = "nohook resolv.conf";
     # If using NetworkManager:
     networkmanager.dns = "none";
   };
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with unstable.pkgs; [
     ack
     borgbackup
     borgmatic
+
     btrfs-progs
+
     cargo
-    dog
+    # dog # different cat
     doggo # DNS Resolver
+
     du-dust
+    ncdu
+
     duf
+    dfc
+
+    eza
+
+    btop
+    htop
+    glances
+
     gnupg
     gocryptfs
     graphviz
@@ -90,6 +101,7 @@
     nix-du
     nix-tree
     nixpkgs-fmt
+
     nmap
     nodejs
     parallel
@@ -104,7 +116,7 @@
 
   nix.settings = {
     auto-optimise-store = true;
-    experimental-features = [ "nix-command" ];
+    experimental-features = [ "nix-command" "flakes" ];
   };
 
   boot = {
