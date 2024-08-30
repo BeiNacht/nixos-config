@@ -1,7 +1,4 @@
 { config, pkgs, lib, ... }:
-let
-  unstable = import <nixos-unstable> {};
-in
 {
   environment.shells = with pkgs; [ bashInteractive zsh ];
 
@@ -61,7 +58,7 @@ in
     networkmanager.dns = "none";
   };
 
-  environment.systemPackages = with unstable.pkgs; [
+  environment.systemPackages = with pkgs.unstable; [
     ack
     borgbackup
     borgmatic

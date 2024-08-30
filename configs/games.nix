@@ -1,10 +1,4 @@
-{ config, pkgs, lib, ... }:
-let
-  unstable = import <nixos-unstable> {
-    config.allowUnfree = true;
-  };
-  nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
-in
+{ config, pkgs, lib, outputs, ... }:
 {
   programs = {
     gamescope = {
@@ -13,22 +7,23 @@ in
     };
     steam = {
       enable = true;
-      package = unstable.pkgs.steam.override {
-        extraPkgs = pkgs: with unstable.pkgs; [
-          gamescope
-          mangohud
-          libkrb5
-          keyutils
+      package = pkgs.unstable.steam.override {
+        extraPkgs = pkgs: [
+          pkgs.gamescope
+          pkgs.mangohud
+          # libkrb5
+          # keyutils
         ];
       };
     };
   };
 
-  environment.systemPackages = with unstable.pkgs; [
+  environment.systemPackages = with pkgs.unstable; [
     (lutris.override {
-      extraPkgs = pkgs: with unstable.pkgs; [
-        gamescope mangohud
-        ];
+      extraPkgs = pkgs: [
+        pkgs.gamescope
+        pkgs.mangohud
+      ];
     })
 
     heroic
