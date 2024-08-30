@@ -8,7 +8,6 @@ in
 {
   imports = [
     <nixos-hardware/framework/13-inch/12th-gen-intel>
-    <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
     ../configs/browser.nix
     ../configs/common.nix
@@ -212,13 +211,6 @@ in
     '';
   };
   systemd.sleep.extraConfig = "HibernateDelaySec=60m";
-
-  home-manager.users.alex.services.barrier.client = {
-    enable = true;
-    enableCrypto = false;
-    name = "framework";
-    server = "192.168.0.168:24800";
-  };
 
   system.stateVersion = "24.05";
 }
