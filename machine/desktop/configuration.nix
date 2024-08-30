@@ -1,8 +1,8 @@
 { config, pkgs, inputs, outputs, ... }:
 let
-  secrets = import ../configs/secrets.nix;
-  be = import ../configs/borg-exclude.nix;
-  wireguard = import ../configs/wireguard.nix;
+  secrets = import ../../configs/secrets.nix;
+  be = import ../../configs/borg-exclude.nix;
+  wireguard = import ../../configs/wireguard.nix;
 in
 {
   nixpkgs = {
@@ -30,19 +30,19 @@ in
   };
 
   imports = [
-    ./desktop-hardware-configuration.nix
+    ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-    ../configs/browser.nix
-    ../configs/common.nix
-    ../configs/docker.nix
-    ../configs/games.nix
-    ../configs/libvirt.nix
-    ../configs/plasma.nix
-    ../configs/user-gui.nix
-    ../configs/user.nix
+    ../../configs/browser.nix
+    ../../configs/common.nix
+    ../../configs/docker.nix
+    ../../configs/games.nix
+    ../../configs/libvirt.nix
+    ../../configs/plasma.nix
+    ../../configs/user-gui.nix
+    ../../configs/user.nix
   ];
 
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-znver2" ];

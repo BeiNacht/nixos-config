@@ -1,24 +1,34 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, outputs, inputs, ... }:
 let
-  secrets = import ../configs/secrets.nix;
-  be = import ../configs/borg-exclude.nix;
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+  secrets = import ../../configs/secrets.nix;
+  be = import ../../configs/borg-exclude.nix;
 in
 {
-  imports = [
-    /etc/nixos/hardware-configuration.nix
-    ../configs/common.nix
-    ../configs/docker.nix
-    ../configs/user.nix
+  nixpkgs = {
+    overlays = [
+      outputs.overlays.additions
+      outputs.overlays.modifications
+      outputs.overlays.unstable-packages
+    ];
+    config = {
+      allowUnfree = true;
+    };
+  };
 
-    ../services/adguardhome.nix
-    ../services/frigate.nix
-    ../services/gitea.nix
-    ../services/nextcloud.nix
-    ../services/rustdesk-server.nix
-    ../services/uptime-kuma.nix
-    ../services/headscale.nix
-    ../services/goaccess.nix
+  imports = [
+    ./hardware-configuration.nix
+    ../../configs/common.nix
+    ../../configs/docker.nix
+    ../../configs/user.nix
+
+    ../../services/adguardhome.nix
+    ../../services/frigate.nix
+    ../../services/gitea.nix
+    ../../services/nextcloud.nix
+    ../../services/rustdesk-server.nix
+    ../../services/uptime-kuma.nix
+    ../../services/headscale.nix
+    ../../services/goaccess.nix
   ];
 
   boot.loader = {
