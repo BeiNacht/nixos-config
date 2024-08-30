@@ -66,10 +66,18 @@
         };
 
         vps-arm = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          system = "aarch64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./machine/vps-arm/configuration.nix
+          ];
+        };
+
+        mini = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./machine/mini/configuration.nix
           ];
         };
       };
