@@ -12,9 +12,22 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    fw-fanctrl = {
+      url = "github:TamtamHero/fw-fanctrl/packaging/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nixos-hardware, ... } @ inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , nixpkgs-unstable
+    , home-manager
+    , nixos-hardware
+    , fw-fanctrl
+    , ...
+    } @ inputs:
     let
       inherit (self) outputs;
 
@@ -42,6 +55,16 @@
             ./machine/desktop.nix
           ];
         };
+
+        framework = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            fw-fanctrl.nixosModules.default
+            ./machine/framework.nix
+          ];
+        };
+
       };
     };
 }

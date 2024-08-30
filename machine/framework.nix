@@ -1,14 +1,34 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, outputs, inputs, ... }:
 let
-  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
   be = import ../configs/borg-exclude.nix;
   secrets = import ../configs/secrets.nix;
   wireguard = import ../configs/wireguard.nix;
 in
 {
+  nixpkgs = {
+    overlays = [
+      outputs.overlays.additions
+      outputs.overlays.modifications
+      outputs.overlays.unstable-packages
+
+      # You can also add overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+    ];
+    config = {
+      allowUnfree = true;
+    };
+  };
+
   imports = [
-    <nixos-hardware/framework/13-inch/12th-gen-intel>
-    /etc/nixos/hardware-configuration.nix
+    ./framework-hardware-configuration.nix
+    inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
     ../configs/browser.nix
     ../configs/common.nix
     ../configs/docker.nix
@@ -17,7 +37,6 @@ in
     ../configs/plasma-wayland.nix
     ../configs/user-gui.nix
     ../configs/user.nix
-    /home/alex/Workspace/fw-fanctrl-nix/service.nix
   ];
 
   boot = {
@@ -28,13 +47,13 @@ in
     };
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    packageOverrides = pkgs: {
-      intel-vaapi-driver =
-        pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-    };
-  };
+  # nixpkgs.config = {
+  #   allowUnfree = true;
+  #   packageOverrides = pkgs: {
+  #     intel-vaapi-driver =
+  #       pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  #   };
+  # };
 
   # nixpkgs.localSystem = {
   #   gcc.arch = "alderlake";
@@ -46,23 +65,30 @@ in
 
   networking = {
     hostName = "framework";
-    # wireguard.interfaces = {
-    #   wg0 = {
-    #     ips = [ "10.100.0.7/24" ];
-    #     privateKey = secrets.wireguard-framework-private;
-
-    #     peers = [{
-    #       publicKey = wireguard.wireguard-vps-public;
-    #       presharedKey = secrets.wireguard-preshared;
-    #       allowedIPs = [ "10.100.0.0/24" ];
-    #       endpoint = "old.szczepan.ski:51820";
-    #       persistentKeepalive = 25;
-    #     }];
-    #   };
-    # };
   };
 
   time.timeZone = "Europe/Berlin";
+
+  programs.fw-fanctrl = {
+    enable = true;
+    config = {
+      defaultStrategy = "lazy";
+      strategies = {
+        "lazy" = {
+          fanSpeedUpdateFrequency = 5;
+          movingAverageInterval = 30;
+          speedCurve = [
+            { temp = 0; speed = 15; }
+            { temp = 50; speed = 15; }
+            { temp = 65; speed = 25; }
+            { temp = 70; speed = 35; }
+            { temp = 75; speed = 50; }
+            { temp = 85; speed = 100; }
+          ];
+        };
+      };
+    };
+  };
 
   hardware = {
     keyboard.qmk.enable = true;
@@ -90,16 +116,6 @@ in
     colord.enable = true;
 
     fwupd.enable = true;
-
-    fw-fanctrl = {
-      enable = true;
-      configJsonPath = "/home/alex/nixos-config/config.json";
-    };
-
-    # displayManager.autoLogin = {
-    #   enable = true;
-    #   user = "alex";
-    # };
 
     pipewire = {
       enable = true;
@@ -168,7 +184,7 @@ in
 
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
-  environment.systemPackages = with unstable.pkgs; [
+  environment.systemPackages = with pkgs.unstable; [
     psensor
     veracrypt
     gnumake
@@ -185,7 +201,6 @@ in
     homebank
     # fahviewer
     # fahcontrol
-    (import ("/home/alex/Workspace/fw-ectool/default.nix"))
   ];
 
   # Set up deep sleep + hibernation
