@@ -66,7 +66,7 @@
     btrfs-progs
 
     cargo
-    # dog # different cat
+    # dog # cat replace
     doggo # DNS Resolver
 
     du-dust
