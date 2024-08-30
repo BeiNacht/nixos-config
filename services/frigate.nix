@@ -1,6 +1,5 @@
 { config, lib, pkgs, ... }:
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
   secrets = import ../configs/secrets.nix;
 in
 {
@@ -17,7 +16,7 @@ in
 
     frigate = {
       enable = true;
-      package = unstable.pkgs.frigate;
+      package = pkgs.unstable.frigate;
       hostname = "frigate.szczepan.ski";
 
       settings = {

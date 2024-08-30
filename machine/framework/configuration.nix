@@ -1,8 +1,7 @@
 { config, pkgs, lib, outputs, inputs, ... }:
 let
-  be = import ../configs/borg-exclude.nix;
-  secrets = import ../configs/secrets.nix;
-  wireguard = import ../configs/wireguard.nix;
+  be = import ../../configs/borg-exclude.nix;
+  secrets = import ../../configs/secrets.nix;
 in
 {
   nixpkgs = {
@@ -10,16 +9,6 @@ in
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-
-      # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
     ];
     config = {
       allowUnfree = true;
@@ -27,16 +16,16 @@ in
   };
 
   imports = [
-    ./framework-hardware-configuration.nix
+    ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
-    ../configs/browser.nix
-    ../configs/common.nix
-    ../configs/docker.nix
-    ../configs/games.nix
-    ../configs/libvirt.nix
-    ../configs/plasma-wayland.nix
-    ../configs/user-gui.nix
-    ../configs/user.nix
+    ../../configs/browser.nix
+    ../../configs/common.nix
+    ../../configs/docker.nix
+    ../../configs/games.nix
+    ../../configs/libvirt.nix
+    ../../configs/plasma-wayland.nix
+    ../../configs/user-gui.nix
+    ../../configs/user.nix
   ];
 
   boot = {

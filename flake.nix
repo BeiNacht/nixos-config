@@ -52,7 +52,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./machine/desktop.nix
+            ./machine/desktop/configuration.nix
           ];
         };
 
@@ -61,10 +61,17 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             fw-fanctrl.nixosModules.default
-            ./machine/framework.nix
+            ./machine/framework/configuration.nix
           ];
         };
 
+        vps-arm = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./machine/vps-arm/configuration.nix
+          ];
+        };
       };
     };
 }
