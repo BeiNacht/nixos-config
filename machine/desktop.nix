@@ -1,18 +1,41 @@
-{ config, pkgs, lib, ... }:
-
+{ config, pkgs, inputs, outputs, ... }:
 let
   secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
   wireguard = import ../configs/wireguard.nix;
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
 in
 {
+  nixpkgs = {
+    # You can add overlays here
+    overlays = [
+      # Add overlays your own flake exports (from overlays and pkgs dir):
+      outputs.overlays.additions
+      outputs.overlays.modifications
+      outputs.overlays.unstable-packages
+
+      # You can also add overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+    ];
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+    };
+  };
+
   imports = [
-    <nixos-hardware/common/cpu/amd/default.nix>
-    <nixos-hardware/common/cpu/amd/pstate.nix>
-    <nixos-hardware/common/cpu/amd/zenpower.nix>
-    <nixos-hardware/common/pc/ssd>
-    /etc/nixos/hardware-configuration.nix
+    ./desktop-hardware-configuration.nix
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
     ../configs/browser.nix
     ../configs/common.nix
     ../configs/docker.nix
@@ -23,15 +46,7 @@ in
     ../configs/user.nix
   ];
 
-  #  nixpkgs.localSystem = {
-  #    gcc.arch = "znver2";
-  #    gcc.tune = "znver2";
-  #    system = "x86_64-linux";
-  #  };
-
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-znver2" ];
-
-  nixpkgs.config.allowUnfree = true;
 
   boot = {
     initrd.systemd.enable = true;
@@ -50,7 +65,7 @@ in
       description = "AMDGPU Control Daemon";
       wantedBy = [ "multi-user.target" ];
       after = [ "multi-user.target" ];
-      serviceConfig = { ExecStart = "${unstable.pkgs.lact}/bin/lact daemon"; };
+      serviceConfig = { ExecStart = "${pkgs.unstable.lact}/bin/lact daemon"; };
     };
   };
 
@@ -79,7 +94,7 @@ in
     keyMap = "us";
   };
 
-  environment.systemPackages = with unstable.pkgs; [
+  environment.systemPackages = with pkgs.unstable; [
     lact
     amdgpu_top
 

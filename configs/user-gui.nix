@@ -1,7 +1,6 @@
-{ config, pkgs, lib, ... }:
-let unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in {
-  imports = [ <home-manager/nixos> ];
+{ config, pkgs, inputs, home-manager, ... }:
+{
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
   networking = {
     firewall.enable = false;
     networkmanager = { enable = true; };
@@ -62,7 +61,7 @@ in {
     # };
   };
 
-  environment.systemPackages = with unstable.pkgs; [
+  environment.systemPackages = with pkgs.unstable; [
     alacritty
     czkawka # fslint before
     grsync
@@ -83,7 +82,7 @@ in {
     programs = {
       vscode = {
         enable = true;
-        package = unstable.pkgs.vscode;
+        package = pkgs.unstable.vscode;
       };
 
       mpv = {
@@ -97,7 +96,7 @@ in {
 
       kitty = {
         enable = true;
-        package = unstable.pkgs.kitty;
+        package = pkgs.unstable.kitty;
         extraConfig = ''
           enable_audio_bell false
 

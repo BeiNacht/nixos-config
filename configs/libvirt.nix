@@ -1,7 +1,4 @@
-{ config, pkgs, lib, ... }:
-# let
-#   unstable = import <nixos-unstable> { config.allowUnfree = true; };
-# in
+{ pkgs, ... }:
 {
   virtualisation = {
     libvirtd = {

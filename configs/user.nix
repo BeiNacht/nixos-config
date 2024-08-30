@@ -1,9 +1,15 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
   secrets = import ./secrets.nix;
-in {
-  imports = [ <home-manager/nixos> ];
+in
+{
+  imports = [
+    inputs.home-manager.nixosModules.home-manager
+    {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+    }
+  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
@@ -41,15 +47,12 @@ in {
     nix-ld.enable = true;
   };
 
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-
   environment.pathsToLink = [ "/share/zsh" ];
 
   home-manager.users.alex = { pkgs, ... }: {
     home = {
       stateVersion = "24.05";
-      packages = with unstable.pkgs; [
+      packages = with pkgs.unstable; [
         # atop
         broot
         ffmpeg
@@ -141,7 +144,7 @@ in {
         plugins = [
           {
             name = "powerlevel10k";
-            src = unstable.pkgs.zsh-powerlevel10k;
+            src = pkgs.unstable.zsh-powerlevel10k;
             file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
           }
           {
@@ -159,10 +162,6 @@ in {
           "-g C" = "| wc -l";
           "-g G" = "| grep --ignore-case";
           bat = "upower -i /org/freedesktop/UPower/devices/battery_BAT0";
-          brightness-max =
-            "echo 4794 | sudo tee /sys/class/backlight/intel_backlight/brightness";
-          brightness-power-save =
-            "echo 2300 | sudo tee /sys/class/backlight/intel_backlight/brightness";
           ff = "find . -type f -iname";
           l = "eza --group-directories-first -l -g";
           ll = "eza --group-directories-first -l -g";
