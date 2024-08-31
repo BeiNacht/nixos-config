@@ -6,24 +6,11 @@ let
 in
 {
   nixpkgs = {
-    # You can add overlays here
     overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-
-      # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
     ];
-    # Configure your nixpkgs instance
     config = {
       allowUnfree = true;
     };
@@ -35,15 +22,46 @@ in
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
     inputs.nixos-hardware.nixosModules.common-pc-ssd
+    inputs.sops-nix.nixosModules.sops
     ../../configs/browser.nix
     ../../configs/common.nix
     ../../configs/docker.nix
     ../../configs/games.nix
+    ../../configs/develop.nix
     ../../configs/libvirt.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix
   ];
+
+  sops = {
+    defaultSopsFile = ../../secrets-desktop.yaml;
+    validateSopsFiles = true;
+    age = {
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/var/lib/sops-nix/key.txt";
+      generateKey = true;
+    };
+
+    secrets = {
+      borg-key = {
+        sopsFile = ../../secrets-desktop.yaml;
+        owner = config.users.users.alex.name;
+        group = config.users.users.alex.group;
+      };
+
+      borg-repo = {
+        sopsFile = ../../secrets-desktop.yaml;
+        owner = config.users.users.alex.name;
+        group = config.users.users.alex.group;
+      };
+
+      hashedPassword = {
+        neededForUsers = true;
+        sopsFile = ../../secrets.yaml;
+      };
+    };
+  };
 
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-znver2" ];
 
@@ -71,19 +89,6 @@ in
   networking = {
     hostName = "desktop";
     useDHCP = false;
-    # wireguard.interfaces = {
-    #   wg0 = {
-    #     ips = [ "10.100.0.2/24" ];
-    #     privateKey = secrets.wireguard-desktop-private;
-    #     peers = [{
-    #       publicKey = wireguard.wireguard-vps-public;
-    #       presharedKey = secrets.wireguard-preshared;
-    #       allowedIPs = [ "10.100.0.0/24" ];
-    #       endpoint = "old.szczepan.ski:51820";
-    #       persistentKeepalive = 25;
-    #     }];
-    #   };
-    # };
   };
 
   time.timeZone = "Europe/Berlin";
@@ -194,12 +199,15 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2";
-        passphrase = secrets.borg-key;
+        # passphrase = secrets.borg-key;
+        passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
       extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_ed25519";
       paths = "/home/alex";
-      repo = secrets.borg-repo;
+      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
+      # repo = secrets.borg-repo;
+      # repo = (builtins.readFile config.sops.secrets.borg-repo.path);
       startAt = "daily";
       user = "alex";
       prune.keep = {

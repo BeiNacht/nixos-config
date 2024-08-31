@@ -1,0 +1,16 @@
+keys:
+  - &users
+    - &alex age1gjhlw6vkfers3f76yug3alwupe4jckjhg8ncr8kll5gj5g6wlqtqacqa73
+  - &hosts:
+    - &desktop age1m873zl0umr6huvs7ft98t7dg3wqx7skzgdrd6vjzeh8h6kkgdghsy5atvx
+creation_rules:
+  - path_regex: secrets.yaml$
+    key_groups:
+    - age:
+      - *alex
+      - *desktop
+  - path_regex: secrets-desktop.yaml$
+    key_groups:
+    - age:
+      - *alex
+      - *desktop

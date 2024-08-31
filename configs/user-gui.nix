@@ -11,8 +11,7 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "Meslo" ]; })
-      # nerdfonts
+      (nerdfonts.override { fonts = [ "Meslo" "RobotoMono"]; })
       corefonts
       google-fonts
       liberation_ttf
@@ -27,17 +26,6 @@
       stix-two
       twemoji-color-font
     ];
-
-    # fontconfig = {
-    #   enable = true;
-    #   antialias = true;
-    #   defaultFonts = {
-    #     # monospace = [ "Fira Mono" ];
-    #     serif = [ "Linux Libertine" ];
-    #     sansSerif = [ "Open Sans" ];
-    #     emoji = [ "Twitter Color Emoji" ];
-    #   };
-    # };
   };
 
   hardware = {
@@ -62,19 +50,14 @@
   };
 
   environment.systemPackages = with pkgs.unstable; [
-    alacritty
     czkawka # fslint before
     grsync
     handbrake
-    insomnia
     keepassxc
-    meld
-    exfatprogs
     nextcloud-client
     pinta
     rustdesk-flutter
     simple-scan
-    virt-manager
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
