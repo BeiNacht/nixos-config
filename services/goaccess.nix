@@ -9,7 +9,7 @@ in
         "goaccess.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          basicAuth = { alex = secrets.goaccess-password; };
+          basicAuthFile = config.sops.secrets.goaccess-password.path;
           locations = {
             "/" = { root = "/var/www/goaccess"; };
             "/ws" = {
