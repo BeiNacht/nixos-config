@@ -192,15 +192,12 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2";
-        # passphrase = secrets.borg-key;
         passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
       extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_ed25519";
       paths = "/home/alex";
       repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
-      # repo = secrets.borg-repo;
-      # repo = (builtins.readFile config.sops.secrets.borg-repo.path);
       startAt = "daily";
       user = "alex";
       prune.keep = {
