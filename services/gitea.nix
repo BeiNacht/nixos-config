@@ -29,7 +29,7 @@
       appName = "My awesome Gitea server"; # Give the site a name
       database = {
         type = "postgres";
-        password = "REMOVED_OLD_PASSWORD_FROM_HISTORY";
+        passwordFile = config.sops.secrets.gitea-password.path;
       };
       settings = {
         server = {

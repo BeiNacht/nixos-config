@@ -92,7 +92,7 @@
       config = {
         dbtype = "pgsql";
         adminuser = "alex";
-        adminpassFile = "/var/nextcloud-admin-pass";
+        adminpassFile = config.sops.secrets.nextcloud-password.path;
       };
     };
   };

@@ -47,19 +47,24 @@ in
         group = config.users.users.alex.group;
       };
 
-      # webdav-password = {
-      #   owner = config.users.users.alex.name;
-      #   group = config.users.users.alex.group;
-      # };
-
-      goaccess-password = {
+      goaccess-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
       };
 
-      frigate-password = {
+      frigate-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
+      };
+
+      nextcloud-password = {
+        owner = "nextcloud";
+        group = "nextcloud";
+      };
+
+      gitea-password = {
+        owner = config.services.gitea.user;
+        group = config.services.gitea.group;
       };
 
       hashedPassword = {
