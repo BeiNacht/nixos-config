@@ -17,6 +17,7 @@ in
 
   imports = [
     ./hardware-configuration.nix
+    inputs.sops-nix.nixosModules.sops
     ../../configs/common.nix
     ../../configs/docker.nix
     ../../configs/user.nix
@@ -30,6 +31,43 @@ in
     ../../services/headscale.nix
     ../../services/goaccess.nix
   ];
+
+  sops = {
+    defaultSopsFile = ../../secrets-vps-arm.yaml;
+    validateSopsFiles = true;
+    age = {
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/var/lib/sops-nix/key.txt";
+      generateKey = true;
+    };
+
+    secrets = {
+      borg-key = {
+        owner = config.users.users.alex.name;
+        group = config.users.users.alex.group;
+      };
+
+      # webdav-password = {
+      #   owner = config.users.users.alex.name;
+      #   group = config.users.users.alex.group;
+      # };
+
+      # goaccess-password = {
+      #   owner = config.users.users.alex.name;
+      #   group = config.users.users.alex.group;
+      # };
+
+      frigate-password = {
+        owner = config.services.nginx.user;
+        group = config.services.nginx.group;
+      };
+
+      hashedPassword = {
+        neededForUsers = true;
+        sopsFile = ../../secrets.yaml;
+      };
+    };
+  };
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -165,13 +203,13 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2";
-        passphrase = secrets.borg-key;
+        passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
       extraCreateArgs =
         "--stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
       paths = [ "/home/alex" "/var/lib" ];
-      repo = secrets.borg-repo;
+      repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
       startAt = "daily";
       prune.keep = {
         daily = 4;

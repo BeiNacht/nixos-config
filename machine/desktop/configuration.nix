@@ -35,7 +35,7 @@ in
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets-desktop.yaml;
+    defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
       sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -50,15 +50,8 @@ in
         group = config.users.users.alex.group;
       };
 
-      borg-repo = {
-        sopsFile = ../../secrets-desktop.yaml;
-        owner = config.users.users.alex.name;
-        group = config.users.users.alex.group;
-      };
-
       hashedPassword = {
         neededForUsers = true;
-        sopsFile = ../../secrets.yaml;
       };
     };
   };
