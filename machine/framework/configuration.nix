@@ -1,7 +1,6 @@
 { config, pkgs, lib, outputs, inputs, ... }:
 let
   be = import ../../configs/borg-exclude.nix;
-  secrets = import ../../configs/secrets.nix;
 in
 {
   nixpkgs = {
@@ -18,6 +17,7 @@ in
   imports = [
     ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
+    inputs.sops-nix.nixosModules.sops
     ../../configs/browser.nix
     ../../configs/common.nix
     ../../configs/docker.nix
@@ -28,7 +28,30 @@ in
     ../../configs/user.nix
   ];
 
+  sops = {
+    defaultSopsFile = ../../secrets.yaml;
+    validateSopsFiles = true;
+    age = {
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/var/lib/sops-nix/key.txt";
+      generateKey = true;
+    };
+
+    secrets = {
+      borg-key = {
+        sopsFile = ../../secrets-framework.yaml;
+        owner = config.users.users.alex.name;
+        group = config.users.users.alex.group;
+      };
+
+      hashedPassword = {
+        neededForUsers = true;
+      };
+    };
+  };
+
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
     initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
@@ -82,7 +105,6 @@ in
   hardware = {
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
-    cpu.intel.updateMicrocode = true;
     openrazer = {
       enable = true;
       users = [ "alex" ];
@@ -142,13 +164,13 @@ in
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2";
-        passphrase = secrets.borg-key;
+        passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
       extraCreateArgs =
         "--stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
       paths = [ "/home/alex" "/var/lib" ];
-      repo = secrets.borg-repo;
+      repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
       startAt = "daily";
       prune.keep = {
         daily = 7;

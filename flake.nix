@@ -8,6 +8,7 @@
 
     #nixos-hardware
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     sops-nix =
       {
@@ -29,6 +30,7 @@
 
   outputs =
     { self
+    , chaotic
     , fw-fanctrl
     , home-manager
     , nixos-hardware
@@ -71,6 +73,7 @@
           modules = [
             fw-fanctrl.nixosModules.default
             ./machine/framework/configuration.nix
+            chaotic.nixosModules.default # OUR DEFAULT MODULE
           ];
         };
 
