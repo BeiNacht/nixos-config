@@ -11,8 +11,8 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
-      # (nerdfonts.override { fonts = [ "Liberation" ]; })
-      nerdfonts
+      (nerdfonts.override { fonts = [ "Meslo" ]; })
+      # nerdfonts
       corefonts
       google-fonts
       liberation_ttf
