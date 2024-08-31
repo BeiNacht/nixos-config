@@ -5,7 +5,15 @@
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    #nixos-hardware
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
+
+    sops-nix =
+      {
+        url = "github:mic92/sops-nix";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
 
     # Home manager
     home-manager = {
@@ -21,11 +29,12 @@
 
   outputs =
     { self
-    , nixpkgs
-    , nixpkgs-unstable
+    , fw-fanctrl
     , home-manager
     , nixos-hardware
-    , fw-fanctrl
+    , nixpkgs
+    , nixpkgs-unstable
+    , sops-nix
     , ...
     } @ inputs:
     let

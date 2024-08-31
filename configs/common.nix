@@ -64,8 +64,8 @@
     borgmatic
 
     btrfs-progs
+    exfatprogs
 
-    cargo
     # dog # cat replace
     doggo # DNS Resolver
 
@@ -77,33 +77,37 @@
 
     eza
 
+    # age key encryption
+    ssh-to-age
+    age
+    sops
+
+    # monitoring
     btop
     htop
     glances
+    nethogs
+    iotop
+    nmap
 
     gnupg
     gocryptfs
     graphviz
     hdparm
-    home-manager
     inxi
-    iotop
     lm_sensors
     lsd
     lsof
     man-pages
     man-pages-posix
-    nethogs
+
     nil
     nix-du
     nix-tree
     nixpkgs-fmt
 
-    nmap
-    nodejs
     parallel
     pciutils
-    ruby
     progress
     unixtools.xxd
     unzip
