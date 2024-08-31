@@ -9,7 +9,7 @@ in
         "frigate.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          basicAuth = { alex = secrets.frigate-password; };
+          basicAuthFile = config.sops.secrets.frigate-password.path;
         };
       };
     };
