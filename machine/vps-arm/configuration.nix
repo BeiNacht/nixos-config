@@ -52,10 +52,10 @@ in
       #   group = config.users.users.alex.group;
       # };
 
-      # goaccess-password = {
-      #   owner = config.users.users.alex.name;
-      #   group = config.users.users.alex.group;
-      # };
+      goaccess-password = {
+        owner = config.services.nginx.user;
+        group = config.services.nginx.group;
+      };
 
       frigate-password = {
         owner = config.services.nginx.user;
