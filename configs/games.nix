@@ -1,10 +1,19 @@
 { config, pkgs, lib, outputs, ... }:
 {
+
+  services.flatpak.enable = true;
   programs = {
     gamescope = {
       enable = true;
-      capSysNice = true;
+      capSysNice = false;
+      package = pkgs.unstable.gamescope;
     };
+
+    gamemode = {
+      enable = true;
+      enableRenice = true;
+    };
+
     steam = {
       enable = true;
       package = pkgs.unstable.steam.override {
@@ -19,13 +28,14 @@
   };
 
   environment.systemPackages = with pkgs.unstable; [
-    (lutris.override {
-      extraPkgs = pkgs: [
-        pkgs.gamescope
-        pkgs.mangohud
-      ];
-    })
+    # (lutris.override {
+    #   extraPkgs = pkgs: [
+    #     pkgs.gamescope
+    #     pkgs.mangohud
+    #   ];
+    # })
 
+    lutris
     heroic
 
     protontricks
@@ -38,7 +48,6 @@
     winetricks
     # proton-ge-bin
     pcsx2
-    gamescope
     mangohud
   ];
 }
