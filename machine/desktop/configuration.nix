@@ -65,7 +65,8 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
-    extraModulePackages = with pkgs.linuxPackages; [ it87 ];
+    kernelPackages = pkgs.linuxPackages_latest;
+    extraModulePackages = with pkgs.linuxPackages_latest; [ it87 ];
     kernelModules = [ "it87" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
@@ -85,11 +86,6 @@ in
   };
 
   time.timeZone = "Europe/Berlin";
-
-  console = {
-    font = "latarcyrheb-sun32";
-    keyMap = "us";
-  };
 
   environment.systemPackages = with pkgs.unstable; [
     lact
