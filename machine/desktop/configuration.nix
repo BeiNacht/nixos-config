@@ -29,7 +29,7 @@ in
     ../../configs/games.nix
     ../../configs/develop.nix
     ../../configs/libvirt.nix
-    ../../configs/plasma.nix
+    ../../configs/plasma-wayland.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix
   ];
@@ -59,9 +59,14 @@ in
   nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-znver2" ];
 
   boot = {
-    initrd.systemd.enable = true;
     loader = {
-      systemd-boot.enable = true;
+      grub = {
+        enable = true;
+        efiSupport = true;
+        device = "nodev";
+        configurationLimit = 5;
+        useOSProber = true;
+      };
       efi = { canTouchEfiVariables = true; };
     };
 
@@ -144,11 +149,6 @@ in
     netdata.enable = true;
     printing.enable = true;
     fwupd.enable = true;
-
-    displayManager.autoLogin = {
-      enable = true;
-      user = "alex";
-    };
 
     pipewire = {
       enable = true;

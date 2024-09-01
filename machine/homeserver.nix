@@ -124,8 +124,6 @@ in {
   };
 
   services = {
-    netdata.enable = false;
-
     jellyfin = {
       enable = true;
       user = "alex";
