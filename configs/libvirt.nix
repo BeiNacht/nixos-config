@@ -1,6 +1,13 @@
 { pkgs, ... }:
 {
+  users.extraGroups.vboxusers.members = [ "alex" ];
+
   virtualisation = {
+    virtualbox.host ={
+      enable = true;
+      enableExtensionPack = true;
+    };
+
     libvirtd = {
       enable = true;
       qemu = {
@@ -10,7 +17,6 @@
           enable = true;
           packages = [
             (pkgs.OVMF.override {
-            # (unstable.pkgs.OVMF.override {
               secureBoot = true;
               tpmSupport = true;
             }).fd
