@@ -91,6 +91,10 @@ in {
     nyx
   ];
 
+  hardware = {
+    enableAllFirmware = true;
+  };
+
   services = {
     tor = {
       enable = true;

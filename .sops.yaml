@@ -5,6 +5,7 @@ keys:
     - &desktop age1m873zl0umr6huvs7ft98t7dg3wqx7skzgdrd6vjzeh8h6kkgdghsy5atvx
     - &framework age1w3nq2g9ctm43f43lyzfrznywqpqlrk6x9de2qy3sr05mm4yk4u3s05slw4
     - &vps-arm age14l4v7kmtpp49mgngftlqquqe2u0mpdnfvnmtgqzv5zlsxh8mpvdspk3mel
+    - &mini age1hdv2nz7r5fv6glq7jac27uf864t2668a97ptx52q57yfg4jd7ypqkag7wd
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
@@ -13,6 +14,7 @@ creation_rules:
       - *desktop
       - *vps-arm
       - *framework
+      - *mini
   - path_regex: secrets-desktop.yaml$
     key_groups:
     - age:
@@ -28,3 +30,8 @@ creation_rules:
     - age:
       - *alex
       - *framework
+  - path_regex: secrets-mini.yaml$
+    key_groups:
+    - age:
+      - *alex
+      - *mini
