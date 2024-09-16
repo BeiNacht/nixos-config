@@ -1,10 +1,10 @@
 { config, pkgs, lib, ... }:
 {
-  environment.systemPackages = with pkgs.unstable; [
-    brave
-    chromium
-    firefox
-    librewolf
-    tor-browser-bundle-bin
+  environment.systemPackages = [
+    pkgs.brave
+    # pkgs.unstable.chromium
+    pkgs.unstable.firefox
+    pkgs.unstable.librewolf
+    pkgs.unstable.tor-browser-bundle-bin
   ];
 }

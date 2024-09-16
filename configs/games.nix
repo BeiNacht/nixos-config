@@ -5,8 +5,8 @@
   programs = {
     gamescope = {
       enable = true;
-      capSysNice = true;
-      package = pkgs.unstable.gamescope;
+      capSysNice = false;
+      package = pkgs.gamescope;
     };
 
     gamemode = {
@@ -16,15 +16,17 @@
 
     steam = {
       enable = true;
-      package = pkgs.unstable.steam;
+      # package = pkgs.unstable.steam;
       extraPackages = with pkgs; [
-        unstable.gamescope
-        unstable.mangohud
+        gamescope
+        mangohud
+        libkrb5
+        keyutils
       ];
 
-      extraCompatPackages = with pkgs; [
-        proton-ge-custom
-      ];
+      # extraCompatPackages = with pkgs; [
+      #   proton-ge-custom
+      # ];
     };
   };
 

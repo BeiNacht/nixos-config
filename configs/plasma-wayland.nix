@@ -2,6 +2,9 @@
   programs = {
     dconf.enable = true;
     kdeconnect.enable = true;
+    partition-manager.enable = true;
+      # package = pkgs.kdePackages.partitionmanager;
+    # };
   };
 
   environment = {
@@ -17,7 +20,7 @@
       kdePackages.ksshaskpass
       kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
-      kdePackages.partitionmanager
+      # kdePackages.partitionmanager
       kdePackages.filelight
       kdePackages.plasma-disks
       kdePackages.kalk

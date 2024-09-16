@@ -101,6 +101,8 @@ in
 
     snapraid
     mergerfs
+
+    gimp
   ];
 
   hardware = {
