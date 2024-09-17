@@ -7,7 +7,7 @@ in {
     /etc/nixos/hardware-configuration.nix
     ../configs/common.nix
     ../configs/docker.nix
-    ../configs/libvirt.nix
+    ../configs/virtualisation.nix
     ../configs/user.nix
   ];
 
@@ -30,15 +30,6 @@ in {
       enable = true;
       networks.Skynet_5G.psk = secrets.wifipassword;
       interfaces = [ "wlp1s0" ];
-    };
-
-    # libvirt uses 192.168.122.0
-    bridges.br0.interfaces = [ ];
-    interfaces.br0 = {
-      ipv4.addresses = [{
-        address = "192.168.122.1";
-        prefixLength = 24;
-      }];
     };
 
     interfaces.enp3s0.useDHCP = true;
