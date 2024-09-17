@@ -10,7 +10,7 @@ in
       /etc/nixos/hardware-configuration.nix
       ../configs/common.nix
       ../configs/docker.nix
-      ../configs/libvirt.nix
+      ../configs/virtualisation.nix
       ../configs/plasma.nix
       ../configs/user-gui.nix
       ../configs/user.nix
