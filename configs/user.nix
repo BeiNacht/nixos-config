@@ -64,6 +64,7 @@
 
         nix-output-monitor
       ];
+
       sessionPath = [ "$HOME/.npm-packages" "$HOME/.bin" ];
       file = {
         ".npmrc" = { source = ../home/npmrc; };

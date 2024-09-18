@@ -1,7 +1,5 @@
 { config, pkgs, lib, outputs, ... }:
 {
-
-  services.flatpak.enable = true;
   programs = {
     gamescope = {
       enable = true;

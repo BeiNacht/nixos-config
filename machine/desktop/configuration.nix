@@ -10,6 +10,19 @@ in
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
+      (self: super: {
+        linuxPackages_latest = super.linuxPackages_latest.extend (lpself: lpsuper: {
+          xone = super.linuxPackages_latest.xone.overrideAttrs (oldAttrs: rec {
+            version = "0-unstable-latest";
+            src = pkgs.fetchFromGitHub {
+              owner = "tskaar";
+              repo = "xone";
+              rev = "28df566c38e0ee500fd5f74643fc35f21a4ff696";
+              hash = "sha256-++ScZiHnf8v7TjNBTQm7qGm3FALGp440avuQUuA86O4=";
+            };
+          });
+        });
+      })
     ];
     config = {
       allowUnfree = true;
