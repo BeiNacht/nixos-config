@@ -58,6 +58,8 @@
     pinta
     rustdesk-flutter
     simple-scan
+
+    telegram-desktop
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
