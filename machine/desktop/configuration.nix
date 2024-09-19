@@ -83,10 +83,10 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
-    kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = with pkgs.linuxPackages_latest; [ it87 ];
+    kernelPackages = pkgs.linuxPackages_zen;
+    extraModulePackages = with pkgs.linuxPackages_zen; [ it87 ];
     kernelModules = [ "it87" ];
-    # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
+    kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
 
   systemd.services = {
@@ -116,6 +116,8 @@ in
     mergerfs
 
     gimp
+
+    clinfo
   ];
 
   hardware = {
@@ -128,9 +130,10 @@ in
       driSupport = true;
       driSupport32Bit = true;
       # extraPackages = with pkgs; [
-      #   rocm-opencl-icd
-      #   rocm-opencl-runtime
+      #   # rocm-opencl-icd
+      #   # rocm-opencl-runtime
       #   amdvlk
+      #   rocmPackages.clr.icd
       # ];
       # extraPackages32 = with pkgs; [
       #   driversi686Linux.amdvlk
@@ -143,14 +146,14 @@ in
         INTERVAL=10
         DEVPATH=hwmon3=devices/platform/it87.656
         DEVNAME=hwmon3=it8665
-        FCTEMPS=hwmon3/pwm3=hwmon2/temp1_input hwmon3/pwm2=hwmon2/temp1_input hwmon3/pwm1=hwmon2/temp1_input
-        FCFANS=hwmon3/pwm3=hwmon3/fan3_input hwmon3/pwm2=hwmon3/fan2_input hwmon3/pwm1=hwmon3/fan1_input
-        MINTEMP=hwmon3/pwm3=60 hwmon3/pwm2=60 hwmon3/pwm1=60
-        MAXTEMP=hwmon3/pwm3=80 hwmon3/pwm2=80 hwmon3/pwm1=80
-        MINSTART=hwmon3/pwm3=51 hwmon3/pwm2=51 hwmon3/pwm1=51
-        MINSTOP=hwmon3/pwm3=51 hwmon3/pwm2=51 hwmon3/pwm1=51
-        MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=51 hwmon3/pwm3=51
-        MAXPWM=hwmon3/pwm3=127 hwmon3/pwm2=153 hwmon3/pwm1=153
+        FCTEMPS=hwmon3/pwm1=hwmon6/temp1_input hwmon3/pwm2=hwmon6/temp3_input hwmon3/pwm3=hwmon6/temp3_input
+        FCFANS=hwmon3/pwm1=hwmon3/fan1_input hwmon3/pwm2=hwmon3/fan2_input hwmon3/pwm3=hwmon3/fan3_input
+        MINTEMP=hwmon3/pwm1=60 hwmon3/pwm2=60 hwmon3/pwm3=60
+        MAXTEMP=hwmon3/pwm1=80 hwmon3/pwm2=80 hwmon3/pwm3=80
+        MINSTART=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
+        MINSTOP=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
+        MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
+        MAXPWM=hwmon3/pwm1=127 hwmon3/pwm2=127 hwmon3/pwm3=127
       '';
     };
 
@@ -164,6 +167,8 @@ in
     netdata.enable = true;
     printing.enable = true;
     fwupd.enable = true;
+
+    xserver.videoDrivers = [ "amdgpu" ];
 
     pipewire = {
       enable = true;

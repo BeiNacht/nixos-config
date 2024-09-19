@@ -60,6 +60,7 @@
     simple-scan
 
     telegram-desktop
+    discord
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
