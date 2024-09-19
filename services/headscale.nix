@@ -49,6 +49,18 @@
             "127.0.0.1"
           ];
         };
+
+        derp = {
+          server = {
+            enabled = true;
+            region_id = 999;
+            region_code = "headscale";
+            region_name = "Headscale Embedded DERP";
+            stun_listen_addr = "0.0.0.0:3478";
+
+            # private_key_path: /var/lib/headscale/derp_server_private.key
+          };
+        };
       };
     };
   };
