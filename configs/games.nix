@@ -28,7 +28,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     # (lutris.override {
     #   extraPkgs = pkgs: [
     #     pkgs.gamescope

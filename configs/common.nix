@@ -58,7 +58,7 @@
     networkmanager.dns = "none";
   };
 
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     ack
     borgbackup
     borgmatic

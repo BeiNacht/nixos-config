@@ -1,18 +1,13 @@
 { config, pkgs, inputs, outputs, ... }:
 let
-  secrets = import ../../configs/secrets.nix;
   be = import ../../configs/borg-exclude.nix;
-  wireguard = import ../../configs/wireguard.nix;
 in
 {
   nixpkgs = {
     overlays = [
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
       (self: super: {
-        linuxPackages_latest = super.linuxPackages_latest.extend (lpself: lpsuper: {
-          xone = super.linuxPackages_latest.xone.overrideAttrs (oldAttrs: rec {
+        linuxPackages_cachyos = super.linuxPackages_cachyos.extend (lpself: lpsuper: {
+          xone = super.linuxPackages_cachyos.xone.overrideAttrs (oldAttrs: rec {
             version = "0-unstable-latest";
             src = pkgs.fetchFromGitHub {
               owner = "tskaar";
@@ -83,8 +78,8 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
-    kernelPackages = pkgs.linuxPackages_zen;
-    extraModulePackages = with pkgs.linuxPackages_zen; [ it87 ];
+    kernelPackages = pkgs.linuxPackages_cachyos;
+    extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
     kernelModules = [ "it87" ];
     kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
@@ -94,7 +89,7 @@ in
       description = "AMDGPU Control Daemon";
       wantedBy = [ "multi-user.target" ];
       after = [ "multi-user.target" ];
-      serviceConfig = { ExecStart = "${pkgs.unstable.lact}/bin/lact daemon"; };
+      serviceConfig = { ExecStart = "${pkgs.lact}/bin/lact daemon"; };
     };
   };
 
@@ -105,7 +100,7 @@ in
 
   time.timeZone = "Europe/Berlin";
 
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     lact
     amdgpu_top
 
@@ -118,6 +113,10 @@ in
     gimp
 
     clinfo
+
+    fan2go
+
+    unigine-superposition
   ];
 
   hardware = {
@@ -126,18 +125,9 @@ in
     xone.enable = true;
 
     bluetooth.enable = true;
-    opengl = {
-      driSupport = true;
-      driSupport32Bit = true;
-      # extraPackages = with pkgs; [
-      #   # rocm-opencl-icd
-      #   # rocm-opencl-runtime
-      #   amdvlk
-      #   rocmPackages.clr.icd
-      # ];
-      # extraPackages32 = with pkgs; [
-      #   driversi686Linux.amdvlk
-      # ];
+    graphics = {
+      enable = true;
+      enable32Bit = true;
     };
 
     fancontrol = {
@@ -160,7 +150,7 @@ in
     pulseaudio.enable = false;
   };
 
-  sound.enable = true;
+  programs.coolercontrol.enable = true;
 
   services = {
     power-profiles-daemon.enable = true;
@@ -177,30 +167,30 @@ in
       pulse.enable = true;
     };
 
-    samba = {
-      enable = true;
-      securityType = "user";
-      extraConfig = ''
-        workgroup = WORKGROUP
-        server string = server
-        netbios name = server
-        security = user
-        guest account = nobody
-        map to guest = bad user
-        logging = systemd
-        max log size = 50
-      '';
-      shares = {
-        storage = {
-          path = "/home/alex/shared/storage";
-          browseable = "yes";
-          "read only" = "no";
-          "guest ok" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-      };
-    };
+    # samba = {
+    #   enable = true;
+    #   securityType = "user";
+    #   extraConfig = ''
+    #     workgroup = WORKGROUP
+    #     server string = server
+    #     netbios name = server
+    #     security = user
+    #     guest account = nobody
+    #     map to guest = bad user
+    #     logging = systemd
+    #     max log size = 50
+    #   '';
+    #   shares = {
+    #     storage = {
+    #       path = "/home/alex/shared/storage";
+    #       browseable = "yes";
+    #       "read only" = "no";
+    #       "guest ok" = "no";
+    #       "create mask" = "0644";
+    #       "directory mask" = "0755";
+    #     };
+    #   };
+    # };
 
     tailscale.enable = true;
 
@@ -226,5 +216,5 @@ in
     };
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }
