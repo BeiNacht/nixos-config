@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 {
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     insomnia
     meld
     virt-manager

@@ -49,7 +49,7 @@
     # };
   };
 
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     czkawka # fslint before
     grsync
     handbrake
@@ -68,7 +68,7 @@
     programs = {
       vscode = {
         enable = true;
-        package = pkgs.unstable.vscode;
+        package = pkgs.vscode;
       };
 
       mpv = {
@@ -82,7 +82,7 @@
 
       kitty = {
         enable = true;
-        package = pkgs.unstable.kitty;
+        package = pkgs.kitty;
         extraConfig = ''
           enable_audio_bell false
 

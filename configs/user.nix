@@ -45,9 +45,8 @@
 
   home-manager.users.alex = { pkgs, ... }: {
     home = {
-      stateVersion = "24.05";
-      packages = with pkgs.unstable; [
-        # atop
+      stateVersion = "24.11";
+      packages = with pkgs; [
         broot
         ffmpeg
         git-secret
@@ -139,7 +138,7 @@
         plugins = [
           {
             name = "powerlevel10k";
-            src = pkgs.unstable.zsh-powerlevel10k;
+            src = pkgs.zsh-powerlevel10k;
             file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
           }
           {

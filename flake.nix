@@ -2,11 +2,7 @@
   description = "Your new nix config";
 
   inputs = {
-    # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    #nixos-hardware
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
@@ -18,7 +14,7 @@
 
     # Home manager
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -35,7 +31,7 @@
     , home-manager
     , nixos-hardware
     , nixpkgs
-    , nixpkgs-unstable
+    # , nixpkgs-unstable
     , sops-nix
     , ...
     } @ inputs:
@@ -64,6 +60,7 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./machine/desktop/configuration.nix
+            chaotic.nixosModules.default # OUR DEFAULT MODULE
           ];
         };
 
