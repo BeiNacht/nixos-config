@@ -5,23 +5,23 @@ in
 {
   nixpkgs = {
     overlays = [
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-      (self: super: {
-        linuxPackages_latest = super.linuxPackages_latest.extend (lpself: lpsuper: {
-          framework-laptop-kmod = super.linuxPackages_latest.framework-laptop-kmod.overrideAttrs (oldAttrs: rec {
-            version = "0-unstable-latest";
-            src = pkgs.fetchFromGitHub {
-              owner = "DHowett";
-              repo = "framework-laptop-kmod";
-              rev = "6164bc3dec24b6bb2806eedd269df6a170bcc930";
-              # sha256 = pkgs.lib.fakeSha256;
-              hash = "sha256-OwtXQR0H4GNlYjVZ5UU5MEM6ZOjlV3B0x2auYawbS2U=";
-            };
-          });
-        });
-      })
+      # outputs.overlays.additions
+      # outputs.overlays.modifications
+      # outputs.overlays.unstable-packages
+      # (self: super: {
+      #   linuxPackages_latest = super.linuxPackages_latest.extend (lpself: lpsuper: {
+      #     framework-laptop-kmod = super.linuxPackages_latest.framework-laptop-kmod.overrideAttrs (oldAttrs: rec {
+      #       version = "0-unstable-latest";
+      #       src = pkgs.fetchFromGitHub {
+      #         owner = "DHowett";
+      #         repo = "framework-laptop-kmod";
+      #         rev = "6164bc3dec24b6bb2806eedd269df6a170bcc930";
+      #         # sha256 = pkgs.lib.fakeSha256;
+      #         hash = "sha256-OwtXQR0H4GNlYjVZ5UU5MEM6ZOjlV3B0x2auYawbS2U=";
+      #       };
+      #     });
+      #   });
+      # })
     ];
     config = {
       allowUnfree = true;
@@ -210,7 +210,7 @@ in
 
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     # psensor
     mission-center
     resources
