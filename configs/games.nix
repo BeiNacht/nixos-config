@@ -4,7 +4,6 @@
     gamescope = {
       enable = true;
       capSysNice = false;
-      package = pkgs.gamescope;
     };
 
     gamemode = {
@@ -14,7 +13,6 @@
 
     steam = {
       enable = true;
-      # package = pkgs.unstable.steam;
       extraPackages = with pkgs; [
         gamescope
         mangohud
@@ -22,22 +20,17 @@
         keyutils
       ];
 
-      # extraCompatPackages = with pkgs; [
-      #   proton-ge-custom
-      # ];
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
     };
   };
 
   environment.systemPackages = with pkgs; [
-    # (lutris.override {
-    #   extraPkgs = pkgs: [
-    #     pkgs.gamescope
-    #     pkgs.mangohud
-    #   ];
-    # })
-
     lutris
     heroic
+
+    vkbasalt
 
     protontricks
     protonup-qt

@@ -5,10 +5,11 @@
   programs = {
     nh = {
       enable = true;
-      # clean = {
-      #   enable = true;
-      #   extraArgs = "--keep-since 14d --keep 5";
-      # };
+      clean = {
+        enable = true;
+        extraArgs = "--keep-since 14d --keep 5";
+      };
+      flake = "/home/alex/nixos-config";
     };
   };
 
@@ -113,6 +114,8 @@
     unzip
     usbutils
     wget
+
+    comma
   ];
 
   nix.settings = {
@@ -125,11 +128,5 @@
     kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
     kernel.sysctl = { "vm.max_map_count" = 262144; };
-  };
-
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 14d";
   };
 }

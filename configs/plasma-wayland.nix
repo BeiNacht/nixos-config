@@ -8,7 +8,10 @@
   };
 
   environment = {
-    sessionVariables.NIXOS_OZONE_WL = "1";
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
+    };
     plasma6.excludePackages = with pkgs.kdePackages; [
       plasma-browser-integration
       konsole
