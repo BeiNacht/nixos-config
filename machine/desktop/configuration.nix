@@ -4,21 +4,7 @@ let
 in
 {
   nixpkgs = {
-    overlays = [
-      (self: super: {
-        linuxPackages_cachyos = super.linuxPackages_cachyos.extend (lpself: lpsuper: {
-          xone = super.linuxPackages_cachyos.xone.overrideAttrs (oldAttrs: rec {
-            version = "0-unstable-latest";
-            src = pkgs.fetchFromGitHub {
-              owner = "tskaar";
-              repo = "xone";
-              rev = "28df566c38e0ee500fd5f74643fc35f21a4ff696";
-              hash = "sha256-++ScZiHnf8v7TjNBTQm7qGm3FALGp440avuQUuA86O4=";
-            };
-          });
-        });
-      })
-    ];
+    overlays = [ ];
     config = {
       allowUnfree = true;
     };
@@ -41,6 +27,8 @@ in
     ../../configs/user-gui.nix
     ../../configs/user.nix
   ];
+
+  chaotic.mesa-git.enable = true;
 
   sops = {
     defaultSopsFile = ../../secrets.yaml;
@@ -80,6 +68,8 @@ in
 
     kernelPackages = pkgs.linuxPackages_cachyos;
     extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
+    # kernelPackages = pkgs.linuxPackages_6_9;
+    # extraModulePackages = with pkgs.linuxPackages_6_9; [ it87 ];
     kernelModules = [ "it87" ];
     kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
@@ -130,22 +120,22 @@ in
       enable32Bit = true;
     };
 
-    fancontrol = {
-      enable = true;
-      config = ''
-        INTERVAL=10
-        DEVPATH=hwmon3=devices/platform/it87.656
-        DEVNAME=hwmon3=it8665
-        FCTEMPS=hwmon3/pwm1=hwmon6/temp1_input hwmon3/pwm2=hwmon6/temp3_input hwmon3/pwm3=hwmon6/temp3_input
-        FCFANS=hwmon3/pwm1=hwmon3/fan1_input hwmon3/pwm2=hwmon3/fan2_input hwmon3/pwm3=hwmon3/fan3_input
-        MINTEMP=hwmon3/pwm1=60 hwmon3/pwm2=60 hwmon3/pwm3=60
-        MAXTEMP=hwmon3/pwm1=80 hwmon3/pwm2=80 hwmon3/pwm3=80
-        MINSTART=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
-        MINSTOP=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
-        MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
-        MAXPWM=hwmon3/pwm1=127 hwmon3/pwm2=127 hwmon3/pwm3=127
-      '';
-    };
+    # fancontrol = {
+    #   enable = true;
+    #   config = ''
+    #     INTERVAL=10
+    #     DEVPATH=hwmon3=devices/platform/it87.656
+    #     DEVNAME=hwmon3=it8665
+    #     FCTEMPS=hwmon3/pwm1=hwmon6/temp1_input hwmon3/pwm2=hwmon6/temp3_input hwmon3/pwm3=hwmon6/temp3_input
+    #     FCFANS=hwmon3/pwm1=hwmon3/fan1_input hwmon3/pwm2=hwmon3/fan2_input hwmon3/pwm3=hwmon3/fan3_input
+    #     MINTEMP=hwmon3/pwm1=60 hwmon3/pwm2=60 hwmon3/pwm3=60
+    #     MAXTEMP=hwmon3/pwm1=80 hwmon3/pwm2=80 hwmon3/pwm3=80
+    #     MINSTART=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
+    #     MINSTOP=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
+    #     MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
+    #     MAXPWM=hwmon3/pwm1=127 hwmon3/pwm2=127 hwmon3/pwm3=127
+    #   '';
+    # };
 
     pulseaudio.enable = false;
   };
@@ -167,30 +157,34 @@ in
       pulse.enable = true;
     };
 
-    # samba = {
-    #   enable = true;
-    #   securityType = "user";
-    #   extraConfig = ''
-    #     workgroup = WORKGROUP
-    #     server string = server
-    #     netbios name = server
-    #     security = user
-    #     guest account = nobody
-    #     map to guest = bad user
-    #     logging = systemd
-    #     max log size = 50
-    #   '';
-    #   shares = {
-    #     storage = {
-    #       path = "/home/alex/shared/storage";
-    #       browseable = "yes";
-    #       "read only" = "no";
-    #       "guest ok" = "no";
-    #       "create mask" = "0644";
-    #       "directory mask" = "0755";
-    #     };
-    #   };
-    # };
+    samba = {
+      enable = true;
+      settings = {
+        global = {
+          workgroup = "WORKGROUP";
+          "server string" = "server";
+          "netbios name" = "server";
+          security = "user";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+          logging = "systemd";
+          "max log size" = 50;
+          "invalid users" = [
+            "root"
+          ];
+          "passwd program" = "/run/wrappers/bin/passwd %u";
+        };
+        shares = {
+          browseable = "yes";
+          "guest ok" = "no";
+          path = "/home/alex/shared/storage";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+
+        };
+      };
+    };
 
     tailscale.enable = true;
 
@@ -215,6 +209,11 @@ in
       exclude = map (x: paths + "/" + x) be.borg-exclude;
     };
   };
+
+  swapDevices = [{
+    device = "/swapfile";
+    size = 32 * 1024;
+  }];
 
   system.stateVersion = "24.11";
 }

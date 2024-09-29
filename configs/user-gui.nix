@@ -61,6 +61,7 @@
 
     telegram-desktop
     discord
+    kdenlive
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
