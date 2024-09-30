@@ -1,5 +1,19 @@
 { config, pkgs, lib, ... }:
 {
+  boot = {
+    tmp = {
+      useTmpfs = true;
+      cleanOnBoot = true;
+    };
+    # kernelParams = [ "quiet" ];
+    consoleLogLevel = 0;
+    kernel.sysctl = { "vm.max_map_count" = 262144; };
+    initrd.systemd.enable = (!config.boot.swraid.enable && !config.boot.isContainer);
+  };
+
+  # Work around for https://github.com/NixOS/nixpkgs/issues/124215
+  documentation.info.enable = false;
+
   environment = {
     # Don't install the /lib/ld-linux.so.2 stub. This saves one instance of nixpkgs.
     ldso32 = null;
@@ -63,6 +77,14 @@
 
       comma
     ];
+  };
+
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+        LANGUAGE = "en_US.UTF-8";
+        LC_ALL = "en_US.UTF-8";
+    };
   };
 
   networking = {
@@ -203,7 +225,6 @@
     # services."serial-getty@".environment.TERM = "xterm-256color";
   };
 
-
   system.activationScripts.update-diff = {
     supportsDryActivation = true;
     text = ''
@@ -214,18 +235,4 @@
       fi
     '';
   };
-
-  boot = {
-    tmp = {
-      useTmpfs = true;
-      cleanOnBoot = true;
-    };
-    # kernelParams = [ "quiet" ];
-    consoleLogLevel = 0;
-    kernel.sysctl = { "vm.max_map_count" = 262144; };
-    initrd.systemd.enable = (!config.boot.swraid.enable && !config.boot.isContainer);
-  };
-
-  # Work around for https://github.com/NixOS/nixpkgs/issues/124215
-  documentation.info.enable = false;
 }

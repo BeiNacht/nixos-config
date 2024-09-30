@@ -4,25 +4,6 @@ let
 in
 {
   nixpkgs = {
-    overlays = [
-      # outputs.overlays.additions
-      # outputs.overlays.modifications
-      # outputs.overlays.unstable-packages
-      # (self: super: {
-      #   linuxPackages_latest = super.linuxPackages_latest.extend (lpself: lpsuper: {
-      #     framework-laptop-kmod = super.linuxPackages_latest.framework-laptop-kmod.overrideAttrs (oldAttrs: rec {
-      #       version = "0-unstable-latest";
-      #       src = pkgs.fetchFromGitHub {
-      #         owner = "DHowett";
-      #         repo = "framework-laptop-kmod";
-      #         rev = "6164bc3dec24b6bb2806eedd269df6a170bcc930";
-      #         # sha256 = pkgs.lib.fakeSha256;
-      #         hash = "sha256-OwtXQR0H4GNlYjVZ5UU5MEM6ZOjlV3B0x2auYawbS2U=";
-      #       };
-      #     });
-      #   });
-      # })
-    ];
     config = {
       allowUnfree = true;
     };
@@ -124,10 +105,9 @@ in
       users = [ "alex" ];
     };
 
-    opengl = {
+    graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [ intel-media-driver intel-vaapi-driver ];
     };
     pulseaudio.enable = false;
@@ -150,30 +130,30 @@ in
       pulse.enable = true;
     };
 
-    samba = {
-      enable = true;
-      securityType = "user";
-      extraConfig = ''
-        workgroup = WORKGROUP
-        server string = server
-        netbios name = server
-        security = user
-        guest account = nobody
-        map to guest = bad user
-        logging = systemd
-        max log size = 50
-      '';
-      shares = {
-        storage = {
-          path = "/home/alex/storage";
-          browseable = "yes";
-          "read only" = "no";
-          "guest ok" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-      };
-    };
+    # samba = {
+    #   enable = true;
+    #   securityType = "user";
+    #   extraConfig = ''
+    #     workgroup = WORKGROUP
+    #     server string = server
+    #     netbios name = server
+    #     security = user
+    #     guest account = nobody
+    #     map to guest = bad user
+    #     logging = systemd
+    #     max log size = 50
+    #   '';
+    #   shares = {
+    #     storage = {
+    #       path = "/home/alex/storage";
+    #       browseable = "yes";
+    #       "read only" = "no";
+    #       "guest ok" = "no";
+    #       "create mask" = "0644";
+    #       "directory mask" = "0755";
+    #     };
+    #   };
+    # };
 
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
@@ -216,7 +196,6 @@ in
     resources
     monitorets
 
-    veracrypt
     gnumake
     pkg-config
     libftdi
@@ -257,5 +236,5 @@ in
   };
   systemd.sleep.extraConfig = "HibernateDelaySec=60m";
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }
