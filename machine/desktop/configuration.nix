@@ -28,7 +28,7 @@ in
     ../../configs/user.nix
   ];
 
-  chaotic.mesa-git.enable = true;
+  # chaotic.mesa-git.enable = true;
 
   sops = {
     defaultSopsFile = ../../secrets.yaml;
@@ -67,21 +67,19 @@ in
     };
 
     kernelPackages = pkgs.linuxPackages_cachyos;
-    extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
-    # kernelPackages = pkgs.linuxPackages_6_9;
-    # extraModulePackages = with pkgs.linuxPackages_6_9; [ it87 ];
-    kernelModules = [ "it87" ];
-    kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
+#    extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
+    kernelModules = [ "nct6775" ];
+    # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
 
-  systemd.services = {
-    monitor = {
-      description = "AMDGPU Control Daemon";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "multi-user.target" ];
-      serviceConfig = { ExecStart = "${pkgs.lact}/bin/lact daemon"; };
-    };
-  };
+  # systemd.services = {
+  #   monitor = {
+  #     description = "AMDGPU Control Daemon";
+  #     wantedBy = [ "multi-user.target" ];
+  #     after = [ "multi-user.target" ];
+  #     serviceConfig = { ExecStart = "${pkgs.lact}/bin/lact daemon"; };
+  #   };
+  # };
 
   networking = {
     hostName = "desktop";
@@ -104,9 +102,9 @@ in
 
     clinfo
 
-    fan2go
+#    fan2go
 
-    unigine-superposition
+#    unigine-superposition
   ];
 
   hardware = {
@@ -140,7 +138,15 @@ in
     pulseaudio.enable = false;
   };
 
-  programs.coolercontrol.enable = true;
+  programs = {
+    coolercontrol.enable = true;
+    corectrl = {
+      enable = true;
+      # gpuOverclock.ppfeaturemask
+      gpuOverclock.enable = true;
+    };
+  };
+
 
   services = {
     power-profiles-daemon.enable = true;

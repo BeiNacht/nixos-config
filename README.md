@@ -12,6 +12,8 @@ it's important to add the ssh host key to known hosts
 
 
 ```
+nix flake update .
+
 sudo nix-collect-garbage -d
 
 sudo nix-env -p /nix/var/nix/profiles/system --list-generations

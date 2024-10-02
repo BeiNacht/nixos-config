@@ -61,6 +61,7 @@
       lsof
       man-pages
       man-pages-posix
+      kitty.terminfo
 
       nil
       nix-du
