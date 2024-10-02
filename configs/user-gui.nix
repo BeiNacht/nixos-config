@@ -56,7 +56,7 @@
     keepassxc
     nextcloud-client
     pinta
-    rustdesk
+    rustdesk-flutter
     simple-scan
 
     telegram-desktop
