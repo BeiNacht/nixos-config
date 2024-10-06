@@ -150,16 +150,17 @@
         shellAliases = {
           active-services =
             "systemctl --no-page --no-legend --plain -t service --state=running";
-          autofanspeed = "echo level auto | sudo tee /proc/acpi/ibm/fan";
-          maxfanspeed = "echo level full-speed | sudo tee /proc/acpi/ibm/fan";
           db = "sudo updatedb";
           "-g C" = "| wc -l";
           "-g G" = "| grep --ignore-case";
-          bat = "upower -i /org/freedesktop/UPower/devices/battery_BAT0";
           ff = "find . -type f -iname";
-          l = "eza --group-directories-first -l -g";
-          ll = "eza --group-directories-first -l -g";
-          la = "eza --group-directories-first -l -g -a";
+          l = "lsd -lh --group-directories-first";
+          ll = "lsd -lh --group-directories-first";
+          la = "lsd -lah --group-directories-first";
+
+          # bat = "upower -i /org/freedesktop/UPower/devices/battery_BAT0";
+          # autofanspeed = "echo level auto | sudo tee /proc/acpi/ibm/fan";
+          # maxfanspeed = "echo level full-speed | sudo tee /proc/acpi/ibm/fan";
         };
       };
 

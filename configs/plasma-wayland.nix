@@ -2,9 +2,14 @@
   programs = {
     dconf.enable = true;
     kdeconnect.enable = true;
+    evolution.enable = true;
     partition-manager.enable = true;
-      # package = pkgs.kdePackages.partitionmanager;
-    # };
+    kde-pim = {
+      enable = true;
+      kontact = true;
+      kmail = true;
+      merkuro = true;
+    };
   };
 
   environment = {
@@ -23,7 +28,7 @@
       kdePackages.ksshaskpass
       kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
-      # kdePackages.partitionmanager
+      # kdePackages.kmail
       kdePackages.filelight
       kdePackages.plasma-disks
       kdePackages.kalk
