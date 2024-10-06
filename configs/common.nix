@@ -33,10 +33,8 @@
 
       du-dust
       ncdu
-      duf
-      dfc
-
-      eza
+      duf # dfc alternative
+      lsd # eza alternative
 
       # age key encryption
       ssh-to-age
@@ -50,6 +48,7 @@
       nethogs
       iotop
       nmap
+      nmon
 
       gnupg
       gocryptfs
@@ -57,7 +56,6 @@
       hdparm
       inxi
       lm_sensors
-      lsd
       lsof
       man-pages
       man-pages-posix

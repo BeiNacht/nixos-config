@@ -6,11 +6,15 @@
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    sops-nix =
-      {
-        url = "github:mic92/sops-nix";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    kwin-effects-forceblur = {
+      url = "github:taj-ny/kwin-effects-forceblur";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Home manager
     home-manager = {
@@ -31,7 +35,7 @@
     , home-manager
     , nixos-hardware
     , nixpkgs
-    # , nixpkgs-unstable
+      # , nixpkgs-unstable
     , sops-nix
     , ...
     } @ inputs:

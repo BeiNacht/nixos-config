@@ -1,8 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
-  programs.pantheon-tweaks.enable = true;
-  programs.evolution.enable = true;
+  programs = {
+    pantheon-tweaks.enable = true;
+    evolution.enable = true;
+  };
 
   services = {
     xserver = {

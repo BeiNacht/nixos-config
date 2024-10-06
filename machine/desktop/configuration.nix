@@ -67,8 +67,9 @@ in
     };
 
     kernelPackages = pkgs.linuxPackages_cachyos;
-#    extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
+    #    extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
     kernelModules = [ "nct6775" ];
+    # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
 
@@ -89,6 +90,7 @@ in
   time.timeZone = "Europe/Berlin";
 
   environment.systemPackages = with pkgs; [
+    inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
     lact
     amdgpu_top
 
@@ -102,9 +104,18 @@ in
 
     clinfo
 
-#    fan2go
+    gparted
 
-#    unigine-superposition
+    mission-center
+    resources
+
+    # monitorets
+
+    stressapptest
+
+    qdiskinfo
+    #    fan2go
+    #    unigine-superposition
   ];
 
   hardware = {
@@ -142,11 +153,9 @@ in
     coolercontrol.enable = true;
     corectrl = {
       enable = true;
-      # gpuOverclock.ppfeaturemask
       gpuOverclock.enable = true;
     };
   };
-
 
   services = {
     power-profiles-daemon.enable = true;
@@ -154,7 +163,7 @@ in
     printing.enable = true;
     fwupd.enable = true;
 
-    xserver.videoDrivers = [ "amdgpu" ];
+    # xserver.videoDrivers = [ "amdgpu" ];
 
     pipewire = {
       enable = true;
