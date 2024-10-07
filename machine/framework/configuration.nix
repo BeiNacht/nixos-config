@@ -68,7 +68,13 @@ in
   #   system = "x86_64-linux";
   # };
 
-  nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-alderlake" ];
+  nix.settings.system-features = [
+    "nixos-test"
+    "benchmark"
+    "big-parallel"
+    "kvm"
+    "gccarch-alderlake"
+  ];
 
   networking = {
     hostName = "framework";
