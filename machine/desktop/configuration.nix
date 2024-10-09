@@ -4,7 +4,32 @@ let
 in
 {
   nixpkgs = {
-    overlays = [ ];
+    overlays = [
+      (self: super: {
+        linuxPackages_cachyos-rc = super.linuxPackages_cachyos-rc.extend (lpself: lpsuper: {
+          xone = super.linuxPackages_cachyos-rc.xone.overrideAttrs (oldAttrs: rec {
+            version = "0-unstable-latest";
+            patches = [
+              # Fix build on kernel 6.11
+              # https://github.com/medusalix/xone/pull/48
+              (pkgs.fetchpatch {
+                name = "kernel-6.11.patch";
+                url = "https://github.com/medusalix/xone/commit/28df566c38e0ee500fd5f74643fc35f21a4ff696.patch";
+                hash = "sha256-X14oZmxqqZJoBZxPXGZ9R8BAugx/hkSOgXlGwR5QCm8=";
+              })
+
+              (pkgs.fetchpatch {
+                name = "kernel-6.12.patch";
+                url = "https://github.com/medusalix/xone/commit/d88ea1e8b430d4b96134e43ca1892ac48334578e.patch";
+                hash = "sha256-zQK1tuxu2ZmKxPO0amkfcT/RFBSkU2pWD0qhGyCCHXI=";
+              })
+            ];
+
+          });
+        });
+      })
+    ];
+
     config = {
       allowUnfree = true;
     };
@@ -66,8 +91,7 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
-    kernelPackages = pkgs.linuxPackages_cachyos;
-    #    extraModulePackages = with pkgs.linuxPackages_cachyos; [ it87 ];
+    kernelPackages = pkgs.linuxPackages_cachyos-rc;
     kernelModules = [ "nct6775" ];
     # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
@@ -199,6 +223,12 @@ in
 
         };
       };
+    };
+
+    jellyfin = {
+      enable = true;
+      user = "alex";
+      group = "users";
     };
 
     tailscale.enable = true;
