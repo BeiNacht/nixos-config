@@ -4,8 +4,15 @@ let
 in
 {
   nixpkgs = {
+    overlays = [
+      outputs.overlays.additions
+    ];
     config = {
       allowUnfree = true;
+      packageOverrides = pkgs: {
+        intel-vaapi-driver =
+          pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+      };
     };
   };
 
@@ -46,7 +53,7 @@ in
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_testing;
     initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
@@ -56,10 +63,7 @@ in
 
   # nixpkgs.config = {
   #   allowUnfree = true;
-  #   packageOverrides = pkgs: {
-  #     intel-vaapi-driver =
-  #       pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-  #   };
+
   # };
 
   # nixpkgs.localSystem = {
