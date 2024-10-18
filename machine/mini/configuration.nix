@@ -4,9 +4,7 @@
   inputs,
   outputs,
   ...
-}: let
-  secrets = import ../../configs/secrets.nix;
-in {
+}: {
   nixpkgs = {
     overlays = [
       outputs.overlays.additions
@@ -21,10 +19,33 @@ in {
   imports = [
     ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.common-cpu-intel
+    inputs.sops-nix.nixosModules.sops
     ../../configs/docker.nix
     ../../configs/common.nix
     ../../configs/user.nix
   ];
+
+  sops = {
+    defaultSopsFile = ../../secrets.yaml;
+    validateSopsFiles = true;
+    age = {
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/var/lib/sops-nix/key.txt";
+      generateKey = true;
+    };
+
+    secrets = {
+      borg-key = {
+        sopsFile = ../../secrets-mini.yaml;
+        owner = config.users.users.alex.name;
+        group = config.users.users.alex.group;
+      };
+
+      hashedPassword = {
+        neededForUsers = true;
+      };
+    };
+  };
 
   boot = {
     loader = {
@@ -63,14 +84,6 @@ in {
     #     ips = [ "10.100.0.3/24" ];
     #     privateKey = secrets.wireguard-mini-private;
 
-    #     peers = [{
-    #       publicKey = secrets.wireguard-vps-public;
-    #       presharedKey = secrets.wireguard-preshared;
-    #       allowedIPs = [ "10.100.0.0/24" ];
-    #       endpoint = "[2a02:c207:3008:1547::1]:51820";
-    #       persistentKeepalive = 25;
-    #     }];
-
     #     postSetup = ''
     #       ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o enp3s0 -j MASQUERADE
     #     '';
@@ -98,6 +111,8 @@ in {
 
   environment.systemPackages = with pkgs; [
     nyx
+    snapraid
+    mergerfs
   ];
 
   hardware = {
@@ -110,22 +125,23 @@ in {
       # openFirewall = true;
     };
 
-    hostapd = {
-      enable = true;
-      radios = {
-        wlp0s20u1u2 = {
-          # wifi4.enable = false;
-          # wifi5.enable = false;
-          # settings.ieee80211n = true; # otherwise enabled by wifi4.enable
-          networks.wlp0s20u1u2 = {
-            ssid = "Skynet-Tor";
-            authentication.saePasswords = [
-              {password = "REMOVED_OLD_PASSWORD_FROM_HISTORY";}
-            ];
-          };
-        };
-      };
-    };
+    # hostapd = {
+    #   enable = true;
+    #   radios = {
+    #     wlp0s20u1u2 = {
+    #       # wifi4.enable = false;
+    #       # wifi5.enable = false;
+    #       # settings.ieee80211n = true; # otherwise enabled by wifi4.enable
+    #       networks.wlp0s20u1u2 = {
+    #         ssid = "Skynet-Tor";
+    #         authentication.saePasswords = [
+    #           { password = "REMOVED_OLD_PASSWORD_FROM_HISTORY"; }
+    #         ];
+    #       };
+
+    #     };
+    #   };
+    # };
 
     # dnsmasq = {
     #   enable = true;
@@ -136,37 +152,37 @@ in {
     #   '';
     # };
 
-    kea.dhcp4 = {
-      enable = true;
-      # interfaces = [ "wlp0s20u1u2" ];
-      settings = {
-        interfaces-config = {
-          interfaces = [
-            "wlp0s20u1u2"
-          ];
-        };
-        lease-database = {
-          name = "/var/lib/kea/dhcp4.leases";
-          persist = true;
-          type = "memfile";
-        };
-        rebind-timer = 2000;
-        renew-timer = 1000;
-        subnet4 = [
-          {
-            pools = [
-              {
-                pool = "192.168.12.100 - 192.168.12.240";
-              }
-            ];
-            subnet = "192.168.12.0/24";
-          }
-        ];
-        valid-lifetime = 4000;
-      };
-    };
+    # kea.dhcp4 = {
+    #   enable = true;
+    #   # interfaces = [ "wlp0s20u1u2" ];
+    #   settings = {
+    #     interfaces-config = {
+    #       interfaces = [
+    #         "wlp0s20u1u2"
+    #       ];
+    #     };
+    #     lease-database = {
+    #       name = "/var/lib/kea/dhcp4.leases";
+    #       persist = true;
+    #       type = "memfile";
+    #     };
+    #     rebind-timer = 2000;
+    #     renew-timer = 1000;
+    #     subnet4 = [
+    #       {
+    #         pools = [
+    #           {
+    #             pool = "192.168.12.100 - 192.168.12.240";
+    #           }
+    #         ];
+    #         subnet = "192.168.12.0/24";
+    #       }
+    #     ];
+    #     valid-lifetime = 4000;
+    #   };
+    # };
 
-    haveged.enable = true;
+    # haveged.enable = true;
 
     # k3s = {
     #   enable = true;
@@ -198,16 +214,41 @@ in {
       extraUpFlags = "--advertise-exit-node --login-server=https://headscale.szczepan.ski";
     };
 
+    samba = {
+      enable = true;
+      securityType = "user";
+      extraConfig = ''
+        workgroup = WORKGROUP
+        server string = server
+        netbios name = server
+        security = user
+        guest account = nobody
+        map to guest = bad user
+        logging = systemd
+        max log size = 50
+      '';
+      shares = {
+        storage = {
+          path = "/mnt/storage";
+          browseable = "yes";
+          "read only" = "no";
+          "guest ok" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+      };
+    };
+
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2";
-        passphrase = secrets.borg-key;
+        passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
       extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -o StrictHostKeyChecking=no -i /home/alex/.ssh/id_ed25519";
       paths = ["/home/alex" "/var/lib"];
-      repo = secrets.borg-repo;
+      repo = "ssh://u278697-sub8@u278697.your-storagebox.de:23/./borg-backup-mini";
       startAt = "daily";
       prune.keep = {
         daily = 7;
@@ -223,6 +264,19 @@ in {
     enable = true;
     powertop.enable = true;
     # cpuFreqGovernor = "powersave";
+  };
+
+  systemd = {
+    mounts = [{
+      requires = [ "mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount" ];
+      after = [ "mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount" ];
+      what = "/mnt/disk1:/mnt/disk2:/mnt/disk3";
+      where = "/mnt/storage";
+      type = "fuse.mergerfs";
+      options =
+        "defaults,allow_other,use_ino,fsname=mergerfs,minfreespace=50G,func.getattr=newest,noforget";
+      wantedBy = [ "multi-user.target" ];
+    }];
   };
 
   system.stateVersion = "24.05";
