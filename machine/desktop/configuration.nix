@@ -91,20 +91,21 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
-    kernelPackages = pkgs.linuxPackages_cachyos-rc;
+    kernelPackages = pkgs.pkgs.linuxPackages_cachyos-rc;
     kernelModules = [ "nct6775" ];
+    extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos-rc; [ ryzen-smu ];
     # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
   };
 
-  # systemd.services = {
-  #   monitor = {
-  #     description = "AMDGPU Control Daemon";
-  #     wantedBy = [ "multi-user.target" ];
-  #     after = [ "multi-user.target" ];
-  #     serviceConfig = { ExecStart = "${pkgs.lact}/bin/lact daemon"; };
-  #   };
-  # };
+  systemd.services = {
+    monitor = {
+      description = "AMDGPU Control Daemon";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "multi-user.target" ];
+      serviceConfig = { ExecStart = "${pkgs.lact}/bin/lact daemon"; };
+    };
+  };
 
   networking = {
     hostName = "desktop";
@@ -117,26 +118,17 @@ in
     inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
     lact
     amdgpu_top
-
     python3
     python311Packages.tkinter
-
     snapraid
     mergerfs
-
     gimp
-
     clinfo
-
     gparted
-
     mission-center
     resources
-
-    # monitorets
-
     stressapptest
-
+    ryzen-monitor-ng
     qdiskinfo
     #    fan2go
     #    unigine-superposition
@@ -153,23 +145,6 @@ in
       enable32Bit = true;
     };
 
-    # fancontrol = {
-    #   enable = true;
-    #   config = ''
-    #     INTERVAL=10
-    #     DEVPATH=hwmon3=devices/platform/it87.656
-    #     DEVNAME=hwmon3=it8665
-    #     FCTEMPS=hwmon3/pwm1=hwmon6/temp1_input hwmon3/pwm2=hwmon6/temp3_input hwmon3/pwm3=hwmon6/temp3_input
-    #     FCFANS=hwmon3/pwm1=hwmon3/fan1_input hwmon3/pwm2=hwmon3/fan2_input hwmon3/pwm3=hwmon3/fan3_input
-    #     MINTEMP=hwmon3/pwm1=60 hwmon3/pwm2=60 hwmon3/pwm3=60
-    #     MAXTEMP=hwmon3/pwm1=80 hwmon3/pwm2=80 hwmon3/pwm3=80
-    #     MINSTART=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
-    #     MINSTOP=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
-    #     MINPWM=hwmon3/pwm1=51 hwmon3/pwm2=102 hwmon3/pwm3=102
-    #     MAXPWM=hwmon3/pwm1=127 hwmon3/pwm2=127 hwmon3/pwm3=127
-    #   '';
-    # };
-
     pulseaudio.enable = false;
   };
 
@@ -181,10 +156,15 @@ in
     };
   };
 
+  # powerManagement = {
+  #   enable = true;
+  #   powertop.enable = true;
+  # };
+
   services = {
     power-profiles-daemon.enable = true;
-    netdata.enable = true;
-    printing.enable = true;
+    # netdata.enable = true;
+    # printing.enable = true;
     fwupd.enable = true;
 
     # xserver.videoDrivers = [ "amdgpu" ];

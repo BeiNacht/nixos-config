@@ -15,7 +15,7 @@
       enable = true;
       extraPackages = with pkgs; [
         gamescope
-        mangohud
+        mangohud_git
         libkrb5
         keyutils
       ];
@@ -41,7 +41,7 @@
     wine
     winetricks
     # proton-ge-bin
-    pcsx2
-    mangohud
+    # pcsx2
+    mangohud_git
   ];
 }
