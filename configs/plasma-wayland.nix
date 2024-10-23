@@ -36,6 +36,7 @@
       kdePackages.filelight
       kdePackages.plasma-disks
       kdePackages.kalk
+      kdePackages.powerdevil
       krusader
       ktimetracker
       kdiff3
