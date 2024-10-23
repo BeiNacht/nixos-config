@@ -19,13 +19,11 @@
       ensureDatabases = [
         config.services.nextcloud.config.dbname
       ];
-      ensureUsers = [
-        {
-          name = config.services.nextcloud.config.dbuser;
-          ensureDBOwnership = true;
-          # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGES";
-        }
-      ];
+      ensureUsers = [{
+        name = config.services.nextcloud.config.dbuser;
+        ensureDBOwnership = true;
+        # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGES";
+      }];
     };
 
     nextcloud = {
