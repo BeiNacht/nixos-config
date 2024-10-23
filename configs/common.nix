@@ -2,7 +2,7 @@
 {
   boot = {
     tmp = {
-      useTmpfs = true;
+      useTmpfs = lib.mkDefault true;
       cleanOnBoot = true;
     };
     # kernelParams = [ "quiet" ];

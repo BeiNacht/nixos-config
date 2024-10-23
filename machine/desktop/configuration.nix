@@ -68,7 +68,7 @@ in
       borg-key = {
         sopsFile = ../../secrets-desktop.yaml;
         owner = config.users.users.alex.name;
-        group = config.users.users.alex.group;
+        group = config.users.users.alex.group; 
       };
 
       hashedPassword = {
@@ -91,11 +91,17 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
+    tmp.useTmpfs = false;
+
     kernelPackages = pkgs.pkgs.linuxPackages_cachyos-rc;
     kernelModules = [ "nct6775" ];
     extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos-rc; [ ryzen-smu ];
     # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
+    kernelPatches = [{
+      name = "fix problems with netfilter in 6.11.4";
+      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
+    }];
   };
 
   systemd.services = {
@@ -132,6 +138,9 @@ in
     qdiskinfo
     #    fan2go
     #    unigine-superposition
+
+    jdk
+    moonlight-qt
   ];
 
   hardware = {
@@ -174,6 +183,11 @@ in
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+    };
+
+    sunshine = {
+      enable = true;
+      capSysAdmin = true;
     };
 
     samba = {
