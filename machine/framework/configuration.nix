@@ -53,18 +53,15 @@ in
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_testing;
+    kernelPackages = pkgs.linuxPackages_latest;
     initrd.systemd.enable = true;
     loader = {
       systemd-boot.enable = true;
       efi = { canTouchEfiVariables = true; };
     };
+
+    tmp.useTmpfs = false;
   };
-
-  # nixpkgs.config = {
-  #   allowUnfree = true;
-
-  # };
 
   # nixpkgs.localSystem = {
   #   gcc.arch = "alderlake";
@@ -139,31 +136,6 @@ in
       alsa.support32Bit = true;
       pulse.enable = true;
     };
-
-    # samba = {
-    #   enable = true;
-    #   securityType = "user";
-    #   extraConfig = ''
-    #     workgroup = WORKGROUP
-    #     server string = server
-    #     netbios name = server
-    #     security = user
-    #     guest account = nobody
-    #     map to guest = bad user
-    #     logging = systemd
-    #     max log size = 50
-    #   '';
-    #   shares = {
-    #     storage = {
-    #       path = "/home/alex/storage";
-    #       browseable = "yes";
-    #       "read only" = "no";
-    #       "guest ok" = "no";
-    #       "create mask" = "0644";
-    #       "directory mask" = "0755";
-    #     };
-    #   };
-    # };
 
     borgbackup.jobs.home = rec {
       compression = "auto,zstd";
