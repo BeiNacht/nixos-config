@@ -104,6 +104,11 @@
       LANGUAGE = "en_US.UTF-8";
       LC_ALL = "en_US.UTF-8";
     };
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "de_DE.UTF-8/UTF-8"
+      "de_DE/ISO-8859-1"
+    ];
   };
 
   networking = {

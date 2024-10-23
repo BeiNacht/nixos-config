@@ -9,6 +9,7 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1731866540,
         "narHash": "sha256-wAz/S5GLm+9Vp0kmUPsva3Mxp+VUnbEUZ8aBM1aEhhY=",
         "owner": "chaotic-cx",
@@ -29,6 +30,13 @@
         "rev": "fed2d39a7c4614311e25a4281d056a7a2d36a6c8",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+        "lastModified": 1729599319,
+        "narHash": "sha256-e/4JPcIRte5zkwqmGFrFo3763e0iHURX6N0apz4jbI0=",
+        "owner": "chaotic-cx",
+        "repo": "nyx",
+        "rev": "1b86b304c8eb1437d9337a760e7f930826fc4d6d",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {
@@ -38,6 +46,7 @@
         "type": "github"
       }
     },
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     "fenix": {
@@ -71,6 +80,8 @@
       }
     },
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -132,6 +143,7 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1731535640,
         "narHash": "sha256-2EckCJn4wxran/TsRiCOFcmVpep2m9EBKl99NBh2GnM=",
         "owner": "nix-community",
@@ -152,6 +164,13 @@
         "rev": "ffe2d07e771580a005e675108212597e5b367d2d",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+        "lastModified": 1729414726,
+        "narHash": "sha256-Dtmm1OU8Ymiy9hVWn/a2B8DhRYo9Eoyx9veERdOBR4o=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "fe56302339bb28e3471632379d733547caec8103",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {
@@ -206,6 +225,7 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1731227601,
         "narHash": "sha256-aGUQ6W/Oxd9xjH9RQbnUtC61sTK2fWlKr+J7kavT/RQ=",
         "owner": "Jovian-Experiments",
@@ -226,6 +246,13 @@
         "rev": "3390ff2632d0d8a14c92473db60fa52bf881f979",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+        "lastModified": 1729177642,
+        "narHash": "sha256-DdKal+ZhB9QD/tnEwFg4cZ4j4YnrkvSljBxnyG+3eE0=",
+        "owner": "Jovian-Experiments",
+        "repo": "Jovian-NixOS",
+        "rev": "bb69165ff372ddbd3228a03513922acd783040e8",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {
@@ -281,6 +308,7 @@
     "nixos-hardware": {
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1731797098,
         "narHash": "sha256-UhWmEZhwJZmVZ1jfHZFzCg+ZLO9Tb/v3Y6LC0UNyeTo=",
         "owner": "nixos",
@@ -301,6 +329,13 @@
         "rev": "11c43c830e533dad1be527ecce379fcf994fbbb5",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+        "lastModified": 1729624485,
+        "narHash": "sha256-iEffyT68tEU5kHQuyP05QRH+JhWNNLAwHfgZAzXFS7o=",
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "rev": "22e8de2729f40d29a445c8baeaf22740b8b25daf",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {
@@ -312,6 +347,7 @@
     },
     "nixpkgs": {
       "locked": {
+<<<<<<< HEAD
 <<<<<<< HEAD
         "lastModified": 1731676054,
         "narHash": "sha256-OZiZ3m8SCMfh3B6bfGC/Bm4x3qc1m2SVEAlkV6iY7Yg=",
@@ -333,6 +369,13 @@
         "rev": "06cf0e1da4208d3766d898b7fdab6513366d45b9",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+        "lastModified": 1729413321,
+        "narHash": "sha256-I4tuhRpZFa6Fu6dcH9Dlo5LlH17peT79vx1y1SpeKt0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1997e4aa514312c1af7e2bda7fad1644e778ff26",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {
@@ -342,6 +385,7 @@
         "type": "github"
       }
     },
+<<<<<<< HEAD
     "nixpkgs-unstable": {
       "locked": {
 <<<<<<< HEAD
@@ -365,6 +409,31 @@
         "rev": "06cf0e1da4208d3766d898b7fdab6513366d45b9",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+    "nixpkgs-stable": {
+      "locked": {
+        "lastModified": 1729357638,
+        "narHash": "sha256-66RHecx+zohbZwJVEPF7uuwHeqf8rykZTMCTqIrOew4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "bb8c2cf7ea0dd2e18a52746b2c3a5b0c73b93c22",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-24.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1729413321,
+        "narHash": "sha256-I4tuhRpZFa6Fu6dcH9Dlo5LlH17peT79vx1y1SpeKt0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "1997e4aa514312c1af7e2bda7fad1644e778ff26",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {
@@ -379,19 +448,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-<<<<<<< HEAD
-        "lastModified": 1728627514,
-        "narHash": "sha256-r+SF9AnHrTg+bk6YszoKfV9lgyw+yaFUQe0dOjI0Z2o=",
+        "lastModified": 1729449015,
+        "narHash": "sha256-Gf04dXB0n4q0A9G5nTGH3zuMGr6jtJppqdeljxua1fo=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c505ebf777526041d792a49d5f6dd4095ea391a7",
-=======
-        "lastModified": 1727672256,
-        "narHash": "sha256-9/79hjQc9+xyH+QxeMcRsA6hDyw6Z9Eo1/oxjvwirLk=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "1719f27dd95fd4206afb9cec9f415b539978827e",
->>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
+        "rev": "89172919243df199fe237ba0f776c3e3e3d72367",
         "type": "github"
       },
       "original": {
@@ -414,6 +475,7 @@
         "sops-nix": "sops-nix"
       }
     },
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     "rust-analyzer-src": {
@@ -442,6 +504,8 @@
       }
     },
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
     "sops-nix": {
       "inputs": {
         "nixpkgs": [
@@ -449,6 +513,7 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
 <<<<<<< HEAD
         "lastModified": 1731954233,
         "narHash": "sha256-vvXx1m2Rsw7MkbKJdpcICzz4YPgZPApGKQGhNZfkhOI=",
@@ -470,6 +535,13 @@
         "rev": "3198a242e547939c5e659353551b0668ec150268",
 >>>>>>> f304ed7 (vps-arm-2024-10-01-12-15-04)
 >>>>>>> b98a5ab (vps-arm-2024-10-01-12-15-04)
+=======
+        "lastModified": 1729669122,
+        "narHash": "sha256-SpS3rSwYcskdOpx+jeCv1lcZDdkT/K5qT8dlenCBQ8c=",
+        "owner": "mic92",
+        "repo": "sops-nix",
+        "rev": "a4c33bfecb93458d90f9eb26f1cf695b47285243",
+>>>>>>> c0051c2 (vps-arm-2024-10-23-10-10-15)
         "type": "github"
       },
       "original": {

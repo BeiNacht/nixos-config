@@ -20,12 +20,10 @@
       ensureDatabases = [
         config.services.gitea.user
       ];
-      ensureUsers = [
-        {
-          name = config.services.gitea.database.user;
-          ensureDBOwnership = true;
-        }
-      ];
+      ensureUsers = [{
+        name = config.services.gitea.database.user;
+        ensureDBOwnership = true;
+      }];
     };
 
     gitea = {
