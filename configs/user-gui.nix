@@ -62,6 +62,7 @@
     telegram-desktop
     discord
     kdenlive
+    shotcut
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
@@ -83,7 +84,6 @@
 
       kitty = {
         enable = true;
-        package = pkgs.kitty;
         extraConfig = ''
           enable_audio_bell false
 
@@ -107,7 +107,7 @@
           color14               #70c0b1
           color7                #fffefe
           color15               #fffefe
-          selection_foreground #000000
+          selection_foreground  #000000
         '';
       };
     };
