@@ -10,6 +10,17 @@
     # example = prev.example.overrideAttrs (oldAttrs: rec {
     # ...
     # });
+
+    # linuxPackages_6_11 = final.pkgs.linuxPackagesFor (final.pkgs.linuxPackages_6_11.override {
+    #   argsOverride = rec {
+    #     src = final.pkgs.fetchurl {
+    #       url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
+    #       sha256 = "0wwv8jaipx352rna6bxj6jklmnm4kcikvzaag59m4zf1mz866wh5";
+    #     };
+    #     version = "6.11.3";
+    #     modDirVersion = "6.11.3";
+    #   };
+    # });
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will

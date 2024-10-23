@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
@@ -13,17 +14,40 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/5549d49d-165e-4a45-973e-6a32a63e31be";
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/5549d49d-165e-4a45-973e-6a32a63e31be";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
+    "/boot" = {
+      device = "/dev/disk/by-uuid/20D2-E669";
+      fsType = "vfat";
+    };
+    "/home/alex/shared/storage" = {
+      device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
+      fsType = "btrfs";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+        "subvol=@data"
+        "nofail"
+        "x-systemd.automount"
+      ];
+    };
+  };
 
   boot.initrd.luks.devices."luks-4f42a0a6-1f09-413c-8af3-9be8fc5c1b25".device = "/dev/disk/by-uuid/4f42a0a6-1f09-413c-8af3-9be8fc5c1b25";
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/20D2-E669";
-      fsType = "vfat";
-    };
+  environment.etc.crypttab.text = ''
+    luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /etc/luks-key01
+  '';
+  # boot.initrd.luks.devices."luks-e36ec189-2211-4bcc-bb9d-46650443d76b".device = "/dev/disk/by-uuid/e36ec189-2211-4bcc-bb9d-46650443d76b";
 
   swapDevices = [ ];
 

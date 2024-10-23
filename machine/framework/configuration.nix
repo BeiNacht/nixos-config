@@ -9,10 +9,10 @@ in
     ];
     config = {
       allowUnfree = true;
-      packageOverrides = pkgs: {
-        intel-vaapi-driver =
-          pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-      };
+      # packageOverrides = pkgs: {
+      #   intel-vaapi-driver =
+      #     pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+      # };
     };
   };
 
@@ -60,6 +60,11 @@ in
       efi = { canTouchEfiVariables = true; };
     };
 
+    kernelPatches = [{
+      name = "fix problems with netfilter in 6.11.4";
+      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
+    }];
+
     tmp.useTmpfs = false;
   };
 
@@ -84,7 +89,7 @@ in
   time.timeZone = "Europe/Berlin";
 
   programs.fw-fanctrl = {
-    enable = true;
+    enable = false;
     config = {
       defaultStrategy = "lazy";
       strategies = {
@@ -115,7 +120,11 @@ in
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [ intel-media-driver intel-vaapi-driver ];
+      extraPackages = with pkgs; [
+        intel-media-driver
+        intel-vaapi-driver
+        vpl-gpu-rt
+      ];
     };
     pulseaudio.enable = false;
   };
@@ -129,6 +138,12 @@ in
     colord.enable = true;
 
     fwupd.enable = true;
+
+    btrfs.autoScrub = {
+      enable = true;
+      interval = "monthly";
+      fileSystems = [ "/home/alex/shared/storage" ];
+    };
 
     pipewire = {
       enable = true;
@@ -172,27 +187,32 @@ in
 
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
-  environment.systemPackages = with pkgs; [
-    # psensor
-    mission-center
-    resources
-    monitorets
+  environment = {
+    sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+    systemPackages = with pkgs; [
+      # psensor
+      mission-center
+      resources
 
-    gnumake
-    pkg-config
-    libftdi
-    libusb1
-    gcc
-    intel-gpu-tools
-    msr-tools
-    quota
-    mergerfs
-    snapraid
-    gparted
-    homebank
-    # fahviewer
-    # fahcontrol
-  ];
+      gnumake
+      pkg-config
+      libftdi
+      libusb1
+      gcc
+
+      intel-gpu-tools
+      msr-tools
+      quota
+
+      mergerfs
+      snapraid
+
+      gparted
+      homebank
+      # fahviewer
+      # fahcontrol
+    ];
+  };
 
   # Set up deep sleep + hibernation
   swapDevices = [{
