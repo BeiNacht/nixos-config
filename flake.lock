@@ -310,6 +310,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1731797098,
         "narHash": "sha256-UhWmEZhwJZmVZ1jfHZFzCg+ZLO9Tb/v3Y6LC0UNyeTo=",
         "owner": "nixos",
@@ -344,6 +345,13 @@
         "repo": "nixos-hardware",
         "rev": "6906ac67a1078cf950b8527341e229eeecb5bc30",
 >>>>>>> f36a48a (mini-2024-10-28-14-06-27)
+=======
+        "lastModified": 1730161780,
+        "narHash": "sha256-z5ILcmwMtiCoHTXS1KsQWqigO7HJO8sbyK7f7wn9F/E=",
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "rev": "07d15e8990d5d86a631641b4c429bc0a7400cfb8",
+>>>>>>> 0630f25 (vps-arm-2024-10-29-13-18-23)
         "type": "github"
       },
       "original": {
