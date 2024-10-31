@@ -68,7 +68,7 @@ in
       borg-key = {
         sopsFile = ../../secrets-desktop.yaml;
         owner = config.users.users.alex.name;
-        group = config.users.users.alex.group; 
+        group = config.users.users.alex.group;
       };
 
       hashedPassword = {
@@ -77,7 +77,17 @@ in
     };
   };
 
-  nix.settings.system-features = [ "nixos-test" "benchmark" "big-parallel" "kvm" "gccarch-znver2" ];
+  nix.settings = {
+    system-features = [
+      "nixos-test"
+      "benchmark"
+      "big-parallel"
+      "kvm"
+      "gccarch-znver2"
+    ];
+    trusted-substituters = [ "https://ai.cachix.org" ];
+    trusted-public-keys = [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
+  };
 
   boot = {
     loader = {
@@ -92,16 +102,24 @@ in
     };
 
     tmp.useTmpfs = false;
-
+    supportedFilesystems = [ "btrfs" ];
     kernelPackages = pkgs.pkgs.linuxPackages_cachyos-rc;
     kernelModules = [ "nct6775" ];
     extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos-rc; [ ryzen-smu ];
     # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
-    kernelPatches = [{
-      name = "fix problems with netfilter in 6.11.4";
-      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
-    }];
+    # kernelPatches = [{
+    #   name = "fix problems with netfilter in 6.11.4";
+    #   patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
+    # }];
+
+    initrd.luks.devices = {
+      root = {
+        # Use https://nixos.wiki/wiki/Full_Disk_Encryption
+        device = "/dev/disk/by-uuid/cc43f1eb-49c3-41a6-9279-6766de3659e7";
+        preLVM = true;
+      };
+    };
   };
 
   systemd.services = {
@@ -176,8 +194,6 @@ in
     # printing.enable = true;
     fwupd.enable = true;
 
-    # xserver.videoDrivers = [ "amdgpu" ];
-
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -227,32 +243,53 @@ in
 
     tailscale.enable = true;
 
-    borgbackup.jobs.home = rec {
-      compression = "auto,zstd";
-      encryption = {
-        mode = "repokey-blake2";
-        passCommand = "cat ${config.sops.secrets.borg-key.path}";
+    borgbackup.jobs = {
+      home = rec {
+        compression = "auto,zstd";
+        encryption = {
+          mode = "repokey-blake2";
+          passCommand = "cat ${config.sops.secrets.borg-key.path}";
+        };
+        extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
+        environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_ed25519";
+        paths = "/home/alex";
+        repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
+        startAt = "daily";
+        user = "alex";
+        prune.keep = {
+          daily = 7;
+          weekly = 4;
+          monthly = 6;
+        };
+        extraPruneArgs = "--save-space --list --stats";
+        exclude = map (x: paths + "/" + x) be.borg-exclude;
       };
-      extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-      environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_ed25519";
-      paths = "/home/alex";
-      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
-      startAt = "daily";
-      user = "alex";
-      prune.keep = {
-        daily = 7;
-        weekly = 4;
-        monthly = 6;
+
+      home-external = rec {
+        compression = "auto,zstd";
+        encryption = {
+          mode = "repokey-blake2";
+          passCommand = "cat ${config.sops.secrets.borg-key.path}";
+        };
+        extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
+        paths = "/home/alex";
+        repo = "/run/media/alex/b6c33623-fc23-47ed-b6f5-e99455d5534a/borg";
+        startAt = [];
+        user = "alex";
+        prune.keep = {
+          daily = 7;
+          weekly = 4;
+          monthly = 6;
+        };
+        extraPruneArgs = "--save-space --list --stats";
+        exclude = map (x: paths + "/" + x) [
+          ".cache"
+          ".config/Nextcloud/logs"
+          ".local/share/baloo"
+        ];
       };
-      extraPruneArgs = "--save-space --list --stats";
-      exclude = map (x: paths + "/" + x) be.borg-exclude;
     };
   };
-
-  swapDevices = [{
-    device = "/swapfile";
-    size = 32 * 1024;
-  }];
 
   system.stateVersion = "24.11";
 }

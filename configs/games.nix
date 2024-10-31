@@ -1,5 +1,7 @@
 { config, pkgs, lib, outputs, ... }:
 {
+  users.extraGroups.gamemode.members = [ "alex" ];
+
   programs = {
     gamescope = {
       enable = true;

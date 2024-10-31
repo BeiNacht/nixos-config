@@ -1,8 +1,11 @@
 {
   borg-exclude = [
     ".cache"
+    ".config/Nextcloud/logs"
+    ".local/share/baloo"
 
-    ".local/share/libvirt/images"
+    # ".local/share/libvirt/images"
+
     ".local/share/Steam"
     ".local/share/Trash"
 
