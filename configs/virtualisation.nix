@@ -7,10 +7,12 @@
   # "kvm"
 
   virtualisation = {
-    virtualbox.host ={
+    virtualbox.host = {
       enable = true;
       enableExtensionPack = true;
     };
+
+    vmware.host.enable = true;
 
     # libvirtd = {
     #   enable = true;

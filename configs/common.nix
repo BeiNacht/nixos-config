@@ -49,6 +49,7 @@
       iotop
       nmap
       nmon
+      bandwhich
 
       gnupg
       gocryptfs

@@ -1,4 +1,18 @@
 { config, pkgs, lib, inputs, ... }:
+let
+  serviceConfig = {
+    MountAPIVFS = true;
+    PrivateTmp = true;
+    PrivateUsers = true;
+    ProtectKernelModules = true;
+    PrivateDevices = true;
+    ProtectControlGroups = true;
+    ProtectHome = true;
+    ProtectKernelTunables = true;
+    ProtectSystem = "full";
+    RestrictSUIDSGID = true;
+  };
+in
 {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -15,6 +29,7 @@
 
     users.alex = {
       isNormalUser = true;
+      uid = 1000;
       # hashedPassword = secrets.hashedPassword;
       hashedPasswordFile = config.sops.secrets.hashedPassword.path;
       extraGroups = [
@@ -34,6 +49,11 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkURF5v9vRyEPhsK80kUgYh1vsS0APL4XyH4F3Fpyic alex@macbook"
       ];
     };
+  };
+
+  systemd.services = {
+    alex.serviceConfig = serviceConfig;
+    root.serviceConfig = serviceConfig;
   };
 
   programs = {
