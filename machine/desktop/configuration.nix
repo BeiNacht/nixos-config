@@ -166,7 +166,7 @@ in
       "/var/lib/docker"
       "/var/lib/nixos"
       "/var/lib/samba"
-      "/var/lib/sddm"
+      # "/var/lib/sddm"
       "/var/lib/systemd/rfkill"
       "/var/lib/tailscale"
       "/var/lib/tuptime"
@@ -221,7 +221,6 @@ in
     #    unigine-superposition
 
     jdk
-    moonlight-qt
   ];
 
   hardware = {
