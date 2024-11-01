@@ -37,11 +37,6 @@ in
 
   imports = [
     ./hardware-configuration.nix
-    inputs.nixos-hardware.nixosModules.common-cpu-amd
-    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
-    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
-    inputs.nixos-hardware.nixosModules.common-pc-ssd
-    inputs.sops-nix.nixosModules.sops
     ../../configs/browser.nix
     ../../configs/common.nix
     ../../configs/docker.nix
@@ -52,8 +47,6 @@ in
     ../../configs/user-gui.nix
     ../../configs/user.nix
   ];
-
-  # chaotic.mesa-git.enable = true;
 
   sops = {
     defaultSopsFile = ../../secrets.yaml;
@@ -113,13 +106,80 @@ in
     #   patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
     # }];
 
-    initrd.luks.devices = {
-      root = {
-        # Use https://nixos.wiki/wiki/Full_Disk_Encryption
-        device = "/dev/disk/by-uuid/cc43f1eb-49c3-41a6-9279-6766de3659e7";
-        preLVM = true;
+    initrd = {
+      luks.devices = {
+        root = {
+          # Use https://nixos.wiki/wiki/Full_Disk_Encryption
+          device = "/dev/disk/by-uuid/cc43f1eb-49c3-41a6-9279-6766de3659e7";
+          allowDiscards = true;
+          preLVM = true;
+        };
       };
+
+      postDeviceCommands = pkgs.lib.mkBefore ''
+        mkdir -p /mnt
+
+        # We first mount the btrfs root to /mnt
+        # so we can manipulate btrfs subvolumes.
+        mount -o subvol=/ /dev/mapper/lvm-root /mnt
+
+        # While we're tempted to just delete /root and create
+        # a new snapshot from /root-blank, /root is already
+        # populated at this point with a number of subvolumes,
+        # which makes `btrfs subvolume delete` fail.
+        # So, we remove them first.
+        #
+        # /root contains subvolumes:
+        # - /root/var/lib/portables
+        # - /root/var/lib/machines
+        #
+        # I suspect these are related to systemd-nspawn, but
+        # since I don't use it I'm not 100% sure.
+        # Anyhow, deleting these subvolumes hasn't resulted
+        # in any issues so far, except for fairly
+        # benign-looking errors from systemd-tmpfiles.
+        btrfs subvolume list -o /mnt/root |
+        cut -f9 -d' ' |
+        while read subvolume; do
+          echo "deleting /$subvolume subvolume..."
+          btrfs subvolume delete "/mnt/$subvolume"
+        done &&
+        echo "deleting /root subvolume..." &&
+        btrfs subvolume delete /mnt/root
+
+        echo "restoring blank /root subvolume..."
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+        # Once we're done rolling back to a blank snapshot,
+        # we can unmount /mnt and continue on the boot process.
+        umount /mnt
+      '';
     };
+  };
+
+  environment.persistence."/persist" = {
+    directories = [
+      "/etc/coolercontrol"
+      "/etc/NetworkManager/system-connections"
+      "/etc/nixos"
+      "/var/lib/bluetooth"
+      "/var/lib/docker"
+      "/var/lib/nixos"
+      "/var/lib/samba"
+      "/var/lib/sddm"
+      "/var/lib/systemd/rfkill"
+      "/var/lib/tailscale"
+      "/var/lib/tuptime"
+      "/var/lib/vnstat"
+    ];
+    files = [
+      # "/etc/machine-id"
+      "/etc/NIXOS"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
+    ];
   };
 
   systemd.services = {
@@ -142,11 +202,14 @@ in
     inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
     lact
     amdgpu_top
+
     python3
     python311Packages.tkinter
+
     snapraid
     mergerfs
     gimp
+
     clinfo
     gparted
     mission-center
@@ -235,11 +298,11 @@ in
       };
     };
 
-    jellyfin = {
-      enable = true;
-      user = "alex";
-      group = "users";
-    };
+    # jellyfin = {
+    #   enable = true;
+    #   user = "alex";
+    #   group = "users";
+    # };
 
     tailscale.enable = true;
 
@@ -265,30 +328,46 @@ in
         exclude = map (x: paths + "/" + x) be.borg-exclude;
       };
 
-      home-external = rec {
-        compression = "auto,zstd";
-        encryption = {
-          mode = "repokey-blake2";
-          passCommand = "cat ${config.sops.secrets.borg-key.path}";
-        };
-        extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-        paths = "/home/alex";
-        repo = "/run/media/alex/b6c33623-fc23-47ed-b6f5-e99455d5534a/borg";
-        startAt = [];
-        user = "alex";
-        prune.keep = {
-          daily = 7;
-          weekly = 4;
-          monthly = 6;
-        };
-        extraPruneArgs = "--save-space --list --stats";
-        exclude = map (x: paths + "/" + x) [
-          ".cache"
-          ".config/Nextcloud/logs"
-          ".local/share/baloo"
-        ];
-      };
+      # home-external = rec {
+      #   compression = "auto,zstd";
+      #   encryption = {
+      #     mode = "repokey-blake2";
+      #     passCommand = "cat ${config.sops.secrets.borg-key.path}";
+      #   };
+      #   extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
+      #   paths = "/home/alex";
+      #   repo = "/run/media/alex/b6c33623-fc23-47ed-b6f5-e99455d5534a/borg";
+      #   startAt = [ ];
+      #   user = "alex";
+      #   prune.keep = {
+      #     daily = 7;
+      #     weekly = 4;
+      #     monthly = 6;
+      #   };
+      #   extraPruneArgs = "--save-space --list --stats";
+      #   exclude = map (x: paths + "/" + x) [
+      #     ".cache"
+      #     ".config/Nextcloud/logs"
+      #     ".local/share/baloo"
+      #   ];
+      # };
     };
+  };
+
+  security = {
+    rtkit.enable = true;
+    apparmor.enable = true;
+
+    auditd.enable = true;
+    audit.enable = true;
+    audit.rules = [
+      "-a exit,always -F arch=b64 -S execve"
+    ];
+
+    sudo.extraConfig = ''
+      # rollback results in sudo lectures after each reboot
+      Defaults lecture = never
+    '';
   };
 
   system.stateVersion = "24.11";
