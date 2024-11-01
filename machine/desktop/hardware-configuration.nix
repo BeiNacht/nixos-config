@@ -18,31 +18,32 @@
     "/" = {
       device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
       fsType = "btrfs";
-      options = [ "subvol=root" "compress=zstd" "noatime" ];
+      options = [ "subvol=root" "discard=async" "compress=zstd" "noatime" ];
     };
 
     "/home" = {
       device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
       fsType = "btrfs";
-      options = [ "subvol=home" "compress=zstd" "noatime" ];
+      options = [ "subvol=home" "discard=async" "compress=zstd" "noatime" ];
     };
 
     "/nix" = {
       device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
       fsType = "btrfs";
-      options = [ "subvol=nix" "compress=zstd" "noatime" ];
+      options = [ "subvol=nix" "discard=async" "compress=zstd" "noatime" ];
     };
 
     "/persist" = {
       device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
       fsType = "btrfs";
-      options = [ "subvol=persist" "compress=zstd" "noatime" ];
+      options = [ "subvol=persist" "discard=async" "compress=zstd" "noatime" ];
+      neededForBoot = true;
     };
 
     "/var/log" = {
       device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
       fsType = "btrfs";
-      options = [ "subvol=log" "compress=zstd" "noatime" ];
+      options = [ "subvol=log" "discard=async" "compress=zstd" "noatime" ];
       neededForBoot = true;
     };
 

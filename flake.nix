@@ -28,10 +28,12 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    impermanence.url = "github:nix-community/impermanence";
+
+    # nixos-cosmic = {
+    #   url = "github:lilyinstarlight/nixos-cosmic";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
   };
 
   outputs =
@@ -43,7 +45,8 @@
     , nixpkgs-stable
     , nixpkgs-unstable
     , sops-nix
-    , nixos-cosmic
+    # , nixos-cosmic
+    , impermanence
     , ...
     } @ inputs:
     let
@@ -63,16 +66,15 @@
       # pass to it, with each system as an argument
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      cosmic-modules = [
-        {
-          nix.settings = {
-            substituters = [ "https://cosmic.cachix.org/" ];
-            trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
-          };
-        }
-        nixos-cosmic.nixosModules.default
-      ];
-
+      # cosmic-modules = [
+      #   {
+      #     nix.settings = {
+      #       substituters = [ "https://cosmic.cachix.org/" ];
+      #       trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
+      #     };
+      #   }
+      #   nixos-cosmic.nixosModules.default
+      # ];
     in
     {
       overlays = import ./overlays { inherit inputs; };
@@ -82,8 +84,14 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./machine/desktop/configuration.nix
+            impermanence.nixosModules.impermanence
             chaotic.nixosModules.default # OUR DEFAULT MODULE
+            nixos-hardware.nixosModules.common-cpu-amd
+            nixos-hardware.nixosModules.common-cpu-amd-pstate
+            nixos-hardware.nixosModules.common-cpu-amd-zenpower
+            nixos-hardware.nixosModules.common-pc-ssd
+            sops-nix.nixosModules.sops
+            ./machine/desktop/configuration.nix
           ];
         };
 

@@ -8,7 +8,7 @@
     # kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
     kernel.sysctl = { "vm.max_map_count" = 262144; };
-    initrd.systemd.enable = (!config.boot.swraid.enable && !config.boot.isContainer);
+    # initrd.systemd.enable = (!config.boot.swraid.enable && !config.boot.isContainer);
   };
 
   # Work around for https://github.com/NixOS/nixpkgs/issues/124215
