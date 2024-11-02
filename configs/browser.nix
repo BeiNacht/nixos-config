@@ -2,13 +2,12 @@
 {
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts.packages = with pkgs; [ uget-integrator ];
+    # nativeMessagingHosts.packages = with pkgs; [ uget-integrator ];
   };
 
   environment.systemPackages = with pkgs; [
-    uget
+    # uget
     brave
-    # firefox
     librewolf
     tor-browser-bundle-bin
   ];
