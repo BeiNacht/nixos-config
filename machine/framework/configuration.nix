@@ -66,10 +66,10 @@ in
       efi = { canTouchEfiVariables = true; };
     };
     supportedFilesystems = [ "btrfs" ];
-    kernelPatches = [{
-      name = "fix problems with netfilter in 6.11.4";
-      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
-    }];
+#    kernelPatches = [{
+#      name = "fix problems with netfilter in 6.11.4";
+#      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
+#    }];
 
     tmp.useTmpfs = false;
   };
