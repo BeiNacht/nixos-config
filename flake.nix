@@ -121,11 +121,12 @@
           ];
         };
 
-        nixos-libvirt = nixpkgs.lib.nixosSystem {
+        nixos-virtualbox = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./machine/nixos-libvirt/configuration.nix
+            sops-nix.nixosModules.sops
+            ./machine/nixos-virtualbox/configuration.nix
           ];
         };
       };

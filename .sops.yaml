@@ -6,6 +6,7 @@ keys:
     - &framework age1w3nq2g9ctm43f43lyzfrznywqpqlrk6x9de2qy3sr05mm4yk4u3s05slw4
     - &vps-arm age14l4v7kmtpp49mgngftlqquqe2u0mpdnfvnmtgqzv5zlsxh8mpvdspk3mel
     - &mini age1hdv2nz7r5fv6glq7jac27uf864t2668a97ptx52q57yfg4jd7ypqkag7wd
+    - &nixos-vm age120fg86wv7vrcw6aeuunkzr7nerpwg8w0vu08xp8v8feqawtzqquq4763cw
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
@@ -15,6 +16,7 @@ creation_rules:
       - *vps-arm
       - *framework
       - *mini
+      - *nixos-vm
   - path_regex: secrets-desktop.yaml$
     key_groups:
     - age:
