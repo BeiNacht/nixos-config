@@ -9,24 +9,66 @@
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "thunderbolt"
+    "nvme"
+    "usb_storage"
+    "sd_mod"
+  ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/5549d49d-165e-4a45-973e-6a32a63e31be";
-      fsType = "ext4";
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+      fsType = "btrfs";
       options = [
+        "subvol=@root"
+        "compress=zstd"
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
+    };
+    "/home" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+      fsType = "btrfs";
+      options = [
+        "subvol=@home"
+        "compress=zstd"
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
+    };
+    "/nix" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+      fsType = "btrfs";
+      options = [
+        "subvol=@nix"
+        "compress=zstd"
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
+    };
+    "/var/log" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+      fsType = "btrfs";
+      options = [
+        "subvol=@log"
+        "compress=zstd"
         "noatime"
         "nodiratime"
         "discard"
       ];
     };
     "/boot" = {
-      device = "/dev/disk/by-uuid/20D2-E669";
+      device = "/dev/disk/by-uuid/427A-97BA";
       fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
     };
     "/home/alex/shared/storage" = {
       device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
@@ -42,14 +84,19 @@
     };
   };
 
-  boot.initrd.luks.devices."luks-4f42a0a6-1f09-413c-8af3-9be8fc5c1b25".device = "/dev/disk/by-uuid/4f42a0a6-1f09-413c-8af3-9be8fc5c1b25";
+  boot.initrd.luks.devices.root = {
+    device = "/dev/disk/by-uuid/eddab069-d369-4b26-8b4e-f3b907ba6f6c";
+    preLVM = true;
+  };
 
   environment.etc.crypttab.text = ''
     luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /etc/luks-key01
   '';
   # boot.initrd.luks.devices."luks-e36ec189-2211-4bcc-bb9d-46650443d76b".device = "/dev/disk/by-uuid/e36ec189-2211-4bcc-bb9d-46650443d76b";
 
-  swapDevices = [ ];
+  swapDevices = [{
+    device = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
+  }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

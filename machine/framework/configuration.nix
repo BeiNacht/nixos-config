@@ -56,10 +56,16 @@ in
     kernelPackages = pkgs.linuxPackages_latest;
     initrd.systemd.enable = true;
     loader = {
-      systemd-boot.enable = true;
+      grub = {
+          enable = true;
+          efiSupport = true;
+          device = "nodev";
+          configurationLimit = 5;
+          enableCryptodisk = true;
+        };
       efi = { canTouchEfiVariables = true; };
     };
-
+    supportedFilesystems = [ "btrfs" ];
     kernelPatches = [{
       name = "fix problems with netfilter in 6.11.4";
       patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
@@ -215,17 +221,18 @@ in
   };
 
   # Set up deep sleep + hibernation
-  swapDevices = [{
-    device = "/swapfile";
-    size = 64 * 1024;
-  }];
+  # swapDevices = [{
+  #   device = "/swapfile";
+  #   size = 64 * 1024;
+  # }];
 
   # Partition swapfile is on (after LUKS decryption)
-  boot.resumeDevice = "/dev/disk/by-uuid/5549d49d-165e-4a45-973e-6a32a63e31be";
+  boot.resumeDevice = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
 
   # Resume Offset is offset of swapfile
   # https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
-  boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=190937088" ];
+  # boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=190937088" ];
+  boot.kernelParams = [ "mem_sleep_default=deep" ];
 
   # Suspend-then-hibernate everywhere
   services.logind = {
