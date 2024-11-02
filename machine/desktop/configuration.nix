@@ -52,8 +52,8 @@ in
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      keyFile = "/var/lib/sops-nix/key.txt";
+      sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+      keyFile = "/persist/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
 
@@ -76,11 +76,19 @@ in
       "benchmark"
       "big-parallel"
       "kvm"
-      "gccarch-znver2"
+      "gccarch-znver3"
     ];
     trusted-substituters = [ "https://ai.cachix.org" ];
     trusted-public-keys = [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
   };
+
+  chaotic.nyx.cache.enable = false;
+
+  # nixpkgs.localSystem = {
+  #   gcc.arch = "znver3";
+  #   gcc.tune = "znver3";
+  #   system = "x86_64-linux";
+  # };
 
   boot = {
     loader = {
@@ -96,9 +104,9 @@ in
 
     tmp.useTmpfs = false;
     supportedFilesystems = [ "btrfs" ];
-    kernelPackages = pkgs.pkgs.linuxPackages_cachyos-rc;
+    kernelPackages = pkgs.pkgs.linuxPackages_cachyos;
     kernelModules = [ "nct6775" ];
-    extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos-rc; [ ryzen-smu ];
+    extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos; [ ryzen-smu ];
     # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
     # kernelPatches = [{
@@ -157,31 +165,6 @@ in
     };
   };
 
-  environment.persistence."/persist" = {
-    directories = [
-      "/etc/coolercontrol"
-      "/etc/NetworkManager/system-connections"
-      "/etc/nixos"
-      "/var/lib/bluetooth"
-      "/var/lib/docker"
-      "/var/lib/nixos"
-      "/var/lib/samba"
-      # "/var/lib/sddm"
-      "/var/lib/systemd/rfkill"
-      "/var/lib/tailscale"
-      "/var/lib/tuptime"
-      "/var/lib/vnstat"
-    ];
-    files = [
-      # "/etc/machine-id"
-      "/etc/NIXOS"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_ed25519_key.pub"
-      "/etc/ssh/ssh_host_rsa_key"
-      "/etc/ssh/ssh_host_rsa_key.pub"
-    ];
-  };
-
   systemd.services = {
     monitor = {
       description = "AMDGPU Control Daemon";
@@ -198,30 +181,56 @@ in
 
   time.timeZone = "Europe/Berlin";
 
-  environment.systemPackages = with pkgs; [
-    inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
-    lact
-    amdgpu_top
+  environment = {
+    systemPackages = with pkgs; [
+      inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
+      lact
+      amdgpu_top
 
-    python3
-    python311Packages.tkinter
+      python3
+      python311Packages.tkinter
 
-    snapraid
-    mergerfs
-    gimp
+      snapraid
+      mergerfs
+      gimp
 
-    clinfo
-    gparted
-    mission-center
-    resources
-    stressapptest
-    ryzen-monitor-ng
-    qdiskinfo
-    #    fan2go
-    #    unigine-superposition
+      clinfo
+      gparted
+      mission-center
+      resources
+      stressapptest
+      ryzen-monitor-ng
+      qdiskinfo
+      #    fan2go
+      #    unigine-superposition
 
-    jdk
-  ];
+      jdk
+    ];
+    persistence."/persist" = {
+      directories = [
+        "/etc/coolercontrol"
+        "/etc/NetworkManager/system-connections"
+        "/etc/nixos"
+        "/var/lib/bluetooth"
+        "/var/lib/docker"
+        "/var/lib/nixos"
+        "/var/lib/samba"
+        "/var/lib/sddm"
+        "/var/lib/systemd/rfkill"
+        "/var/lib/tailscale"
+        "/var/lib/tuptime"
+        "/var/lib/vnstat"
+      ];
+      files = [
+        # "/etc/machine-id"
+        "/etc/NIXOS"
+        "/etc/ssh/ssh_host_ed25519_key"
+        "/etc/ssh/ssh_host_ed25519_key.pub"
+        "/etc/ssh/ssh_host_rsa_key"
+        "/etc/ssh/ssh_host_rsa_key.pub"
+      ];
+    };
+  };
 
   hardware = {
     keyboard.qmk.enable = true;
@@ -354,14 +363,14 @@ in
   };
 
   security = {
-    rtkit.enable = true;
-    apparmor.enable = true;
+    # rtkit.enable = true;
+    # apparmor.enable = true;
 
-    auditd.enable = true;
-    audit.enable = true;
-    audit.rules = [
-      "-a exit,always -F arch=b64 -S execve"
-    ];
+    # auditd.enable = true;
+    # audit.enable = true;
+    # audit.rules = [
+    #   "-a exit,always -F arch=b64 -S execve"
+    # ];
 
     sudo.extraConfig = ''
       # rollback results in sudo lectures after each reboot

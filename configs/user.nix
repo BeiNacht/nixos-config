@@ -30,7 +30,6 @@ in
     users.alex = {
       isNormalUser = true;
       uid = 1000;
-      # hashedPassword = secrets.hashedPassword;
       hashedPasswordFile = config.sops.secrets.hashedPassword.path;
       extraGroups = [
         "wheel"

@@ -66,7 +66,6 @@
   ];
 
   home-manager.users.alex = { pkgs, ... }: {
-    # services = { syncthing = { enable = true; }; };
     programs = {
       vscode = {
         enable = true;
