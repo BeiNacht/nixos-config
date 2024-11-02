@@ -106,30 +106,12 @@ in
 
         matchBlocks."szczepan.ski" = { hostname = "szczepan.ski"; };
         matchBlocks."mini" = { hostname = "mini"; };
-        matchBlocks."thinkpad" = { hostname = "thinkpad"; };
-        # matchBlocks."pi" = { hostname = "10.100.0.6"; };
-        # matchBlocks."vps2" = { hostname = "10.100.0.50"; };
-        # matchBlocks."vps3" = { hostname = "10.100.0.100"; };
-        # matchBlocks."router" = {
-        #   hostname = "192.168.1.1";
-        #   user = "root";
-        #   localForwards = [{
-        #     bind.address = "127.0.0.1";
-        #     bind.port = 1337;
-        #     host.address = "127.0.0.1";
-        #     host.port = 80;
-        #   }];
-        # };
+        matchBlocks."nixos-vm" = {
+          hostname = "127.0.0.1";
+          port = 1337;
+        };
 
-        # matchBlocks."homeserver" = {
-        #   hostname = "192.168.0.100";
-        #   localForwards = [{
-        #     bind.address = "127.0.0.1";
-        #     bind.port = 8385;
-        #     host.address = "127.0.0.1";
-        #     host.port = 8384;
-        #   }];
-        # };
+        matchBlocks."thinkpad" = { hostname = "thinkpad"; };
       };
 
       git = {
