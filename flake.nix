@@ -125,6 +125,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
+            impermanence.nixosModules.impermanence
             sops-nix.nixosModules.sops
             ./machine/nixos-virtualbox/configuration.nix
           ];
