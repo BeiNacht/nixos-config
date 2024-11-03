@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   services = {
     uptime-kuma = {
       enable = true;
@@ -14,7 +18,7 @@
         "uptime.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          locations = { "/" = { proxyPass = "http://127.0.0.1:4000/"; }; };
+          locations = {"/" = {proxyPass = "http://127.0.0.1:4000/";};};
         };
       };
     };

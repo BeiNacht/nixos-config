@@ -1,5 +1,10 @@
-{ config, pkgs, lib, outputs, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  outputs,
+  ...
+}: {
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -17,7 +22,7 @@
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
@@ -40,18 +45,18 @@
         device = "nodev";
       };
     };
-    supportedFilesystems = [ "btrfs" ];
+    supportedFilesystems = ["btrfs"];
 
     initrd = {
       enable = true;
-      supportedFilesystems = [ "btrfs" ];
+      supportedFilesystems = ["btrfs"];
 
       postResumeCommands = lib.mkAfter ''
         mkdir -p /mnt
         # We first mount the btrfs root to /mnt
         # so we can manipulate btrfs subvolumes.
         mount -o subvol=/ /dev/vda3 /mnt
-  
+
         # While we're tempted to just delete /root and create
         # a new snapshot from /root-blank, /root is already
         # populated at this point with a number of subvolumes,
@@ -78,7 +83,7 @@
 
         echo "restoring blank /root subvolume..."
         btrfs subvolume snapshot /mnt/root-blank /mnt/root
-  
+
         # Once we're done rolling back to a blank snapshot,
         # we can unmount /mnt and continue on the boot process.
         umount /mnt

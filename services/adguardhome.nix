@@ -1,15 +1,17 @@
-{ config, pkgs, lib, ... }:
-let
-  dns-domain = "dns.szczepan.ski";
-in
 {
-  security.acme.certs.${dns-domain}.postRun =
-    ''
-      cp fullchain.pem /var/lib/AdGuardHome/chain.pem \
-        && cp key.pem /var/lib/AdGuardHome/key.pem \
-        && chown adguardhome:adguardhome /var/lib/AdGuardHome/chain.pem \
-        && chown adguardhome:adguardhome /var/lib/AdGuardHome/key.pem
-    '';
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  dns-domain = "dns.szczepan.ski";
+in {
+  security.acme.certs.${dns-domain}.postRun = ''
+    cp fullchain.pem /var/lib/AdGuardHome/chain.pem \
+      && cp key.pem /var/lib/AdGuardHome/key.pem \
+      && chown adguardhome:adguardhome /var/lib/AdGuardHome/chain.pem \
+      && chown adguardhome:adguardhome /var/lib/AdGuardHome/key.pem
+  '';
 
   services = {
     nginx = {
@@ -18,7 +20,7 @@ in
           forceSSL = true;
           enableACME = true;
           locations = {
-            "/" = { proxyPass = "https://127.0.0.1:3003/"; };
+            "/" = {proxyPass = "https://127.0.0.1:3003/";};
           };
         };
       };
@@ -30,10 +32,12 @@ in
       host = "127.0.0.1";
       port = 3002;
       settings = {
-        users = [{
-          name = "alex";
-          password = "$2y$10$UhKvi4oztTfULWlIKnQhveORKXpIKCqpawJ/skSBAH96Njn4YDhTC";
-        }];
+        users = [
+          {
+            name = "alex";
+            password = "$2y$10$UhKvi4oztTfULWlIKnQhveORKXpIKCqpawJ/skSBAH96Njn4YDhTC";
+          }
+        ];
         dns = {
           bind_hots = [
             "0.0.0.0"
@@ -76,10 +80,14 @@ in
         # The following notation uses map
         # to not have to manually create {enabled = true; url = "";} for every filter
         # This is,qq however, fully optional
-        filters = map (url: { enabled = true; url = url; }) [
-          "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt" # The Big List of Hacked Malware Web Sites
-          "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt" # malicious url blocklist
-        ];
+        filters =
+          map (url: {
+            enabled = true;
+            url = url;
+          }) [
+            "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt" # The Big List of Hacked Malware Web Sites
+            "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt" # malicious url blocklist
+          ];
       };
     };
   };

@@ -1,8 +1,13 @@
-{ config, pkgs, lib, outputs, inputs, ... }:
-let
-  be = import ../../configs/borg-exclude.nix;
-in
 {
+  config,
+  pkgs,
+  lib,
+  outputs,
+  inputs,
+  ...
+}: let
+  be = import ../../configs/borg-exclude.nix;
+in {
   nixpkgs = {
     overlays = [
       outputs.overlays.additions
@@ -34,7 +39,7 @@ in
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
@@ -57,19 +62,19 @@ in
     initrd.systemd.enable = true;
     loader = {
       grub = {
-          enable = true;
-          efiSupport = true;
-          device = "nodev";
-          configurationLimit = 5;
-          enableCryptodisk = true;
-        };
-      efi = { canTouchEfiVariables = true; };
+        enable = true;
+        efiSupport = true;
+        device = "nodev";
+        configurationLimit = 5;
+        enableCryptodisk = true;
+      };
+      efi = {canTouchEfiVariables = true;};
     };
-    supportedFilesystems = [ "btrfs" ];
-#    kernelPatches = [{
-#      name = "fix problems with netfilter in 6.11.4";
-#      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
-#    }];
+    supportedFilesystems = ["btrfs"];
+    #    kernelPatches = [{
+    #      name = "fix problems with netfilter in 6.11.4";
+    #      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
+    #    }];
 
     tmp.useTmpfs = false;
   };
@@ -103,12 +108,30 @@ in
           fanSpeedUpdateFrequency = 5;
           movingAverageInterval = 30;
           speedCurve = [
-            { temp = 0; speed = 15; }
-            { temp = 50; speed = 15; }
-            { temp = 65; speed = 25; }
-            { temp = 70; speed = 35; }
-            { temp = 75; speed = 50; }
-            { temp = 85; speed = 100; }
+            {
+              temp = 0;
+              speed = 15;
+            }
+            {
+              temp = 50;
+              speed = 15;
+            }
+            {
+              temp = 65;
+              speed = 25;
+            }
+            {
+              temp = 70;
+              speed = 35;
+            }
+            {
+              temp = 75;
+              speed = 50;
+            }
+            {
+              temp = 85;
+              speed = 100;
+            }
           ];
         };
       };
@@ -120,7 +143,7 @@ in
     enableAllFirmware = true;
     openrazer = {
       enable = true;
-      users = [ "alex" ];
+      users = ["alex"];
     };
 
     graphics = {
@@ -148,7 +171,7 @@ in
     btrfs.autoScrub = {
       enable = true;
       interval = "monthly";
-      fileSystems = [ "/home/alex/shared/storage" ];
+      fileSystems = ["/home/alex/shared/storage"];
     };
 
     pipewire = {
@@ -164,10 +187,9 @@ in
         mode = "repokey-blake2";
         passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
-      extraCreateArgs =
-        "--stats --verbose --checkpoint-interval 600 --exclude-caches";
+      extraCreateArgs = "--stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
-      paths = [ "/home/alex" "/var/lib" ];
+      paths = ["/home/alex" "/var/lib"];
       repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
       startAt = "daily";
       prune.keep = {
@@ -194,7 +216,7 @@ in
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
   environment = {
-    sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+    sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
     systemPackages = with pkgs; [
       # psensor
       mission-center
@@ -232,7 +254,7 @@ in
   # Resume Offset is offset of swapfile
   # https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
   # boot.kernelParams = [ "mem_sleep_default=deep" "resume_offset=190937088" ];
-  boot.kernelParams = [ "mem_sleep_default=deep" ];
+  boot.kernelParams = ["mem_sleep_default=deep"];
 
   # Suspend-then-hibernate everywhere
   services.logind = {

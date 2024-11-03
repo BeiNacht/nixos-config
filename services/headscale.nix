@@ -1,6 +1,10 @@
-{ config, lib, pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [ headscale ];
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  environment.systemPackages = with pkgs; [headscale];
 
   services = {
     nginx = {
@@ -39,7 +43,7 @@
           override_local_dns = true;
           base_domain = "szczepan.ski";
           magic_dns = true;
-          domains = [ "main.szczepan.ski" ];
+          domains = ["main.szczepan.ski"];
           nameservers = [
             "100.64.0.2"
             "127.0.0.1"
@@ -47,6 +51,5 @@
         };
       };
     };
-
   };
 }

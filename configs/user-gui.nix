@@ -1,9 +1,14 @@
-{ config, pkgs, inputs, home-manager, ... }:
 {
-  imports = [ inputs.home-manager.nixosModules.home-manager ];
+  config,
+  pkgs,
+  inputs,
+  home-manager,
+  ...
+}: {
+  imports = [inputs.home-manager.nixosModules.home-manager];
   networking = {
     firewall.enable = false;
-    networkmanager = { enable = true; };
+    networkmanager = {enable = true;};
   };
 
   fonts = {
@@ -11,7 +16,7 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "Meslo" "RobotoMono"]; })
+      (nerdfonts.override {fonts = ["Meslo" "RobotoMono"];})
       corefonts
       google-fonts
       liberation_ttf
@@ -40,7 +45,7 @@
 
   programs = {
     adb.enable = true;
-    ssh = { startAgent = true; };
+    ssh = {startAgent = true;};
     # dconf.enable = true;
     # gnupg.agent = {
     #   enable = true;
@@ -65,7 +70,7 @@
     shotcut
   ];
 
-  home-manager.users.alex = { pkgs, ... }: {
+  home-manager.users.alex = {pkgs, ...}: {
     programs = {
       vscode = {
         enable = true;

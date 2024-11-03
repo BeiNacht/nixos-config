@@ -1,18 +1,18 @@
-{ stdenv
-, lib
-, fetchurl
-, pkg-config
-, lm_sensors
-, libgtop
-, libatasmart
-, gtk3
-, libnotify
-, udisks2
-# , libXNVCtrl
-, wrapGAppsHook3
-, libappindicator
+{
+  stdenv,
+  lib,
+  fetchurl,
+  pkg-config,
+  lm_sensors,
+  libgtop,
+  libatasmart,
+  gtk3,
+  libnotify,
+  udisks2,
+  # , libXNVCtrl
+  wrapGAppsHook3,
+  libappindicator,
 }:
-
 stdenv.mkDerivation rec {
   pname = "psensor";
 
@@ -23,7 +23,7 @@ stdenv.mkDerivation rec {
     sha256 = "1ark901va79gfq5p8h8dqypjgm3f8crmj37520q3slwz2rfphkq8";
   };
 
-  nativeBuildInputs = [ pkg-config wrapGAppsHook3 ];
+  nativeBuildInputs = [pkg-config wrapGAppsHook3];
 
   buildInputs = [
     lm_sensors
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
     homepage = "https://wpitchoune.net/psensor/";
     license = licenses.mit;
     platforms = platforms.linux;
-    maintainers = with maintainers; [ ];
+    maintainers = with maintainers; [];
     mainProgram = "psensor";
   };
 }
