@@ -1,9 +1,14 @@
-{ config, lib, pkgs, outputs, inputs, ... }:
-let
+{
+  config,
+  lib,
+  pkgs,
+  outputs,
+  inputs,
+  ...
+}: let
   secrets = import ../../configs/secrets.nix;
   be = import ../../configs/borg-exclude.nix;
-in
-{
+in {
   nixpkgs = {
     overlays = [
       outputs.overlays.additions
@@ -36,7 +41,7 @@ in
     defaultSopsFile = ../../secrets-vps-arm.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
@@ -91,10 +96,12 @@ in
     };
     interfaces.enp7s0 = {
       useDHCP = true;
-      ipv6.addresses = [{
-        address = "2a0a:4cc0:1:124c::1";
-        prefixLength = 64;
-      }];
+      ipv6.addresses = [
+        {
+          address = "2a0a:4cc0:1:124c::1";
+          prefixLength = 64;
+        }
+      ];
     };
     firewall = {
       allowPing = true;
@@ -178,7 +185,6 @@ in
             };
           };
         };
-
       };
     };
 
@@ -210,10 +216,9 @@ in
         mode = "repokey-blake2";
         passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
-      extraCreateArgs =
-        "--stats --verbose --checkpoint-interval 600 --exclude-caches";
+      extraCreateArgs = "--stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
-      paths = [ "/home/alex" "/var/lib" ];
+      paths = ["/home/alex" "/var/lib"];
       repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
       startAt = "daily";
       prune.keep = {

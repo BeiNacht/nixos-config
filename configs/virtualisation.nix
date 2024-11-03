@@ -1,6 +1,5 @@
-{ pkgs, ... }:
-{
-  users.extraGroups.vboxusers.members = [ "alex" ];
+{pkgs, ...}: {
+  users.extraGroups.vboxusers.members = ["alex"];
 
   virtualisation = {
     virtualbox.host = {

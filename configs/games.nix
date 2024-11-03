@@ -1,6 +1,11 @@
-{ config, pkgs, lib, outputs, ... }:
 {
-  users.extraGroups.gamemode.members = [ "alex" ];
+  config,
+  pkgs,
+  lib,
+  outputs,
+  ...
+}: {
+  users.extraGroups.gamemode.members = ["alex"];
 
   programs = {
     gamescope = {

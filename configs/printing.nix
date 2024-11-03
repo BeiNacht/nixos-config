@@ -1,9 +1,13 @@
-{ config, pkgs, lib, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   services = {
     printing = {
       enable = true;
-      drivers = [ pkgs.brlaser ];
+      drivers = [pkgs.brlaser];
     };
   };
 }

@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   services = {
     nginx = {
       virtualHosts = {
@@ -66,7 +70,8 @@
           phonetrack
           previewgenerator
           tasks
-          unroundedcorners;
+          unroundedcorners
+          ;
         # user_migration = pkgs.fetchNextcloudApp {
         #   sha256 = "sha256-OwALAM/WPJ4gXHQado0njfJL+ciDsvfbPjqGWk23Pm8=";
         #   url = "https://github.com/nextcloud-releases/user_migration/releases/download/v6.0.0/user_migration-v6.0.0.tar.gz";
@@ -98,6 +103,6 @@
   };
 
   systemd.services.nextcloud-cron = {
-    path = [ pkgs.perl ];
+    path = [pkgs.perl];
   };
 }

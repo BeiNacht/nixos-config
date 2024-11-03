@@ -1,7 +1,12 @@
-{ config, pkgs, inputs, outputs, ... }:
-let secrets = import ../../configs/secrets.nix;
+{
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}: let
+  secrets = import ../../configs/secrets.nix;
 in {
-
   nixpkgs = {
     overlays = [
       outputs.overlays.additions
@@ -33,18 +38,23 @@ in {
       efi.canTouchEfiVariables = true;
     };
 
-    extraModulePackages = with pkgs.linuxPackages; [ rtl88x2bu ];
+    extraModulePackages = with pkgs.linuxPackages; [rtl88x2bu];
   };
 
   time.timeZone = "Europe/Berlin";
   networking = {
     hostName = "mini";
     useDHCP = false;
-    firewall = { enable = false; };
+    firewall = {enable = false;};
     interfaces = {
       enp3s0.useDHCP = true;
       # wlp0s20u1u1.useDHCP = true;
-      wlp0s20u1u2.ipv4.addresses = [{ address = "192.168.12.1"; prefixLength = 24; }];
+      wlp0s20u1u2.ipv4.addresses = [
+        {
+          address = "192.168.12.1";
+          prefixLength = 24;
+        }
+      ];
     };
 
     nftables.enable = true;
@@ -84,7 +94,6 @@ in {
     #   networks.Skynet.psk = secrets.wifipassword;
     #   interfaces = [ "wlp0s20u1u1" ];
     # };
-
   };
 
   environment.systemPackages = with pkgs; [
@@ -111,10 +120,9 @@ in {
           networks.wlp0s20u1u2 = {
             ssid = "Skynet-Tor";
             authentication.saePasswords = [
-              { password = "REMOVED_OLD_PASSWORD_FROM_HISTORY"; }
+              {password = "REMOVED_OLD_PASSWORD_FROM_HISTORY";}
             ];
           };
-
         };
       };
     };
@@ -196,11 +204,9 @@ in {
         mode = "repokey-blake2";
         passphrase = secrets.borg-key;
       };
-      extraCreateArgs =
-        "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
-      environment.BORG_RSH =
-        "ssh -o StrictHostKeyChecking=no -i /home/alex/.ssh/id_ed25519";
-      paths = [ "/home/alex" "/var/lib" ];
+      extraCreateArgs = "--list --stats --verbose --checkpoint-interval 600 --exclude-caches";
+      environment.BORG_RSH = "ssh -o StrictHostKeyChecking=no -i /home/alex/.ssh/id_ed25519";
+      paths = ["/home/alex" "/var/lib"];
       repo = secrets.borg-repo;
       startAt = "daily";
       prune.keep = {
@@ -209,7 +215,7 @@ in {
         monthly = 6;
       };
       extraPruneArgs = "--save-space --list --stats";
-      exclude = [ "/home/alex/.cache" ];
+      exclude = ["/home/alex/.cache"];
     };
   };
 

@@ -1,8 +1,11 @@
-{ config, lib, pkgs, ... }:
-let
-  secrets = import ../configs/secrets.nix;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  secrets = import ../configs/secrets.nix;
+in {
   services = {
     nginx = {
       virtualHosts = {
@@ -58,12 +61,14 @@ in
           # };
 
           garage = {
-            ffmpeg.inputs = [{
-              path = "rtsp://admin:REMOVED@192.168.178.42:554/H.264";
-              # input_args = "preset-rtsp-restream";
-              # roles = [ "record" "detect" ];
-              roles = [ "record" ];
-            }];
+            ffmpeg.inputs = [
+              {
+                path = "rtsp://admin:REMOVED@192.168.178.42:554/H.264";
+                # input_args = "preset-rtsp-restream";
+                # roles = [ "record" "detect" ];
+                roles = ["record"];
+              }
+            ];
 
             record = {
               enabled = true;
@@ -78,7 +83,6 @@ in
               };
             };
           };
-
         };
       };
     };

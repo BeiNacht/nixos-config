@@ -1,8 +1,12 @@
-{ config, pkgs, inputs, outputs, ... }:
-let
-  be = import ../../configs/borg-exclude.nix;
-in
 {
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}: let
+  be = import ../../configs/borg-exclude.nix;
+in {
   nixpkgs = {
     overlays = [
       (self: super: {
@@ -24,7 +28,6 @@ in
                 hash = "sha256-zQK1tuxu2ZmKxPO0amkfcT/RFBSkU2pWD0qhGyCCHXI=";
               })
             ];
-
           });
         });
       })
@@ -52,7 +55,7 @@ in
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/persist/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
@@ -78,8 +81,8 @@ in
       "kvm"
       "gccarch-znver3"
     ];
-    trusted-substituters = [ "https://ai.cachix.org" ];
-    trusted-public-keys = [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
+    trusted-substituters = ["https://ai.cachix.org"];
+    trusted-public-keys = ["ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
   };
 
   chaotic.nyx.cache.enable = false;
@@ -99,14 +102,14 @@ in
         configurationLimit = 5;
         useOSProber = true;
       };
-      efi = { canTouchEfiVariables = true; };
+      efi = {canTouchEfiVariables = true;};
     };
 
     tmp.useTmpfs = false;
-    supportedFilesystems = [ "btrfs" ];
+    supportedFilesystems = ["btrfs"];
     kernelPackages = pkgs.pkgs.linuxPackages_cachyos;
-    kernelModules = [ "nct6775" ];
-    extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos; [ ryzen-smu ];
+    kernelModules = ["nct6775"];
+    extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos; [ryzen-smu];
     # kernelParams = [ "clearcpuid=514" ];
     # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
     # kernelPatches = [{
@@ -168,9 +171,9 @@ in
   systemd.services = {
     monitor = {
       description = "AMDGPU Control Daemon";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "multi-user.target" ];
-      serviceConfig = { ExecStart = "${pkgs.lact}/bin/lact daemon"; };
+      wantedBy = ["multi-user.target"];
+      after = ["multi-user.target"];
+      serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
     };
   };
 
@@ -301,7 +304,6 @@ in
           "read only" = "no";
           "create mask" = "0644";
           "directory mask" = "0755";
-
         };
       };
     };

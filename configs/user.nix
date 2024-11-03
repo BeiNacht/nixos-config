@@ -1,5 +1,10 @@
-{ config, pkgs, lib, inputs, ... }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: let
   serviceConfig = {
     MountAPIVFS = true;
     PrivateTmp = true;
@@ -12,8 +17,7 @@ let
     ProtectSystem = "full";
     RestrictSUIDSGID = true;
   };
-in
-{
+in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
     {
@@ -60,9 +64,9 @@ in
     nix-ld.enable = true;
   };
 
-  environment.pathsToLink = [ "/share/zsh" ];
+  environment.pathsToLink = ["/share/zsh"];
 
-  home-manager.users.alex = { pkgs, ... }: {
+  home-manager.users.alex = {pkgs, ...}: {
     home = {
       stateVersion = "24.11";
       packages = with pkgs; [
@@ -71,7 +75,6 @@ in
         git-secret
         kubectl
         neofetch
-        nixfmt-classic
         pstree
         qrencode
         ranger
@@ -83,9 +86,9 @@ in
         nix-output-monitor
       ];
 
-      sessionPath = [ "$HOME/.npm-packages" "$HOME/.bin" ];
+      sessionPath = ["$HOME/.npm-packages" "$HOME/.bin"];
       file = {
-        ".npmrc" = { source = ../home/npmrc; };
+        ".npmrc" = {source = ../home/npmrc;};
         ".bin/git-redate" = {
           executable = true;
           source = ../home/bin/git-redate;
@@ -104,14 +107,14 @@ in
         serverAliveInterval = 60;
         forwardAgent = true;
 
-        matchBlocks."szczepan.ski" = { hostname = "szczepan.ski"; };
-        matchBlocks."mini" = { hostname = "mini"; };
+        matchBlocks."szczepan.ski" = {hostname = "szczepan.ski";};
+        matchBlocks."mini" = {hostname = "mini";};
         matchBlocks."nixos-vm" = {
           hostname = "127.0.0.1";
           port = 1337;
         };
 
-        matchBlocks."thinkpad" = { hostname = "thinkpad"; };
+        matchBlocks."thinkpad" = {hostname = "thinkpad";};
       };
 
       git = {
@@ -119,10 +122,10 @@ in
         userName = "Alexander Szczepanski";
         userEmail = "alexander@szczepan.ski";
         extraConfig = {
-          core = { autocrlf = false; };
-          color = { ui = "auto"; };
-          push = { default = "current"; };
-          pull = { rebase = true; };
+          core = {autocrlf = false;};
+          color = {ui = "auto";};
+          push = {default = "current";};
+          pull = {rebase = true;};
         };
       };
 
@@ -133,8 +136,7 @@ in
         syntaxHighlighting.enable = true;
         oh-my-zsh = {
           enable = true;
-          plugins =
-            [ "cp" "common-aliases" "docker" "systemd" "wd" "kubectl" "git" ];
+          plugins = ["cp" "common-aliases" "docker" "systemd" "wd" "kubectl" "git"];
         };
         plugins = [
           {
@@ -149,8 +151,7 @@ in
           }
         ];
         shellAliases = {
-          active-services =
-            "systemctl --no-page --no-legend --plain -t service --state=running";
+          active-services = "systemctl --no-page --no-legend --plain -t service --state=running";
           db = "sudo updatedb";
           "-g C" = "| wc -l";
           "-g G" = "| grep --ignore-case";
@@ -165,7 +166,7 @@ in
         };
       };
 
-      tmux = { enable = true; };
+      tmux = {enable = true;};
     };
   };
 }

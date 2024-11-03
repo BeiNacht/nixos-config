@@ -1,5 +1,10 @@
-{ config, pkgs, lib, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: {
   boot = {
     tmp = {
       useTmpfs = lib.mkDefault true;
@@ -7,7 +12,7 @@
     };
     # kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
-    kernel.sysctl = { "vm.max_map_count" = 262144; };
+    kernel.sysctl = {"vm.max_map_count" = 262144;};
     # initrd.systemd.enable = (!config.boot.swraid.enable && !config.boot.isContainer);
   };
 
@@ -18,7 +23,7 @@
     # Don't install the /lib/ld-linux.so.2 stub. This saves one instance of nixpkgs.
     ldso32 = null;
 
-    shells = with pkgs; [ bashInteractive zsh ];
+    shells = with pkgs; [bashInteractive zsh];
 
     systemPackages = with pkgs; [
       ack
@@ -64,8 +69,10 @@
 
       nil
       nix-du
+
       nix-tree
-      nixpkgs-fmt
+      nixd
+      alejandra
 
       parallel
       pciutils
@@ -74,21 +81,19 @@
       unzip
       usbutils
       wget
-
-      comma
     ];
   };
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
-        LANGUAGE = "en_US.UTF-8";
-        LC_ALL = "en_US.UTF-8";
+      LANGUAGE = "en_US.UTF-8";
+      LC_ALL = "en_US.UTF-8";
     };
   };
 
   networking = {
-    nameservers = [ "127.0.0.1" ];
+    nameservers = ["127.0.0.1"];
     # If using dhcpcd:
     dhcpcd.extraConfig = "nohook resolv.conf";
     # If using NetworkManager:
@@ -107,14 +112,15 @@
   };
 
   nix = {
+    nixPath = ["nixpkgs=${inputs.nixpkgs-unstable}"];
     channel.enable = false;
     settings = {
       auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = ["nix-command" "flakes"];
       connect-timeout = 5;
       log-lines = 25;
-      max-free = (3000 * 1024 * 1024);
-      min-free = (512 * 1024 * 1024);
+      max-free = 3000 * 1024 * 1024;
+      min-free = 512 * 1024 * 1024;
       builders-use-substitutes = true;
     };
 
@@ -134,17 +140,16 @@
     };
 
     ssh.knownHosts = {
-      "github.com".hostNames = [ "github.com" ];
+      "github.com".hostNames = ["github.com"];
       "github.com".publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
 
-      "u278697.your-storagebox.de".hostNames = [ "u278697.your-storagebox.de" ];
+      "u278697.your-storagebox.de".hostNames = ["u278697.your-storagebox.de"];
       "u278697.your-storagebox.de".publicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EB5p/5Hp3hGW1oHok+PIOH9Pbn7cnUiGmUEBrCVjnAw+HrKyN8bYVV0dIGllswYXwkG/+bgiBlE6IVIBAq+JwVWu1Sss3KarHY3OvFJUXZoZyRRg/Gc/+LRCE7lyKpwWQ70dbelGRyyJFH36eNv6ySXoUYtGkwlU5IVaHPApOxe4LHPZa/qhSRbPo2hwoh0orCtgejRebNtW5nlx00DNFgsvn8Svz2cIYLxsPVzKgUxs8Zxsxgn+Q/UvR7uq4AbAhyBMLxv7DjJ1pc7PJocuTno2Rw9uMZi1gkjbnmiOh6TTXIEWbnroyIhwc8555uto9melEUmWNQ+C+PwAK+MPw==";
 
       # [u278697.your-storagebox.de]:23 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIICf9svRenC/PLKIL9nk6K/pxQgoiFC41wTNvoIncOxs
       # [u278697.your-storagebox.de]:23 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EB5p/5Hp3hGW1oHok+PIOH9Pbn7cnUiGmUEBrCVjnAw+HrKyN8bYVV0dIGllswYXwkG/+bgiBlE6IVIBAq+JwVWu1Sss3KarHY3OvFJUXZoZyRRg/Gc/+LRCE7lyKpwWQ70dbelGRyyJFH36eNv6ySXoUYtGkwlU5IVaHPApOxe4LHPZa/qhSRbPo2hwoh0orCtgejRebNtW5nlx00DNFgsvn8Svz2cIYLxsPVzKgUxs8Zxsxgn+Q/UvR7uq4AbAhyBMLxv7DjJ1pc7PJocuTno2Rw9uMZi1gkjbnmiOh6TTXIEWbnroyIhwc8555uto9melEUmWNQ+C+PwAK+MPw==
       # [u278697.your-storagebox.de]:23 ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAGK0po6usux4Qv2d8zKZN1dDvbWjxKkGsx7XwFdSUCnF19Q8psHEUWR7C/LtSQ5crU/g+tQVRBtSgoUcE8T+FWp5wBxKvWG2X9gD+s9/4zRmDeSJR77W6gSA/+hpOZoSE+4KgNdnbYSNtbZH/dN74EG7GLb/gcIpbUUzPNXpfKl7mQitw==
     };
-
   };
 
   services = {
@@ -195,7 +200,7 @@
       };
     };
 
-    journald = { extraConfig = "SystemMaxUse=500M"; };
+    journald = {extraConfig = "SystemMaxUse=500M";};
   };
 
   # The notion of "online" is a broken concept
