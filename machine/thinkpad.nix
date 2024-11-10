@@ -1,20 +1,22 @@
-{ config, pkgs, lib, ... }:
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   secrets = import ../configs/secrets.nix;
   be = import ../configs/borg-exclude.nix;
-in
-{
-  imports =
-    [
-      <nixos-hardware/lenovo/thinkpad/x1-extreme>
-      /etc/nixos/hardware-configuration.nix
-      ../configs/common.nix
-      ../configs/docker.nix
-      ../configs/virtualisation.nix
-      ../configs/plasma.nix
-      ../configs/user-gui.nix
-      ../configs/user.nix
-    ];
+in {
+  imports = [
+    <nixos-hardware/lenovo/thinkpad/x1-extreme>
+    /etc/nixos/hardware-configuration.nix
+    ../configs/common.nix
+    ../configs/docker.nix
+    ../configs/virtualisation.nix
+    ../configs/plasma.nix
+    ../configs/user-gui.nix
+    ../configs/user.nix
+  ];
 
   boot = {
     # initrd = {
@@ -51,7 +53,7 @@ in
       systemd-boot = {
         enable = true;
         configurationLimit = 10;
-      	editor = false;
+        editor = false;
       };
       efi = {
         canTouchEfiVariables = false;
@@ -71,20 +73,22 @@ in
   networking = {
     hostName = "thinkpad";
     useDHCP = false;
-    firewall = { enable = false; };
+    firewall = {enable = false;};
     interfaces.enp0s31f6.useDHCP = true;
     wireguard.interfaces = {
       wg0 = {
-        ips = [ "10.100.0.8/24" ];
+        ips = ["10.100.0.8/24"];
         privateKey = secrets.wireguard-thinkpad-private;
 
-        peers = [{
-          publicKey = secrets.wireguard-vps-public;
-          presharedKey = secrets.wireguard-preshared;
-          allowedIPs = [ "10.100.0.0/24" ];
-          endpoint = "207.180.220.97:51820";
-          persistentKeepalive = 25;
-        }];
+        peers = [
+          {
+            publicKey = secrets.wireguard-vps-public;
+            presharedKey = secrets.wireguard-preshared;
+            allowedIPs = ["10.100.0.0/24"];
+            endpoint = "207.180.220.97:51820";
+            persistentKeepalive = 25;
+          }
+        ];
       };
     };
   };
@@ -132,13 +136,13 @@ in
     thinkfan = {
       enable = true;
       levels = [
-        [ 0 0 67 ]
-        [ 1 65 75 ]
-        [ 2 73 80 ]
-        [ 3 78 85 ]
-        [ 4 83 90 ]
-        [ 6 88 95 ]
-        [ 7 93 32767 ]
+        [0 0 67]
+        [1 65 75]
+        [2 73 80]
+        [3 78 85]
+        [4 83 90]
+        [6 88 95]
+        [7 93 32767]
       ];
     };
     # xserver = {

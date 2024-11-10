@@ -1,6 +1,9 @@
-{ config, pkgs, ... }:
-
-let secrets = import ../configs/secrets.nix;
+{
+  config,
+  pkgs,
+  ...
+}: let
+  secrets = import ../configs/secrets.nix;
 in {
   imports = [
     <nixos-hardware/common/cpu/intel>
@@ -22,14 +25,14 @@ in {
     firewall.enable = false;
     nat = {
       enable = true;
-      internalInterfaces = [ "br0" ];
+      internalInterfaces = ["br0"];
       externalInterface = "enp3s0";
     };
 
     wireless = {
       enable = true;
       networks.Skynet_5G.psk = secrets.wifipassword;
-      interfaces = [ "wlp1s0" ];
+      interfaces = ["wlp1s0"];
     };
 
     interfaces.enp3s0.useDHCP = true;
@@ -45,16 +48,17 @@ in {
   ];
 
   systemd = {
-    mounts = [{
-      requires = [ "mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount" ];
-      after = [ "mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount" ];
-      what = "/mnt/disk1:/mnt/disk2:/mnt/disk3";
-      where = "/mnt/storage";
-      type = "fuse.mergerfs";
-      options =
-        "defaults,allow_other,use_ino,fsname=mergerfs,minfreespace=50G,func.getattr=newest,noforget";
-      wantedBy = [ "multi-user.target" ];
-    }];
+    mounts = [
+      {
+        requires = ["mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount"];
+        after = ["mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount"];
+        what = "/mnt/disk1:/mnt/disk2:/mnt/disk3";
+        where = "/mnt/storage";
+        type = "fuse.mergerfs";
+        options = "defaults,allow_other,use_ino,fsname=mergerfs,minfreespace=50G,func.getattr=newest,noforget";
+        wantedBy = ["multi-user.target"];
+      }
+    ];
 
     services.snapraid-sync = {
       description = "Snapraid Sync and Diff";
@@ -78,8 +82,8 @@ in {
     };
 
     timers.snapraid-sync = {
-      wantedBy = [ "timers.target" ];
-      timerConfig = { OnCalendar = "Mon-Sun, 23:00"; };
+      wantedBy = ["timers.target"];
+      timerConfig = {OnCalendar = "Mon-Sun, 23:00";};
     };
   };
 
@@ -149,18 +153,22 @@ in {
 
   security.sudo.extraRules = [
     {
-      users = [ "alex" ];
-      commands = [{
-        command = "${pkgs.hdparm}/bin/hdparm";
-        options = [ "SETENV" "NOPASSWD" ];
-      }];
+      users = ["alex"];
+      commands = [
+        {
+          command = "${pkgs.hdparm}/bin/hdparm";
+          options = ["SETENV" "NOPASSWD"];
+        }
+      ];
     }
     {
-      users = [ "alex" ];
-      commands = [{
-        command = "${pkgs.snapraid}/bin/snapraid";
-        options = [ "SETENV" "NOPASSWD" ];
-      }];
+      users = ["alex"];
+      commands = [
+        {
+          command = "${pkgs.snapraid}/bin/snapraid";
+          options = ["SETENV" "NOPASSWD"];
+        }
+      ];
     }
   ];
 

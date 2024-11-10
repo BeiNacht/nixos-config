@@ -1,11 +1,15 @@
-{ config, pkgs, lib, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   programs.evolution.enable = true;
 
   services = {
     xserver = {
       enable = true;
-      excludePackages = [ pkgs.xterm ];
+      excludePackages = [pkgs.xterm];
       displayManager = {
         gdm = {
           enable = true;
@@ -43,19 +47,19 @@
     trayscale
   ];
 
-  environment.gnome.excludePackages = (with pkgs; [ gnome-tour gedit ])
+  environment.gnome.excludePackages =
+    (with pkgs; [gnome-tour gedit])
     ++ (with pkgs.gnome; [
-    cheese # webcam tool
-    gnome-music
-    epiphany # web browser
-    gnome-characters
-    totem # video player
-    iagno # go game
-    hitori # sudoku game
-    atomix # puzzle game
-  ]);
-  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+      cheese # webcam tool
+      gnome-music
+      epiphany # web browser
+      gnome-characters
+      totem # video player
+      iagno # go game
+      hitori # sudoku game
+      atomix # puzzle game
+    ]);
+  services.udev.packages = with pkgs; [gnome.gnome-settings-daemon];
 
   # services.gpg-agent.pinentryFlavor = lib.mkDefault "gnome3";
-
 }

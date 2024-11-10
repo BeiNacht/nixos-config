@@ -1,5 +1,10 @@
-{ config, pkgs, lib, ... }:
-let secrets = import ../configs/secrets.nix;
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  secrets = import ../configs/secrets.nix;
 in {
   imports = [
     "${
@@ -15,7 +20,7 @@ in {
     "/" = {
       device = "/dev/disk/by-label/NIXOS_SD";
       fsType = "ext4";
-      options = [ "noatime" ];
+      options = ["noatime"];
     };
   };
 
@@ -25,11 +30,11 @@ in {
     wireless = {
       enable = true;
       networks.Skynet.psk = secrets.wifipassword;
-      interfaces = [ "wlan0" ];
+      interfaces = ["wlan0"];
     };
   };
 
-  environment.systemPackages = with pkgs; [ vim nano git rsync ];
+  environment.systemPackages = with pkgs; [vim nano git rsync];
 
   # Enable GPU acceleration
   # hardware.raspberry-pi."4".fkms-3d.enable = true;

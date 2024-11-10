@@ -2,10 +2,12 @@
   description = "Your new nix config";
 
   inputs = {
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
+    # nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    impermanence.url = "github:nix-community/impermanence";
 
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -17,17 +19,21 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    apple-fonts = {
+      url = "github:Lyndeno/apple-fonts.nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    # Framework Fancontrol
     fw-fanctrl = {
       url = "github:TamtamHero/fw-fanctrl/packaging/nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-
-    impermanence.url = "github:nix-community/impermanence";
   };
 
   outputs = {
@@ -36,7 +42,7 @@
     fw-fanctrl,
     home-manager,
     nixos-hardware,
-    nixpkgs-stable,
+    # nixpkgs-stable,
     nixpkgs-unstable,
     sops-nix,
     impermanence,
@@ -66,6 +72,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           impermanence.nixosModules.impermanence
+          # stylix.nixosModules.stylix
           chaotic.nixosModules.default # OUR DEFAULT MODULE
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-cpu-amd-pstate

@@ -6,7 +6,6 @@
   environment.systemPackages = with pkgs; [
     insomnia
     meld
-    virt-manager
 
     #rust
     cargo
@@ -14,4 +13,8 @@
 
     ruby
   ];
+
+  programs = {
+    adb.enable = true;
+  };
 }
