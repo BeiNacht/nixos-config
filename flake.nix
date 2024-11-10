@@ -88,6 +88,8 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           fw-fanctrl.nixosModules.default
+          inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
+          inputs.sops-nix.nixosModules.sops
           ./machine/framework/configuration.nix
           chaotic.nixosModules.default # OUR DEFAULT MODULE
         ];
