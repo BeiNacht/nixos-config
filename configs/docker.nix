@@ -8,6 +8,7 @@
     docker = {
       enable = true;
       extraOptions = "--metrics-addr='127.0.0.1:9323' --experimental";
+      storageDriver = "btrfs";
     };
   };
 

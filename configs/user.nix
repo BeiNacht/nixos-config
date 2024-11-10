@@ -69,22 +69,6 @@ in {
   home-manager.users.alex = {pkgs, ...}: {
     home = {
       stateVersion = "24.11";
-      packages = with pkgs; [
-        broot
-        ffmpeg
-        git-secret
-        kubectl
-        neofetch
-        pstree
-        qrencode
-        ranger
-        sshfs
-        tealdeer
-        unrar
-        yt-dlp
-
-        nix-output-monitor
-      ];
 
       sessionPath = ["$HOME/.npm-packages" "$HOME/.bin"];
       file = {

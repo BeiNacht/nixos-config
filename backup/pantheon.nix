@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   programs = {
     pantheon-tweaks.enable = true;
     evolution.enable = true;
@@ -9,7 +12,7 @@
   services = {
     xserver = {
       enable = true;
-      excludePackages = [ pkgs.xterm ];
+      excludePackages = [pkgs.xterm];
       displayManager = {
         lightdm = {
           enable = true;
@@ -46,8 +49,8 @@
 
     indicatorapp = {
       description = "indicator-application-gtk3";
-      wantedBy = [ "graphical-session.target" ];
-      partOf = [ "graphical-session.target" ];
+      wantedBy = ["graphical-session.target"];
+      partOf = ["graphical-session.target"];
       serviceConfig = {
         ExecStart = "${pkgs.indicator-application-gtk3}/libexec/indicator-application/indicator-application-service";
       };
@@ -55,7 +58,7 @@
   };
 
   # App indicator
-  environment.pathsToLink = [ "/libexec" ];
+  environment.pathsToLink = ["/libexec"];
   environment.systemPackages = with pkgs; [
     gnome-online-accounts
     gnome.gnome-control-center

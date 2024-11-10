@@ -37,6 +37,7 @@
       kdePackages.ksshaskpass
       kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
+      kdePackages.qtstyleplugin-kvantum
       # kdePackages.kmail
       kdePackages.filelight
       kdePackages.plasma-disks

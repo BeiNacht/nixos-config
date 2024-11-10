@@ -73,6 +73,8 @@ in {
     };
   };
 
+  #  stylix.enable = true;
+
   nix.settings = {
     system-features = [
       "nixos-test"
@@ -308,6 +310,11 @@ in {
       };
     };
 
+    duplicati = {
+      enable = true;
+      user = "alex";
+    };
+
     # jellyfin = {
     #   enable = true;
     #   user = "alex";
@@ -324,43 +331,18 @@ in {
           passCommand = "cat ${config.sops.secrets.borg-key.path}";
         };
         extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-        environment.BORG_RSH = "ssh -i ~/.ssh/id_borg_ed25519";
-        paths = "/home/alex";
+        environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
+        paths = ["/home/alex" "/persist"];
         repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
         startAt = "daily";
-        user = "alex";
         prune.keep = {
           daily = 7;
           weekly = 4;
           monthly = 6;
         };
         extraPruneArgs = "--save-space --list --stats";
-        exclude = map (x: paths + "/" + x) be.borg-exclude;
+        exclude = map (x: "/home/alex/" + x) be.borg-exclude;
       };
-
-      # home-external = rec {
-      #   compression = "auto,zstd";
-      #   encryption = {
-      #     mode = "repokey-blake2";
-      #     passCommand = "cat ${config.sops.secrets.borg-key.path}";
-      #   };
-      #   extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-      #   paths = "/home/alex";
-      #   repo = "/run/media/alex/b6c33623-fc23-47ed-b6f5-e99455d5534a/borg";
-      #   startAt = [ ];
-      #   user = "alex";
-      #   prune.keep = {
-      #     daily = 7;
-      #     weekly = 4;
-      #     monthly = 6;
-      #   };
-      #   extraPruneArgs = "--save-space --list --stats";
-      #   exclude = map (x: paths + "/" + x) [
-      #     ".cache"
-      #     ".config/Nextcloud/logs"
-      #     ".local/share/baloo"
-      #   ];
-      # };
     };
   };
 
