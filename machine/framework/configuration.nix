@@ -23,8 +23,6 @@ in {
 
   imports = [
     ./hardware-configuration.nix
-    inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
-    inputs.sops-nix.nixosModules.sops
     ../../configs/browser.nix
     ../../configs/common.nix
     ../../configs/docker.nix
@@ -71,10 +69,6 @@ in {
       efi = {canTouchEfiVariables = true;};
     };
     supportedFilesystems = ["btrfs"];
-    #    kernelPatches = [{
-    #      name = "fix problems with netfilter in 6.11.4";
-    #      patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
-    #    }];
 
     tmp.useTmpfs = false;
   };
