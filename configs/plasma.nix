@@ -59,17 +59,16 @@
         enable = true;
         wayland.enable = true;
       };
-
       # defaultSession = "plasmax11";
     };
 
-    xserver = {
-      enable = true;
-      excludePackages = [pkgs.xterm];
-      # xkb.layout = "us";
-      # # Enable touchpad support.
-      # updateDbusEnvironment = true;
-    };
+    # xserver = {
+    #   enable = true;
+    #   excludePackages = [pkgs.xterm];
+    #   # xkb.layout = "us";
+    #   # # Enable touchpad support.
+    #   # updateDbusEnvironment = true;
+    # };
 
     libinput.enable = true;
   };
