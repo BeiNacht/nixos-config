@@ -5,7 +5,7 @@
   ...
 }: {
   programs = {
-    pantheon-tweaks.enable = true;
+    # pantheon-tweaks.enable = true;
     evolution.enable = true;
   };
 
@@ -61,11 +61,12 @@
   environment.pathsToLink = ["/libexec"];
   environment.systemPackages = with pkgs; [
     gnome-online-accounts
-    gnome.gnome-control-center
-    gnome.gnome-system-monitor
+    gnome-control-center
+    gnome-system-monitor
     indicator-application-gtk3
     monitor
-    gnome.eog
+    pantheon-tweaks
+    eog
   ];
 
   environment.pantheon.excludePackages = with pkgs.pantheon; [

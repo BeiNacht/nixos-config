@@ -9,30 +9,44 @@
 in {
   nixpkgs = {
     overlays = [
-      (self: super: {
-        linuxPackages_cachyos-rc = super.linuxPackages_cachyos-rc.extend (lpself: lpsuper: {
-          xone = super.linuxPackages_cachyos-rc.xone.overrideAttrs (oldAttrs: rec {
-            version = "0-unstable-latest";
-            patches = [
-              # Fix build on kernel 6.11
-              # https://github.com/medusalix/xone/pull/48
-              (pkgs.fetchpatch {
-                name = "kernel-6.11.patch";
-                url = "https://github.com/medusalix/xone/commit/28df566c38e0ee500fd5f74643fc35f21a4ff696.patch";
-                hash = "sha256-X14oZmxqqZJoBZxPXGZ9R8BAugx/hkSOgXlGwR5QCm8=";
-              })
-
-              (pkgs.fetchpatch {
-                name = "kernel-6.12.patch";
-                url = "https://github.com/medusalix/xone/commit/d88ea1e8b430d4b96134e43ca1892ac48334578e.patch";
-                hash = "sha256-zQK1tuxu2ZmKxPO0amkfcT/RFBSkU2pWD0qhGyCCHXI=";
-              })
-            ];
-          });
-        });
-      })
+      outputs.overlays.additions
+      outputs.overlays.modifications
+      # (final: prev: {
+      #   pythonPackagesExtensions =
+      #     prev.pythonPackagesExtensions
+      #     ++ [
+      #       (python-final: python-prev: {
+      #         # sphinx = python-prev.sphinx.overridePythonAttrs (oldAttrs: {
+      #         #   disabledTests =
+      #         #     oldAttrs.disabledTests
+      #         #     ++ [
+      #         #       "test_linkcheck_request_headers_default"
+      #         #     ]; # stupid timeout failure on busy machine
+      #         # });
+      #         # mechanize = python-prev.mechanize.overridePythonAttrs (oldAttrs: {
+      #         #   disabledTests =
+      #         #     oldAttrs.disabledTests
+      #         #     ++ [
+      #         #       "test/test_urllib2.py::HandlerTests::test_ftp"
+      #         #       "HandlerTests::test_ftp"
+      #         #       "test_ftp"
+      #         #     ];
+      #         # });
+      #         numpy = python-prev.numpy.overridePythonAttrs (oldAttrs: {
+      #           disabledTests =
+      #             oldAttrs.disabledTests
+      #             ++ [
+      #               "test_umath_accuracy"
+      #               "TestAccuracy::test_validate_transcendentals"
+      #               "test_validate_transcendentals"
+      #               "test_structured_object_item_setting"
+      #               "TestStructuredObjectRefcounting::test_structured_object_item_setting"
+      #             ];
+      #         });
+      #       })
+      #     ];
+      # })
     ];
-
     config = {
       allowUnfree = true;
     };
@@ -46,7 +60,7 @@ in {
     ../../configs/games.nix
     ../../configs/develop.nix
     ../../configs/virtualisation.nix
-    ../../configs/plasma-wayland.nix
+    ../../configs/plasma.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix
   ];
@@ -82,12 +96,15 @@ in {
       "big-parallel"
       "kvm"
       "gccarch-znver3"
+      # "gccarch-x86-64-v3"
     ];
+    max-jobs = 4;
+
     trusted-substituters = ["https://ai.cachix.org"];
     trusted-public-keys = ["ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
   };
 
-  chaotic.nyx.cache.enable = false;
+  # chaotic.nyx.cache.enable = false;
 
   # nixpkgs.localSystem = {
   #   gcc.arch = "znver3";
@@ -109,20 +126,13 @@ in {
 
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
-    kernelPackages = pkgs.pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelParams = [ "clearcpuid=514" ];
     kernelModules = ["nct6775"];
-    extraModulePackages = with pkgs.pkgs.linuxPackages_cachyos; [ryzen-smu];
-    # kernelParams = [ "clearcpuid=514" ];
-    # kernelParams = [ "amdgpu.ppfeaturemask=0xffffffff" ];
-    # kernelPatches = [{
-    #   name = "fix problems with netfilter in 6.11.4";
-    #   patch = ../../kernelpatches/fix-netfilter-6.11.4.patch;
-    # }];
-
+    extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
     initrd = {
       luks.devices = {
         root = {
-          # Use https://nixos.wiki/wiki/Full_Disk_Encryption
           device = "/dev/disk/by-uuid/cc43f1eb-49c3-41a6-9279-6766de3659e7";
           allowDiscards = true;
           preLVM = true;
@@ -188,17 +198,13 @@ in {
 
   environment = {
     systemPackages = with pkgs; [
-      inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
       lact
       amdgpu_top
-
-      python3
-      python311Packages.tkinter
-
-      snapraid
-      mergerfs
+      # python3
+      # python311Packages.tkinter
+      # snapraid
+      # mergerfs
       gimp
-
       clinfo
       gparted
       mission-center
@@ -206,9 +212,6 @@ in {
       stressapptest
       ryzen-monitor-ng
       qdiskinfo
-      #    fan2go
-      #    unigine-superposition
-
       jdk
     ];
     persistence."/persist" = {

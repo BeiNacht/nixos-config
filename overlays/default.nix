@@ -7,6 +7,38 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
+    # pythonPackagesExtensions =
+    #   prev.pythonPackagesExtensions
+    #   ++ [
+    #     (
+    #       python-final: python-prev: {
+    #         numpy = python-prev.numpy.overridePythonAttrs (oldAttrs: {
+    #           # disabledTests = oldAttrs.disabledTests ++ ["test_validate_transcendentals"];
+    #           postPatch = ''
+    #             rm numpy/core/tests/test_cython.py
+    #             rm numpy/core/tests/test_umath_accuracy.py
+    #             rm numpy/core/tests/test_*.py
+    #           '';
+    #           doCheck = false;
+    #           doInstallCheck = false;
+    #           dontCheck = true;
+    #           disabledTests = [
+    #             "test_math"
+    #             "test_umath_accuracy"
+    #             "test_validate_transcendentals"
+    #           ];
+    #         });
+    #       }
+    #     )
+    #   ];
+    # python = prev.python.override {
+    #   packageOverrides = python-final: python-prev: {
+    #     numpy = python-prev.numpy.overridePythonAttrs (oldAttrs: {
+    #       disabledTests = oldAttrs.disabledTests ++ ["test_umath_accuracy" "TestAccuracy::test_validate_transcendentals" "test_validate_transcendentals"];
+    #     });
+    #   };
+    # };
+
     # example = prev.example.overrideAttrs (oldAttrs: rec {
     # ...
     # });
