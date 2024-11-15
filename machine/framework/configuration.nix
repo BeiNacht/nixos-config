@@ -135,6 +135,8 @@ in {
   hardware = {
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
+    xone.enable = true;
+
     openrazer = {
       enable = true;
       users = ["alex"];
