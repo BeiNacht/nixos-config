@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   lib,
   ...
 }: {
@@ -24,7 +25,7 @@
   environment = {
     sessionVariables = {
       NIXOS_OZONE_WL = "1";
-      KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
+      # KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
     };
     plasma6.excludePackages = with pkgs.kdePackages; [
       plasma-browser-integration
@@ -34,6 +35,7 @@
     ];
 
     systemPackages = with pkgs; [
+      inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
       kdePackages.ksshaskpass
       kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
@@ -57,6 +59,16 @@
         enable = true;
         wayland.enable = true;
       };
+
+      # defaultSession = "plasmax11";
+    };
+
+    xserver = {
+      enable = true;
+      excludePackages = [pkgs.xterm];
+      # xkb.layout = "us";
+      # # Enable touchpad support.
+      # updateDbusEnvironment = true;
     };
 
     libinput.enable = true;

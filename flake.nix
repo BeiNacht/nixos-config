@@ -19,10 +19,10 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    apple-fonts = {
-      url = "github:Lyndeno/apple-fonts.nix";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    # apple-fonts = {
+    #   url = "github:Lyndeno/apple-fonts.nix";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
 
     home-manager = {
       url = "github:nix-community/home-manager/master";

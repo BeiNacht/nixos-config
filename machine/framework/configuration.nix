@@ -28,7 +28,7 @@ in {
     ../../configs/docker.nix
     ../../configs/games.nix
     ../../configs/virtualisation.nix
-    ../../configs/plasma-wayland.nix
+    ../../configs/plasma.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix
   ];
