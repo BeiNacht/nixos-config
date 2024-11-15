@@ -11,41 +11,6 @@ in {
     overlays = [
       outputs.overlays.additions
       outputs.overlays.modifications
-      # (final: prev: {
-      #   pythonPackagesExtensions =
-      #     prev.pythonPackagesExtensions
-      #     ++ [
-      #       (python-final: python-prev: {
-      #         # sphinx = python-prev.sphinx.overridePythonAttrs (oldAttrs: {
-      #         #   disabledTests =
-      #         #     oldAttrs.disabledTests
-      #         #     ++ [
-      #         #       "test_linkcheck_request_headers_default"
-      #         #     ]; # stupid timeout failure on busy machine
-      #         # });
-      #         # mechanize = python-prev.mechanize.overridePythonAttrs (oldAttrs: {
-      #         #   disabledTests =
-      #         #     oldAttrs.disabledTests
-      #         #     ++ [
-      #         #       "test/test_urllib2.py::HandlerTests::test_ftp"
-      #         #       "HandlerTests::test_ftp"
-      #         #       "test_ftp"
-      #         #     ];
-      #         # });
-      #         numpy = python-prev.numpy.overridePythonAttrs (oldAttrs: {
-      #           disabledTests =
-      #             oldAttrs.disabledTests
-      #             ++ [
-      #               "test_umath_accuracy"
-      #               "TestAccuracy::test_validate_transcendentals"
-      #               "test_validate_transcendentals"
-      #               "test_structured_object_item_setting"
-      #               "TestStructuredObjectRefcounting::test_structured_object_item_setting"
-      #             ];
-      #         });
-      #       })
-      #     ];
-      # })
     ];
     config = {
       allowUnfree = true;
@@ -245,7 +210,6 @@ in {
     enableAllFirmware = true;
     xone.enable = true;
 
-    bluetooth.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
