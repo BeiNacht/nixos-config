@@ -28,45 +28,58 @@
       device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
       fsType = "btrfs";
       options = [
-        "subvol=@root"
+        "subvol=root"
+        "discard=async"
         "compress=zstd"
-        "noatime"
         "nodiratime"
-        "discard"
+        "noatime"
       ];
     };
     "/home" = {
       device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
       fsType = "btrfs";
       options = [
-        "subvol=@home"
+        "subvol=home"
+        "discard=async"
         "compress=zstd"
-        "noatime"
         "nodiratime"
-        "discard"
+        "noatime"
       ];
     };
     "/nix" = {
       device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
       fsType = "btrfs";
       options = [
-        "subvol=@nix"
+        "subvol=nix"
+        "discard=async"
         "compress=zstd"
-        "noatime"
         "nodiratime"
-        "discard"
+        "noatime"
       ];
     };
     "/var/log" = {
       device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
       fsType = "btrfs";
       options = [
-        "subvol=@log"
+        "subvol=log"
+        "discard=async"
         "compress=zstd"
-        "noatime"
         "nodiratime"
-        "discard"
+        "noatime"
       ];
+      neededForBoot = true;
+    };
+    "/persist" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+      fsType = "btrfs";
+      options = [
+        "subvol=persist"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+      neededForBoot = true;
     };
     "/boot" = {
       device = "/dev/disk/by-uuid/427A-97BA";
@@ -77,19 +90,15 @@
       device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
       fsType = "btrfs";
       options = [
-        "noatime"
-        "nodiratime"
-        "discard"
         "subvol=@data"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
         "nofail"
         "x-systemd.automount"
       ];
     };
-  };
-
-  boot.initrd.luks.devices.root = {
-    device = "/dev/disk/by-uuid/eddab069-d369-4b26-8b4e-f3b907ba6f6c";
-    preLVM = true;
   };
 
   environment.etc.crypttab.text = ''

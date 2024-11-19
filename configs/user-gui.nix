@@ -26,18 +26,10 @@
       noto-fonts-cjk-sans
       noto-fonts-emoji
       noto-fonts-extra
-
-      # inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
-
       open-sans
       stix-two
       twemoji-color-font
     ];
-  };
-
-  hardware = {
-    bluetooth.enable = true;
-    sane.enable = true;
   };
 
   # services = {

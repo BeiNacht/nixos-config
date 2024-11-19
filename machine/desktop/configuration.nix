@@ -24,6 +24,7 @@ in {
     ../../configs/docker.nix
     ../../configs/games.nix
     ../../configs/develop.nix
+    ../../configs/hardware.nix
     ../../configs/virtualisation.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
@@ -68,8 +69,6 @@ in {
     trusted-substituters = ["https://ai.cachix.org"];
     trusted-public-keys = ["ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
   };
-
-  # chaotic.nyx.cache.enable = false;
 
   # nixpkgs.localSystem = {
   #   gcc.arch = "znver3";
@@ -235,7 +234,6 @@ in {
     power-profiles-daemon.enable = true;
     # netdata.enable = true;
     # printing.enable = true;
-    fwupd.enable = true;
 
     pipewire = {
       enable = true;
