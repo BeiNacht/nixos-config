@@ -55,20 +55,35 @@ in {
     };
   };
 
+  nix.settings.system-features = [
+    "nixos-test"
+    "benchmark"
+    "big-parallel"
+    "kvm"
+    "gccarch-alderlake"
+  ];
+
+  # nixpkgs.localSystem = {
+  #   gcc.arch = "alderlake";
+  #   gcc.tune = "alderlake";
+  #   system = "x86_64-linux";
+  # };
+
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    # initrd.systemd.enable = true;
     loader = {
       grub = {
         enable = true;
         efiSupport = true;
         device = "nodev";
         configurationLimit = 5;
-        enableCryptodisk = true;
+        # enableCryptodisk = true;
       };
       efi = {canTouchEfiVariables = true;};
     };
+
+    tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
+    kernelPackages = pkgs.linuxPackages_cachyos;
 
     initrd = {
       luks.devices = {
@@ -118,23 +133,7 @@ in {
         umount /mnt
       '';
     };
-
-    tmp.useTmpfs = false;
   };
-
-  # nixpkgs.localSystem = {
-  #   gcc.arch = "alderlake";
-  #   gcc.tune = "alderlake";
-  #   system = "x86_64-linux";
-  # };
-
-  nix.settings.system-features = [
-    "nixos-test"
-    "benchmark"
-    "big-parallel"
-    "kvm"
-    "gccarch-alderlake"
-  ];
 
   networking = {
     hostName = "framework";
@@ -262,7 +261,7 @@ in {
     sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
     systemPackages = with pkgs; [
       # psensor
-      mission-center
+      # mission-center
       resources
 
       gnumake
@@ -306,12 +305,6 @@ in {
       ];
     };
   };
-
-  # Set up deep sleep + hibernation
-  # swapDevices = [{
-  #   device = "/swapfile";
-  #   size = 64 * 1024;
-  # }];
 
   # Partition swapfile is on (after LUKS decryption)
   boot.resumeDevice = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
