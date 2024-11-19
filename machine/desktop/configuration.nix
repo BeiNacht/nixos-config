@@ -88,10 +88,10 @@ in {
 
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
-    kernelPackages = pkgs.linuxPackages_cachyos-rc;
+    kernelPackages = pkgs.linuxPackages_cachyos;
     kernelParams = ["clearcpuid=514"];
     kernelModules = ["nct6775"];
-    extraModulePackages = with pkgs.linuxPackages_cachyos-rc; [ryzen-smu];
+    extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
     initrd = {
       luks.devices = {
         root = {
