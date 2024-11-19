@@ -64,6 +64,8 @@
 
     vorta
     kitty
+
+    lan-mouse_git
   ];
 
   home-manager.users.alex = {pkgs, ...}: {

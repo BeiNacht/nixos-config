@@ -53,8 +53,6 @@ in {
     };
   };
 
-  #  stylix.enable = true;
-
   nix.settings = {
     system-features = [
       "nixos-test"
@@ -155,10 +153,17 @@ in {
 
   networking = {
     hostName = "desktop";
-    useDHCP = false;
   };
 
   time.timeZone = "Europe/Berlin";
+
+  programs = {
+    coolercontrol.enable = true;
+    corectrl = {
+      enable = true;
+      gpuOverclock.enable = true;
+    };
+  };
 
   environment = {
     systemPackages = with pkgs; [
@@ -182,7 +187,6 @@ in {
       directories = [
         "/etc/coolercontrol"
         "/etc/NetworkManager/system-connections"
-        "/etc/nixos"
         "/var/lib/bluetooth"
         "/var/lib/docker"
         "/var/lib/nixos"
@@ -215,14 +219,6 @@ in {
     };
 
     pulseaudio.enable = false;
-  };
-
-  programs = {
-    coolercontrol.enable = true;
-    corectrl = {
-      enable = true;
-      gpuOverclock.enable = true;
-    };
   };
 
   # powerManagement = {

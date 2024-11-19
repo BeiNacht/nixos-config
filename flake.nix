@@ -19,11 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    # apple-fonts = {
-    #   url = "github:Lyndeno/apple-fonts.nix";
-    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
-    # };
-
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -73,7 +68,7 @@
         modules = [
           impermanence.nixosModules.impermanence
           # stylix.nixosModules.stylix
-          chaotic.nixosModules.default # OUR DEFAULT MODULE
+          chaotic.nixosModules.default
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-cpu-amd-pstate
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
@@ -89,7 +84,7 @@
         modules = [
           fw-fanctrl.nixosModules.default
           impermanence.nixosModules.impermanence
-          chaotic.nixosModules.default # OUR DEFAULT MODULE
+          chaotic.nixosModules.default
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
           inputs.sops-nix.nixosModules.sops
           ./machine/framework/configuration.nix
