@@ -19,11 +19,13 @@
       ensureDatabases = [
         config.services.nextcloud.config.dbname
       ];
-      ensureUsers = [{
-        name = config.services.nextcloud.config.dbuser;
-        ensureDBOwnership = true;
-        # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGES";
-      }];
+      ensureUsers = [
+        {
+          name = config.services.nextcloud.config.dbuser;
+          ensureDBOwnership = true;
+          # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGES";
+        }
+      ];
     };
 
     nextcloud = {
@@ -31,7 +33,7 @@
       hostName = "nextcloud.szczepan.ski";
 
       # Need to manually increment with every major upgrade.
-      package = pkgs.nextcloud29;
+      package = pkgs.nextcloud30;
 
       # Let NixOS install and configure the database automatically.
       database.createLocally = true;

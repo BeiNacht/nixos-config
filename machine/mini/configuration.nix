@@ -29,7 +29,7 @@
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
@@ -267,16 +267,17 @@
   };
 
   systemd = {
-    mounts = [{
-      requires = [ "mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount" ];
-      after = [ "mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount" ];
-      what = "/mnt/disk1:/mnt/disk2:/mnt/disk3";
-      where = "/mnt/storage";
-      type = "fuse.mergerfs";
-      options =
-        "defaults,allow_other,use_ino,fsname=mergerfs,minfreespace=50G,func.getattr=newest,noforget";
-      wantedBy = [ "multi-user.target" ];
-    }];
+    mounts = [
+      {
+        requires = ["mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount"];
+        after = ["mnt-disk1.mount" "mnt-disk2.mount" "mnt-disk3.mount"];
+        what = "/mnt/disk1:/mnt/disk2:/mnt/disk3";
+        where = "/mnt/storage";
+        type = "fuse.mergerfs";
+        options = "defaults,allow_other,use_ino,fsname=mergerfs,minfreespace=50G,func.getattr=newest,noforget";
+        wantedBy = ["multi-user.target"];
+      }
+    ];
   };
 
   system.stateVersion = "24.05";

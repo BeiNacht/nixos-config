@@ -26,25 +26,25 @@
     "/mnt/disk1" = {
       device = "/dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b";
       fsType = "ext4";
-      options = [ "nofail" "x-systemd.automount" ];
+      options = ["nofail" "x-systemd.automount"];
     };
 
     "/mnt/disk2" = {
       device = "/dev/disk/by-uuid/98a75e01-fa80-469e-820c-1e1e275937b8";
       fsType = "ext4";
-      options = [ "nofail" "x-systemd.automount" ];
+      options = ["nofail" "x-systemd.automount"];
     };
 
     "/mnt/disk3" = {
       device = "/dev/disk/by-uuid/0301db98-264f-4b18-9423-15691063f73d";
       fsType = "ext4";
-      options = [ "nofail" "x-systemd.automount" ];
+      options = ["nofail" "x-systemd.automount"];
     };
 
     "/mnt/parity" = {
       device = "/dev/disk/by-uuid/6cce037c-d2d4-4940-bb69-6d2b84fd41aa";
       fsType = "ext4";
-      options = [ "nofail" "x-systemd.automount" ];
+      options = ["nofail" "x-systemd.automount"];
     };
 
     "/boot" = {

@@ -30,21 +30,21 @@
       settings = {
         logtail.enabled = false;
         server_url = "https://headscale.szczepan.ski";
-        ip_prefixes = [
-          "100.64.0.0/10"
-          "fd7a:115c:a1e0::/48"
-        ];
+        # ip_prefixes = [
+        #   "100.64.0.0/10"
+        #   "fd7a:115c:a1e0::/48"
+        # ];
         # later
-        # prefixes = {
-        #   v4 = "100.64.0.0/10";
-        #   v6 = "fd7a:115c:a1e0::/48";
-        # };
-        dns_config = {
+        prefixes = {
+          v4 = "100.64.0.0/10";
+          v6 = "fd7a:115c:a1e0::/48";
+        };
+        dns = {
           override_local_dns = true;
-          base_domain = "szczepan.ski";
+          base_domain = "main.szczepan.ski";
           magic_dns = true;
-          domains = ["main.szczepan.ski"];
-          nameservers = [
+          search_domains = ["main.szczepan.ski"];
+          nameservers.global = [
             "100.64.0.2"
             "127.0.0.1"
           ];

@@ -8,7 +8,13 @@
     rustdesk-server = {
       enable = true;
       openFirewall = true;
-      relayIP = "152.53.18.107";
+      signal = {
+        enable = true;
+        relayHosts = ["152.53.18.107"];
+      };
+      relay = {
+        enable = true;
+      };
     };
   };
 }
