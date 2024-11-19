@@ -92,7 +92,7 @@ in {
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
     kernelPackages = pkgs.linuxPackages_cachyos-rc;
-    kernelParams = [ "clearcpuid=514" ];
+    kernelParams = ["clearcpuid=514"];
     kernelModules = ["nct6775"];
     extraModulePackages = with pkgs.linuxPackages_cachyos-rc; [ryzen-smu];
     initrd = {
