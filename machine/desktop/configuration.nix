@@ -91,10 +91,10 @@ in {
 
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_cachyos-rc;
     kernelParams = [ "clearcpuid=514" ];
     kernelModules = ["nct6775"];
-    extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
+    extraModulePackages = with pkgs.linuxPackages_cachyos-rc; [ryzen-smu];
     initrd = {
       luks.devices = {
         root = {
@@ -172,7 +172,7 @@ in {
       gimp
       clinfo
       gparted
-      mission-center
+      # mission-center
       resources
       stressapptest
       ryzen-monitor-ng
