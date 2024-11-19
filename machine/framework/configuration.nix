@@ -37,7 +37,7 @@ in {
     defaultSopsFile = ../../secrets.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
@@ -57,7 +57,7 @@ in {
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
-    initrd.systemd.enable = true;
+    # initrd.systemd.enable = true;
     loader = {
       grub = {
         enable = true;
@@ -69,6 +69,55 @@ in {
       efi = {canTouchEfiVariables = true;};
     };
     supportedFilesystems = ["btrfs"];
+
+    initrd = {
+      luks.devices = {
+        root = {
+          device = "/dev/disk/by-uuid/eddab069-d369-4b26-8b4e-f3b907ba6f6c";
+          allowDiscards = true;
+          preLVM = true;
+        };
+      };
+
+      postDeviceCommands = pkgs.lib.mkBefore ''
+        mkdir -p /mnt
+
+        # We first mount the btrfs root to /mnt
+        # so we can manipulate btrfs subvolumes.
+        mount -o subvol=/ /dev/mapper/lvm-root /mnt
+
+        # While we're tempted to just delete /root and create
+        # a new snapshot from /root-blank, /root is already
+        # populated at this point with a number of subvolumes,
+        # which makes `btrfs subvolume delete` fail.
+        # So, we remove them first.
+        #
+        # /root contains subvolumes:
+        # - /root/var/lib/portables
+        # - /root/var/lib/machines
+        #
+        # I suspect these are related to systemd-nspawn, but
+        # since I don't use it I'm not 100% sure.
+        # Anyhow, deleting these subvolumes hasn't resulted
+        # in any issues so far, except for fairly
+        # benign-looking errors from systemd-tmpfiles.
+        btrfs subvolume list -o /mnt/root |
+        cut -f9 -d' ' |
+        while read subvolume; do
+          echo "deleting /$subvolume subvolume..."
+          btrfs subvolume delete "/mnt/$subvolume"
+        done &&
+        echo "deleting /root subvolume..." &&
+        btrfs subvolume delete /mnt/root
+
+        echo "restoring blank /root subvolume..."
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+        # Once we're done rolling back to a blank snapshot,
+        # we can unmount /mnt and continue on the boot process.
+        umount /mnt
+      '';
+    };
 
     tmp.useTmpfs = false;
   };
@@ -94,7 +143,7 @@ in {
   time.timeZone = "Europe/Berlin";
 
   programs.fw-fanctrl = {
-    enable = false;
+    enable = true;
     config = {
       defaultStrategy = "lazy";
       strategies = {
@@ -161,8 +210,6 @@ in {
     # foldingathome.enable = true;
     power-profiles-daemon.enable = true;
     colord.enable = true;
-
-    fwupd.enable = true;
 
     btrfs.autoScrub = {
       enable = true;
@@ -236,6 +283,28 @@ in {
       # fahviewer
       # fahcontrol
     ];
+    persistence."/persist" = {
+      directories = [
+        "/etc/NetworkManager/system-connections"
+        # "/var/lib/bluetooth"
+        "/var/lib/docker"
+        "/var/lib/nixos"
+        # "/var/lib/samba"
+        "/var/lib/sddm"
+        # "/var/lib/systemd/rfkill"
+        "/var/lib/tailscale"
+        "/var/lib/tuptime"
+        "/var/lib/vnstat"
+      ];
+      files = [
+        "/etc/machine-id"
+        "/etc/NIXOS"
+        "/etc/ssh/ssh_host_ed25519_key"
+        "/etc/ssh/ssh_host_ed25519_key.pub"
+        "/etc/ssh/ssh_host_rsa_key"
+        "/etc/ssh/ssh_host_rsa_key.pub"
+      ];
+    };
   };
 
   # Set up deep sleep + hibernation
