@@ -12,6 +12,7 @@
     };
     consoleLogLevel = 0;
     kernel.sysctl = {"vm.max_map_count" = 262144;};
+    supportedFilesystems = ["ntfs"];
   };
 
   # Work around for https://github.com/NixOS/nixpkgs/issues/124215
@@ -24,19 +25,15 @@
     shells = with pkgs; [bashInteractive zsh];
 
     systemPackages = with pkgs; [
-      ack
       borgbackup
-      borgmatic
-
-      btrfs-progs
-      exfatprogs
-
+      btrfs-progs # utils for btrfs
       doggo # DNS Resolver
-
       du-dust
       ncdu
       duf # dfc alternative
       lsd # eza alternative
+      bat # cat alternative
+      pstree
 
       # age key encryption
       ssh-to-age
@@ -52,47 +49,44 @@
       nmap
       nmon
       bandwhich
+      lsof
+      lm_sensors
 
       gnupg
-      gocryptfs
-      graphviz
       hdparm
-      inxi
-      lm_sensors
-      lsof
-      man-pages
-      man-pages-posix
+      inxi # hardware list
       kitty.terminfo
 
       tre-command
 
-      nil
-      nix-du
-
-      nix-tree
-      nixd
-      alejandra
+      # nix
+      nil # nix language server
+      nix-tree # like ncdu for nix store
+      nixd # nix diff
+      alejandra # nix formating
 
       parallel
       pciutils
       progress
       unixtools.xxd
-      unzip
       usbutils
       wget
 
       broot
-      ffmpeg
       git-secret
-      kubectl
       neofetch
-      pstree
-      ranger
-      sshfs
-      tealdeer
+      ranger # terminal filemanager
+
       unrar
-      yt-dlp
-      nix-output-monitor
+      unzip
+
+      ffmpeg
+      yt-dlp # to download youtube stuff
+      gocryptfs # file encryption
+      sshfs
+      tealdeer # shorter man pages
+      man-pages
+      man-pages-posix
     ];
   };
 
