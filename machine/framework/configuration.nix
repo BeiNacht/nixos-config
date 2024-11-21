@@ -209,7 +209,6 @@ in {
     power-profiles-daemon.enable = true;
     colord.enable = true;
     fprintd.enable = false;
-    tailscale.enable = true;
 
     btrfs.autoScrub = {
       enable = true;

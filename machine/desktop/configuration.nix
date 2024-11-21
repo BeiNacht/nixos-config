@@ -282,8 +282,6 @@ in {
     #   group = "users";
     # };
 
-    tailscale.enable = true;
-
     borgbackup.jobs = {
       home = rec {
         compression = "auto,zstd";
@@ -307,21 +305,6 @@ in {
     };
   };
 
-  security = {
-    # rtkit.enable = true;
-    # apparmor.enable = true;
-
-    # auditd.enable = true;
-    # audit.enable = true;
-    # audit.rules = [
-    #   "-a exit,always -F arch=b64 -S execve"
-    # ];
-
-    sudo.extraConfig = ''
-      # rollback results in sudo lectures after each reboot
-      Defaults lecture = never
-    '';
-  };
 
   system.stateVersion = "24.11";
 }
