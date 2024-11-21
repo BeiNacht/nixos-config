@@ -10,10 +10,8 @@
       useTmpfs = lib.mkDefault true;
       cleanOnBoot = true;
     };
-    # kernelParams = [ "quiet" ];
     consoleLogLevel = 0;
     kernel.sysctl = {"vm.max_map_count" = 262144;};
-    # initrd.systemd.enable = (!config.boot.swraid.enable && !config.boot.isContainer);
   };
 
   # Work around for https://github.com/NixOS/nixpkgs/issues/124215
@@ -195,6 +193,7 @@
     vnstat.enable = true;
     tuptime.enable = true;
     locate.enable = true;
+    tailscale.enable = true;
 
     openssh = {
       enable = true;
@@ -277,6 +276,14 @@
         ${pkgs.nvd}/bin/nvd --nix-bin-dir=${config.nix.package}/bin diff /run/current-system "$systemConfig"
         echo "---"
       fi
+    '';
+  };
+
+  # Turn off sudo lecture
+  security = {
+    sudo.extraConfig = ''
+      # rollback results in sudo lectures after each reboot
+      Defaults lecture = never
     '';
   };
 }
