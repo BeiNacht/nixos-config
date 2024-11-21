@@ -89,10 +89,26 @@ in {
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
     kernelPackages = pkgs.linuxPackages_cachyos;
-    kernelParams = ["clearcpuid=514"];
+    kernelParams = ["clearcpuid=514" "ip=dhcp"];
     kernelModules = ["nct6775"];
     extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
     initrd = {
+      availableKernelModules = ["r8169"];
+      systemd.users.root.shell = "/bin/cryptsetup-askpass";
+      network = {
+        enable = true;
+        ssh = {
+          enable = true;
+          port = 22;
+          authorizedKeys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN99h5reZdz9+DOyTRh8bPYWO+Dtv7TbkLbMdvi+Beio alex@desktop"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkURF5v9vRyEPhsK80kUgYh1vsS0APL4XyH4F3Fpyic alex@macbook"
+          ];
+          hostKeys = ["/persist/pre_boot_ssh_host_rsa_key"];
+        };
+      };
+
       luks.devices = {
         root = {
           device = "/dev/disk/by-uuid/cc43f1eb-49c3-41a6-9279-6766de3659e7";
@@ -304,7 +320,6 @@ in {
       };
     };
   };
-
 
   system.stateVersion = "24.11";
 }
