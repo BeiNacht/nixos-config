@@ -83,7 +83,7 @@ in {
 
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_cachyos-hardened;
 
     initrd = {
       luks.devices = {
@@ -206,9 +206,10 @@ in {
   security.rtkit.enable = true;
   # rtkit is optional but recommended
   services = {
-    # foldingathome.enable = true;
     power-profiles-daemon.enable = true;
     colord.enable = true;
+    fprintd.enable = false;
+    tailscale.enable = true;
 
     btrfs.autoScrub = {
       enable = true;
@@ -242,8 +243,6 @@ in {
       extraPruneArgs = "--save-space --list --stats";
       exclude = map (x: "/home/alex/" + x) be.borg-exclude;
     };
-
-    tailscale.enable = true;
   };
 
   powerManagement = {
@@ -260,10 +259,7 @@ in {
   environment = {
     sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
     systemPackages = with pkgs; [
-      # psensor
-      # mission-center
       resources
-
       gnumake
       pkg-config
       libftdi

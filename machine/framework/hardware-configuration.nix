@@ -19,9 +19,9 @@
     "usb_storage"
     "sd_mod"
   ];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+  # boot.initrd.kernelModules = [];
+  # boot.kernelModules = ["kvm-intel"];
+  # boot.extraModulePackages = [];
 
   fileSystems = {
     "/" = {
@@ -86,25 +86,24 @@
       fsType = "vfat";
       options = ["fmask=0022" "dmask=0022"];
     };
-    "/home/alex/shared/storage" = {
-      device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
-      fsType = "btrfs";
-      options = [
-        "subvol=@data"
-        "discard=async"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-        "nofail"
-        "x-systemd.automount"
-      ];
-    };
+    #    "/home/alex/shared/storage" = {
+    #      device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
+    #      fsType = "btrfs";
+    #      options = [
+    #        "subvol=@data"
+    #        "discard=async"
+    #        "compress=zstd"
+    #        "nodiratime"
+    #        "noatime"
+    #        "nofail"
+    #        "x-systemd.automount"
+    #      ];
+    #    };
   };
 
-  environment.etc.crypttab.text = ''
-    luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /etc/luks-key01
-  '';
-  # boot.initrd.luks.devices."luks-e36ec189-2211-4bcc-bb9d-46650443d76b".device = "/dev/disk/by-uuid/e36ec189-2211-4bcc-bb9d-46650443d76b";
+  # environment.etc.crypttab.text = ''
+  #   luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /persist/luks-key01
+  # '';
 
   swapDevices = [
     {
