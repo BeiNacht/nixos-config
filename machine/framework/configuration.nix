@@ -83,7 +83,7 @@ in {
 
     tmp.useTmpfs = false;
     supportedFilesystems = ["btrfs"];
-    kernelPackages = pkgs.linuxPackages_cachyos-hardened;
+    kernelPackages = pkgs.linuxPackages_6_11;
 
     initrd = {
       luks.devices = {
