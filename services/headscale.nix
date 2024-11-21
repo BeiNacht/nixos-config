@@ -57,8 +57,8 @@
             region_code = "headscale";
             region_name = "Headscale Embedded DERP";
             stun_listen_addr = "0.0.0.0:3478";
-
-            # private_key_path: /var/lib/headscale/derp_server_private.key
+            ipv4 = "152.53.18.107";
+            ipv6 = "2a0a:4cc0:1:124c::1";
           };
         };
       };
