@@ -13,22 +13,51 @@
   ];
 
   boot.initrd.availableKernelModules = ["xhci_pci" "virtio_scsi" "sr_mod"];
-  boot.initrd.kernelModules = [];
+  boot.initrd.kernelModules = ["dm-snapshot"];
   boot.kernelModules = [];
   boot.extraModulePackages = [];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/332b05c2-56cc-4b0b-b906-54b6b87542cd";
-    fsType = "ext4";
+    device = "/dev/disk/by-uuid/3a21f244-5bf9-4c65-bce7-92c03fb0fd69";
+    fsType = "btrfs";
+    options = ["subvol=root"];
+  };
+
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/3a21f244-5bf9-4c65-bce7-92c03fb0fd69";
+    fsType = "btrfs";
+    options = ["subvol=home"];
+  };
+
+  fileSystems."/nix" = {
+    device = "/dev/disk/by-uuid/3a21f244-5bf9-4c65-bce7-92c03fb0fd69";
+    fsType = "btrfs";
+    options = ["subvol=nix"];
+  };
+
+  fileSystems."/persist" = {
+    device = "/dev/disk/by-uuid/3a21f244-5bf9-4c65-bce7-92c03fb0fd69";
+    fsType = "btrfs";
+    options = ["subvol=persist"];
+    neededForBoot = true;
+  };
+
+  fileSystems."/var/log" = {
+    device = "/dev/disk/by-uuid/3a21f244-5bf9-4c65-bce7-92c03fb0fd69";
+    fsType = "btrfs";
+    options = ["subvol=log"];
+    neededForBoot = true;
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/3D20-21CC";
+    device = "/dev/disk/by-uuid/438B-D3D2";
     fsType = "vfat";
     options = ["fmask=0022" "dmask=0022"];
   };
 
-  swapDevices = [];
+  swapDevices = [
+    {device = "/dev/disk/by-uuid/4608cfa2-da5b-45b1-97f4-8486957e409b";}
+  ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

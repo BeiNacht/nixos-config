@@ -95,6 +95,8 @@
         system = "aarch64-linux";
         specialArgs = {inherit inputs outputs;};
         modules = [
+          impermanence.nixosModules.impermanence
+          inputs.sops-nix.nixosModules.sops
           ./machine/vps-arm/configuration.nix
         ];
       };
