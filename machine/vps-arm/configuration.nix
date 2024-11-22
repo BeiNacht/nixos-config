@@ -22,7 +22,6 @@ in {
 
   imports = [
     ./hardware-configuration.nix
-    inputs.sops-nix.nixosModules.sops
     ../../configs/common.nix
     ../../configs/docker.nix
     ../../configs/user.nix
@@ -31,7 +30,7 @@ in {
     ../../services/frigate.nix
     ../../services/gitea.nix
     ../../services/nextcloud.nix
-    ../../services/rustdesk-server.nix
+    # ../../services/rustdesk-server.nix
     ../../services/uptime-kuma.nix
     ../../services/headscale.nix
     ../../services/goaccess.nix
@@ -41,8 +40,8 @@ in {
     defaultSopsFile = ../../secrets-vps-arm.yaml;
     validateSopsFiles = true;
     age = {
-      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
-      keyFile = "/var/lib/sops-nix/key.txt";
+      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
+      keyFile = "/persist/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
 
@@ -79,9 +78,82 @@ in {
     };
   };
 
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        device = "nodev";
+        efiSupport = true;
+        enableCryptodisk = true;
+      };
+    };
+
+    kernelPackages = pkgs.linuxPackages_latest;
+    supportedFilesystems = ["btrfs"];
+    kernelParams = ["ip=dhcp"];
+    initrd = {
+      availableKernelModules = ["virtio-pci"];
+      systemd.users.root.shell = "/bin/cryptsetup-askpass";
+      network = {
+        enable = true;
+        ssh = {
+          enable = true;
+          port = 22;
+          authorizedKeys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN99h5reZdz9+DOyTRh8bPYWO+Dtv7TbkLbMdvi+Beio alex@desktop"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkURF5v9vRyEPhsK80kUgYh1vsS0APL4XyH4F3Fpyic alex@macbook"
+          ];
+          hostKeys = ["/persist/pre_boot_ssh_key"];
+        };
+      };
+      luks.devices = {
+        root = {
+          device = "/dev/disk/by-uuid/d17f6d8b-aec8-4c48-834d-f88d6308e281";
+          preLVM = true;
+        };
+      };
+
+      postDeviceCommands = pkgs.lib.mkBefore ''
+        mkdir -p /mnt
+
+        # We first mount the btrfs root to /mnt
+        # so we can manipulate btrfs subvolumes.
+        mount -o subvol=/ /dev/mapper/lvm-root /mnt
+
+        # While we're tempted to just delete /root and create
+        # a new snapshot from /root-blank, /root is already
+        # populated at this point with a number of subvolumes,
+        # which makes `btrfs subvolume delete` fail.
+        # So, we remove them first.
+        #
+        # /root contains subvolumes:
+        # - /root/var/lib/portables
+        # - /root/var/lib/machines
+        #
+        # I suspect these are related to systemd-nspawn, but
+        # since I don't use it I'm not 100% sure.
+        # Anyhow, deleting these subvolumes hasn't resulted
+        # in any issues so far, except for fairly
+        # benign-looking errors from systemd-tmpfiles.
+        btrfs subvolume list -o /mnt/root |
+        cut -f9 -d' ' |
+        while read subvolume; do
+          echo "deleting /$subvolume subvolume..."
+          btrfs subvolume delete "/mnt/$subvolume"
+        done &&
+        echo "deleting /root subvolume..." &&
+        btrfs subvolume delete /mnt/root
+
+        echo "restoring blank /root subvolume..."
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+        # Once we're done rolling back to a blank snapshot,
+        # we can unmount /mnt and continue on the boot process.
+        umount /mnt
+      '';
+    };
   };
 
   time.timeZone = "Europe/Berlin";
@@ -121,12 +193,41 @@ in {
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    goaccess
-    xd
-    nyx
-    headscale
-  ];
+  environment = {
+    systemPackages = with pkgs; [
+      goaccess
+      xd
+      nyx
+      headscale
+    ];
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/acme"
+        # "/var/lib/docker"
+        "/var/lib/fail2ban"
+        "/var/lib/frigate"
+        "/var/lib/gitea"
+        "/var/lib/headscale"
+        "/var/lib/nextcloud"
+        "/var/lib/nixos"
+        "/var/lib/postgresql"
+        "/var/lib/private"
+        "/var/lib/redis-nextcloud"
+        "/var/lib/tailscale"
+        "/var/lib/tuptime"
+        "/var/lib/vnstat"
+        "/var/www"
+      ];
+      files = [
+        "/etc/machine-id"
+        "/etc/NIXOS"
+        "/etc/ssh/ssh_host_ed25519_key"
+        "/etc/ssh/ssh_host_ed25519_key.pub"
+        "/etc/ssh/ssh_host_rsa_key"
+        "/etc/ssh/ssh_host_rsa_key.pub"
+      ];
+    };
+  };
 
   programs = {
     mtr.enable = true;
@@ -218,7 +319,7 @@ in {
       };
       extraCreateArgs = "--stats --verbose --checkpoint-interval 600 --exclude-caches";
       environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
-      paths = ["/home/alex" "/var/lib"];
+      paths = ["/home/alex" "/persist"];
       repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
       startAt = "daily";
       prune.keep = {
@@ -234,5 +335,5 @@ in {
     };
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 }
