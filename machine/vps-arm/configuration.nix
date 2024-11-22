@@ -317,20 +317,31 @@ in {
         mode = "repokey-blake2";
         passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
-      extraCreateArgs = "--stats --verbose --checkpoint-interval 600 --exclude-caches";
-      environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
+      extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
+      extraPruneArgs = [
+        "--save-space"
+        "--stats"
+      ];
+      extraCompactArgs = [
+        "--cleanup-commits"
+      ];
+      environment = {
+        BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
+        BORG_BASE_DIR = "/persist/borg";
+      };
+      readWritePaths = ["/persist/borg"];
       paths = ["/home/alex" "/persist"];
       repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
       startAt = "daily";
       prune.keep = {
-        daily = 4;
-        weekly = 2;
-        monthly = 2;
+        daily = 7;
+        weekly = 4;
+        monthly = 6;
       };
-      extraPruneArgs = "--save-space --stats";
       exclude = [
         "/home/alex/mounted"
         "/home/alex/.cache"
+        "/persist/borg"
       ];
     };
   };

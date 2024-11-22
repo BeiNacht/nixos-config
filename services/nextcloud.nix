@@ -29,7 +29,7 @@
     };
 
     nextcloud = {
-      enable = false;
+      enable = true;
       hostName = "nextcloud.szczepan.ski";
 
       # Need to manually increment with every major upgrade.
