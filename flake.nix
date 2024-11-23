@@ -105,6 +105,9 @@
         system = "x86_64-linux";
         specialArgs = {inherit inputs outputs;};
         modules = [
+          inputs.nixos-hardware.nixosModules.common-cpu-intel
+          inputs.sops-nix.nixosModules.sops
+          impermanence.nixosModules.impermanence
           ./machine/mini/configuration.nix
         ];
       };
