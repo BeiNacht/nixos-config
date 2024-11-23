@@ -12,15 +12,78 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod"];
-  boot.initrd.kernelModules = [];
+  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod"];
+  boot.initrd.kernelModules = ["dm-snapshot"];
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/8be3b4e5-7219-4427-bba4-340f1dc4b868";
-      fsType = "ext4";
+      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      fsType = "btrfs";
+      options = [
+        "subvol=root"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+    };
+
+    "/home" = {
+      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      fsType = "btrfs";
+      options = [
+        "subvol=home"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+    };
+
+    "/nix" = {
+      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      fsType = "btrfs";
+      options = [
+        "subvol=nix"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+    };
+
+    "/persist" = {
+      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      fsType = "btrfs";
+      options = [
+        "subvol=persist"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+      neededForBoot = true;
+    };
+
+    "/var/log" = {
+      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      fsType = "btrfs";
+      options = [
+        "subvol=log"
+        "discard=async"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+      neededForBoot = true;
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/7222-8C3F";
+      fsType = "vfat";
+      options = ["fmask=0022" "dmask=0022"];
     };
 
     "/mnt/disk1" = {
@@ -46,14 +109,11 @@
       fsType = "ext4";
       options = ["nofail" "x-systemd.automount"];
     };
-
-    "/boot" = {
-      device = "/dev/disk/by-uuid/7C10-C8BD";
-      fsType = "vfat";
-    };
   };
 
-  swapDevices = [{device = "/dev/disk/by-uuid/edb5324f-3cd2-4b8c-bb05-cca045adeaf6";}];
+  swapDevices = [
+    {device = "/dev/disk/by-uuid/e59a0c55-7859-40ad-bf55-345708a67816";}
+  ];
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
