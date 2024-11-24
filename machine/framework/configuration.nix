@@ -224,22 +224,33 @@ in {
     };
 
     borgbackup.jobs.home = rec {
+      repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
+      
       compression = "auto,zstd";
       encryption = {
         mode = "repokey-blake2";
         passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
-      extraCreateArgs = "--stats --verbose --checkpoint-interval 600 --exclude-caches";
-      environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
-      paths = ["/home/alex" "/var/lib"];
-      repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
+      extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
+      extraPruneArgs = [
+        "--save-space"
+        "--stats"
+      ];
+      extraCompactArgs = [
+        "--cleanup-commits"
+      ];
+      environment = {
+        BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
+        BORG_BASE_DIR = "/persist/borg";
+      };
+      readWritePaths = ["/persist/borg"];
+      paths = ["/home/alex" "/persist"];
       startAt = "daily";
       prune.keep = {
         daily = 7;
         weekly = 4;
         monthly = 6;
       };
-      extraPruneArgs = "--save-space --list --stats";
       exclude = map (x: "/home/alex/" + x) be.borg-exclude;
     };
   };
