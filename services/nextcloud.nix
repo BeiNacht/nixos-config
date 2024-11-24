@@ -4,6 +4,21 @@
   pkgs,
   ...
 }: {
+  environment = {
+    systemPackages = with pkgs; [
+      goaccess
+      xd
+      nyx
+    ];
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/nextcloud"
+        "/var/lib/postgresql"
+        "/var/lib/redis-nextcloud"
+      ];
+    };
+  };
+
   services = {
     nginx = {
       virtualHosts = {

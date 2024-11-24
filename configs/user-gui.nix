@@ -42,27 +42,34 @@
     # };
   };
 
-  environment.systemPackages = with pkgs; [
-    czkawka # fslint before
-    handbrake
-    keepassxc
-    nextcloud-client
-    pinta
-    # rustdesk-flutter
-    simple-scan
+  environment = {
+    systemPackages = with pkgs; [
+      czkawka # fslint before
+      handbrake
+      keepassxc
+      nextcloud-client
+      pinta
+      # rustdesk-flutter
+      simple-scan
 
-    telegram-desktop
-    discord
-    kdenlive
-    shotcut
+      telegram-desktop
+      discord
+      kdenlive
+      shotcut
 
-    vorta
-    kitty
+      vorta
+      kitty
 
-    lan-mouse_git
+      lan-mouse_git
 
-    libreoffice
-  ];
+      libreoffice
+    ];
+    persistence."/persist" = {
+      directories = [
+        "/etc/NetworkManager/system-connections"
+      ];
+    };
+  };
 
   home-manager.users.alex = {pkgs, ...}: {
     programs = {

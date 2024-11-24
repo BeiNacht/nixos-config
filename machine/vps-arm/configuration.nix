@@ -135,24 +135,15 @@ in {
 
   environment = {
     systemPackages = with pkgs; [
-      goaccess
       xd
       nyx
-      headscale
     ];
     persistence."/persist" = {
       directories = [
         "/var/lib/acme"
-        # "/var/lib/docker"
         "/var/lib/fail2ban"
-        "/var/lib/frigate"
-        "/var/lib/gitea"
-        "/var/lib/headscale"
-        "/var/lib/nextcloud"
-        "/var/lib/postgresql"
         "/var/lib/private"
-        "/var/lib/redis-nextcloud"
-        "/var/www"
+        "/var/www/alexander.szczepan.ski"
       ];
     };
   };

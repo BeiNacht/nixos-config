@@ -6,6 +6,14 @@
 }: let
   secrets = import ../configs/secrets.nix;
 in {
+  environment = {
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/frigate"
+      ];
+    };
+  };
+
   services = {
     nginx = {
       virtualHosts = {
