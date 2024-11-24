@@ -49,6 +49,7 @@
       ktimetracker
       kdiff3
       kdiskmark
+      maliit-keyboard
     ];
   };
 

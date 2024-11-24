@@ -32,11 +32,6 @@
     ];
   };
 
-  # services = {
-  #   gvfs.enable = true;
-  #   mullvad-vpn.enable = true;
-  # };
-
   programs = {
     ssh = {startAgent = true;};
     # dconf.enable = true;
@@ -49,7 +44,6 @@
 
   environment.systemPackages = with pkgs; [
     czkawka # fslint before
-    grsync
     handbrake
     keepassxc
     nextcloud-client
@@ -66,6 +60,8 @@
     kitty
 
     lan-mouse_git
+
+    libreoffice
   ];
 
   home-manager.users.alex = {pkgs, ...}: {
