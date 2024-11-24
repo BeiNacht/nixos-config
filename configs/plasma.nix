@@ -40,17 +40,24 @@
       kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
       kdePackages.qtstyleplugin-kvantum
-      # kdePackages.kmail
       kdePackages.filelight
       kdePackages.plasma-disks
       kdePackages.kalk
       kdePackages.powerdevil
+      kdePackages.qtlocation
+      kdePackages.kdepim-addons
       krusader
       ktimetracker
       kdiff3
       kdiskmark
       maliit-keyboard
     ];
+
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/sddm"
+      ];
+    };
   };
 
   services = {

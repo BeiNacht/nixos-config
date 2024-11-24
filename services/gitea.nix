@@ -4,6 +4,14 @@
   pkgs,
   ...
 }: {
+  environment = {
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/gitea"
+      ];
+    };
+  };
+
   services = {
     nginx = {
       virtualHosts = {

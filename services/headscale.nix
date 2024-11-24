@@ -4,7 +4,16 @@
   pkgs,
   ...
 }: {
-  environment.systemPackages = with pkgs; [headscale];
+  environment = {
+    systemPackages = with pkgs; [headscale];
+    environment = {
+      persistence."/persist" = {
+        directories = [
+          "/var/lib/headscale"
+        ];
+      };
+    };
+  };
 
   services = {
     nginx = {

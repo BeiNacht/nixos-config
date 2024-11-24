@@ -137,15 +137,14 @@ in {
       ryzen-monitor-ng
       qdiskinfo
       jdk
+
+      xmrig
+      monero-gui
     ];
     persistence."/persist" = {
       directories = [
         "/etc/coolercontrol"
-        "/etc/NetworkManager/system-connections"
-        "/var/lib/bluetooth"
-        "/var/lib/docker"
         "/var/lib/samba"
-        "/var/lib/sddm"
         "/var/lib/systemd/rfkill"
       ];
     };
@@ -159,7 +158,12 @@ in {
     graphics = {
       enable = true;
       enable32Bit = true;
+      extraPackages = with pkgs; [ rocmPackages.clr.icd ];
     };
+
+    # cpu.x86.msr = {
+    #   enable = true;
+    # };
 
     pulseaudio.enable = false;
   };

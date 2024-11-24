@@ -42,14 +42,6 @@
     hostName = "nixos-virtualbox"; # Define your hostname.
   };
 
-  environment = {
-    persistence."/persist" = {
-      directories = [
-        "/var/lib/docker"
-      ];
-    };
-  };
-
   programs.nix-ld.enable = true;
 
   # services = {

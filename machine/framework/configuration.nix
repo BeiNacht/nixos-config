@@ -224,15 +224,11 @@ in {
       # fahviewer
       # fahcontrol
     ];
-    persistence."/persist" = {
-      directories = [
-        "/etc/NetworkManager/system-connections"
-        # "/var/lib/bluetooth"
-        "/var/lib/docker"
-        # "/var/lib/samba"
-        "/var/lib/sddm"
-      ];
-    };
+    # persistence."/persist" = {
+    #   directories = [
+    #     # "/var/lib/samba"
+    #   ];
+    # };
   };
 
   # Partition swapfile is on (after LUKS decryption)

@@ -12,12 +12,19 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    docker-compose
-    lazydocker
-    minikube
-    dive
+  environment = {
+    systemPackages = with pkgs; [
+      docker-compose
+      lazydocker
+      minikube
+      dive
 
-    distrobox
-  ];
+      distrobox
+    ];
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/docker"
+      ];
+    };
+  };
 }

@@ -6,6 +6,17 @@
 }: let
   secrets = import ../configs/secrets.nix;
 in {
+  environment = {
+    systemPackages = with pkgs; [
+      goaccess
+    ];
+    persistence."/persist" = {
+      directories = [
+        "/var/www/goaccess"
+      ];
+    };
+  };
+
   services = {
     nginx = {
       virtualHosts = {
