@@ -26,6 +26,7 @@ in {
     ../../configs/docker.nix
     ../../configs/user.nix
 
+    ../../services/atuin.nix
     ../../services/adguardhome.nix
     ../../services/frigate.nix
     ../../services/gitea.nix
@@ -241,6 +242,7 @@ in {
 
   services = {
     dnscrypt-proxy2.enable = lib.mkForce false;
+    qemuGuest.enable = true;
 
     nginx = {
       enable = true;
