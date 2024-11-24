@@ -2,10 +2,10 @@
 # fs-diff.sh
 set -euo pipefail
 
-OLD_TRANSID=$(sudo btrfs subvolume find-new /mnt/root-blank 9999999)
+OLD_TRANSID=$(sudo btrfs subvolume find-new /fs-diff/root-blank 9999999)
 OLD_TRANSID=${OLD_TRANSID#transid marker was }
 
-sudo btrfs subvolume find-new "/mnt/root" "$OLD_TRANSID" |
+sudo btrfs subvolume find-new "/fs-diff/root" "$OLD_TRANSID" |
 sed '$d' |
 cut -f17- -d' ' |
 sort |
