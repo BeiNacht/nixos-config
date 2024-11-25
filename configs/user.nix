@@ -34,7 +34,8 @@ in {
     users.alex = {
       isNormalUser = true;
       uid = 1000;
-      hashedPasswordFile = config.sops.secrets.hashedPassword.path;
+      hashedPassword = "$6$coUQJjptyQisse8t$OttLrXye26rxlsCaPl7eYy5Gc06wdDXd0lUeV9Hsh01CS8NNuKrrxdQRE1oTrdAKR4.3JK4XqJHKr.xSHGOMa0";
+      # hashedPasswordFile = config.sops.secrets.hashedPassword.path;
       extraGroups = [
         "wheel"
         "docker"

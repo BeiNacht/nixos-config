@@ -11,6 +11,15 @@
     networkmanager = {enable = true;};
   };
 
+  programs = {
+    ssh = { startAgent = true; };
+    # gnupg.agent = {
+    #   enable = true;
+    #   pinentryFlavor = "curses";
+    #   # enableSSHSupport = true;
+    # };
+  };
+
   fonts = {
     enableDefaultPackages = true;
     fontDir.enable = true;
@@ -18,9 +27,13 @@
     packages = with pkgs; [
       (nerdfonts.override {fonts = ["Meslo" "RobotoMono"];})
       corefonts
-      google-fonts
+
+      # google-fonts
+
       liberation_ttf
+
       libertinus
+
       gyre-fonts
       noto-fonts
       noto-fonts-cjk-sans
