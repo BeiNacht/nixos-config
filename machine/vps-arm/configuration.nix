@@ -20,7 +20,6 @@ in {
     ../../services/frigate.nix
     ../../services/gitea.nix
     ../../services/nextcloud.nix
-    # ../../services/rustdesk-server.nix
     ../../services/uptime-kuma.nix
     ../../services/headscale.nix
     ../../services/goaccess.nix
@@ -28,13 +27,6 @@ in {
 
   sops = {
     defaultSopsFile = ../../secrets-vps-arm.yaml;
-    validateSopsFiles = true;
-    age = {
-      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
-      keyFile = "/persist/var/lib/sops-nix/key.txt";
-      generateKey = true;
-    };
-
     secrets = {
       borg-key = {
         owner = config.users.users.alex.name;
@@ -59,11 +51,6 @@ in {
       gitea-password = {
         owner = config.services.gitea.user;
         group = config.services.gitea.group;
-      };
-
-      hashedPassword = {
-        neededForUsers = true;
-        sopsFile = ../../secrets.yaml;
       };
     };
   };

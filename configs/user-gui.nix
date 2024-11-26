@@ -11,15 +11,6 @@
     networkmanager = {enable = true;};
   };
 
-  programs = {
-    ssh = { startAgent = true; };
-    # gnupg.agent = {
-    #   enable = true;
-    #   pinentryFlavor = "curses";
-    #   # enableSSHSupport = true;
-    # };
-  };
-
   fonts = {
     enableDefaultPackages = true;
     fontDir.enable = true;
@@ -65,14 +56,12 @@
     simple-scan
 
     telegram-desktop
-    discord
-    kdenlive
-    shotcut
+    # discord
+    # kdenlive
+    # shotcut
 
     vorta
     kitty
-
-    lan-mouse_git
 
     libreoffice
   ];

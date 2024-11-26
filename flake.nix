@@ -2,7 +2,6 @@
   description = "Your new nix config";
 
   inputs = {
-    # nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
@@ -116,6 +115,8 @@
         system = "aarch64-linux";
         specialArgs = {inherit inputs outputs;};
         modules = [
+          inputs.sops-nix.nixosModules.sops
+          impermanence.nixosModules.impermanence
           ./machine/nixos-vm/configuration.nix
         ];
       };
