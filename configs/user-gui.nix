@@ -18,9 +18,13 @@
     packages = with pkgs; [
       (nerdfonts.override {fonts = ["Meslo" "RobotoMono"];})
       corefonts
-      google-fonts
+
+      # google-fonts
+
       liberation_ttf
+
       libertinus
+
       gyre-fonts
       noto-fonts
       noto-fonts-cjk-sans
@@ -53,14 +57,12 @@
       simple-scan
 
       telegram-desktop
-      discord
-      kdenlive
-      shotcut
+      # discord
+      # kdenlive
+      # shotcut
 
       vorta
       kitty
-
-      lan-mouse_git
 
       libreoffice
     ];

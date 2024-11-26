@@ -74,8 +74,22 @@
     };
   };
 
-  # Work around for https://github.com/NixOS/nixpkgs/issues/124215
-  documentation.info.enable = false;
+  sops = {
+    defaultSopsFile = lib.mkDefault ../secrets.yaml;
+    validateSopsFiles = true;
+    age = {
+      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
+      keyFile = "/persist/var/lib/sops-nix/key.txt";
+      generateKey = true;
+    };
+
+    secrets = {
+      hashedPassword = {
+        neededForUsers = true;
+        sopsFile = ../secrets.yaml;
+      };
+    };
+  };
 
   environment = {
     # Don't install the /lib/ld-linux.so.2 stub. This saves one instance of nixpkgs.
