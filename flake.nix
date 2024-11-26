@@ -2,7 +2,6 @@
   description = "Your new nix config";
 
   inputs = {
-    # nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
@@ -112,13 +111,13 @@
         ];
       };
 
-      nixos-virtualbox = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+      nixos-vm = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
         specialArgs = {inherit inputs outputs;};
         modules = [
+          inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
-          sops-nix.nixosModules.sops
-          ./machine/nixos-virtualbox/configuration.nix
+          ./machine/nixos-vm/configuration.nix
         ];
       };
     };
