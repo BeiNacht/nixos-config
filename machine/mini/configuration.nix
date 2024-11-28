@@ -13,7 +13,7 @@
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets.yaml;
+    defaultSopsFile = ../../secrets/secrets.yaml;
     validateSopsFiles = true;
     age = {
       sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
@@ -23,7 +23,7 @@
 
     secrets = {
       borg-key = {
-        sopsFile = ../../secrets-mini.yaml;
+        sopsFile = ../../secrets/secrets-mini.yaml;
         owner = config.users.users.alex.name;
         group = config.users.users.alex.group;
       };

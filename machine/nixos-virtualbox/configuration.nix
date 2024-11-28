@@ -13,7 +13,7 @@
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets.yaml;
+    defaultSopsFile = ../../secrets/secrets.yaml;
     validateSopsFiles = true;
     age = {
       sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];

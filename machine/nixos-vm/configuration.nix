@@ -34,10 +34,10 @@
   # replicates the default behaviour.
   networking.useDHCP = false;
 
-#  hardware.parallels = {
-#    enable = true;
-    # autoMountShares = true;
-#  };
+  #  hardware.parallels = {
+  #    enable = true;
+  # autoMountShares = true;
+  #  };
 
   services = {
     k3s = {

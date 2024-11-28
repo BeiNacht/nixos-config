@@ -26,7 +26,7 @@ in {
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets-vps-arm.yaml;
+    defaultSopsFile = ../../secrets/secrets-vps-arm.yaml;
     secrets = {
       borg-key = {
         owner = config.users.users.alex.name;

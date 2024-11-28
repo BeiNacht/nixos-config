@@ -22,7 +22,7 @@ in {
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets.yaml;
+    defaultSopsFile = ../../secrets/secrets.yaml;
     validateSopsFiles = true;
     age = {
       sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
@@ -32,7 +32,7 @@ in {
 
     secrets = {
       borg-key = {
-        sopsFile = ../../secrets-desktop.yaml;
+        sopsFile = ../../secrets/secrets-desktop.yaml;
         owner = config.users.users.alex.name;
         group = config.users.users.alex.group;
       };
@@ -158,7 +158,7 @@ in {
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [ rocmPackages.clr.icd ];
+      extraPackages = with pkgs; [rocmPackages.clr.icd];
     };
 
     # cpu.x86.msr = {

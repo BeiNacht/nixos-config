@@ -28,6 +28,11 @@
       url = "github:TamtamHero/fw-fanctrl/packaging/nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
   outputs = {
@@ -40,6 +45,7 @@
     nixpkgs-unstable,
     sops-nix,
     impermanence,
+    nix-darwin,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -120,6 +126,19 @@
           ./machine/nixos-vm/configuration.nix
         ];
       };
+    };
+
+    darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [
+          ./machine/macbook/configuration.nix
+        # home-manager.darwinModules.home-manager
+        # {
+        #   home-manager.useGlobalPkgs = true;
+        #   home-manager.useUserPackages = true;
+        #   home-manager.users.omerxx = import ./home.nix;
+        # }
+      ];
     };
   };
 }

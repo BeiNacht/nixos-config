@@ -75,7 +75,7 @@
   };
 
   sops = {
-    defaultSopsFile = lib.mkDefault ../secrets.yaml;
+    defaultSopsFile = lib.mkDefault ../secrets/secrets.yaml;
     validateSopsFiles = true;
     age = {
       sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
@@ -86,7 +86,7 @@
     secrets = {
       hashedPassword = {
         neededForUsers = true;
-        sopsFile = ../secrets.yaml;
+        sopsFile = ../secrets/secrets.yaml;
       };
     };
   };
