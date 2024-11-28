@@ -51,6 +51,8 @@
       kdiff3
       kdiskmark
       maliit-keyboard
+
+      deskflow
     ];
 
     persistence."/persist" = {
