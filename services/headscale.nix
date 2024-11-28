@@ -6,12 +6,10 @@
 }: {
   environment = {
     systemPackages = with pkgs; [headscale];
-    environment = {
-      persistence."/persist" = {
-        directories = [
-          "/var/lib/headscale"
-        ];
-      };
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/headscale"
+      ];
     };
   };
 

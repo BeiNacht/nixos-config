@@ -27,7 +27,7 @@ in {
 
     frigate = {
       enable = true;
-      package = pkgs.unstable.frigate;
+      package = pkgs.frigate;
       hostname = "frigate.szczepan.ski";
 
       settings = {
