@@ -16,7 +16,8 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
-      (nerdfonts.override {fonts = ["Meslo" "RobotoMono"];})
+      nerd-fonts.meslo-lg
+      nerd-fonts.roboto-mono
       corefonts
 
       # google-fonts
@@ -56,7 +57,6 @@
       # rustdesk-flutter
       simple-scan
 
-      telegram-desktop
       # discord
       # kdenlive
       # shotcut

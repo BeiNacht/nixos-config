@@ -97,6 +97,8 @@ in {
     };
   };
 
+  chaotic.mesa-git.enable = true;
+
   systemd.services = {
     monitor = {
       description = "AMDGPU Control Daemon";

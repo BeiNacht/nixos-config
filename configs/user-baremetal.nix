@@ -41,7 +41,6 @@
     pinta
     rustdesk-flutter
     simple-scan
-    telegram-desktop
     discord
     kdenlive
     shotcut
