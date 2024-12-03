@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    ../../configs/common.nix
+    ./configs/common.nix
   ];
 
   boot = {
@@ -16,7 +16,7 @@
         enable = true;
         device = "nodev";
         efiSupport = true;
-        configurationLimit = 5;
+        configurationLimit = 10;
         enableCryptodisk = true;
         useOSProber = true;
       };
