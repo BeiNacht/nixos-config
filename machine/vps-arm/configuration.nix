@@ -14,6 +14,7 @@
 
     ../../services/adguardhome.nix
     ../../services/atuin.nix
+    ../../services/firefox-syncserver.nix
     ../../services/frigate.nix
     ../../services/gitea.nix
     ../../services/goaccess.nix
@@ -34,11 +35,17 @@
       goaccess-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
+        mode = "0440"
       };
 
       frigate-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
+        mode = "0440";
+      };
+
+      syncserver-secrets = {
+        owner = config.users.users.firefox-syncserver.name;
       };
 
       nextcloud-password = {
@@ -49,6 +56,7 @@
       gitea-password = {
         owner = config.services.gitea.user;
         group = config.services.gitea.group;
+        mode = "0440"
       };
     };
   };
