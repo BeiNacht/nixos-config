@@ -12,6 +12,8 @@
     };
   };
 
+  users.extraGroups.docker.members = ["alex"];
+
   environment = {
     systemPackages = with pkgs; [
       docker-compose

@@ -37,7 +37,6 @@ in {
       hashedPasswordFile = config.sops.secrets.hashedPassword.path;
       extraGroups = [
         "wheel"
-        "docker"
         "networkmanager"
         "lp"
         "nginx"

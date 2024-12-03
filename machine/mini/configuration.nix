@@ -14,7 +14,7 @@
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets-mini.yaml;
+    defaultSopsFile = ../../secrets/secrets-mini.yaml;
   };
 
   boot = {
@@ -95,27 +95,10 @@
         "/persist/borg"
       ];
     };
-  };
 
-  virtualisation = {
-    libvirtd = {
-      enable = true;
-      qemu = {
-        package = pkgs.qemu_kvm;
-        swtpm.enable = true;
-        ovmf = {
-          enable = true;
-          packages = [
-            (pkgs.OVMF.override {
-              secureBoot = true;
-              tpmSupport = true;
-            })
-            .fd
-          ];
-        };
-      };
+    locate = {
+      prunePaths = [ "/mnt" "/nix" ];
     };
-    spiceUSBRedirection.enable = true;
   };
 
   powerManagement = {
