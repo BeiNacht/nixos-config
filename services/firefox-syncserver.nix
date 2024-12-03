@@ -4,43 +4,29 @@
   pkgs,
   ...
 }: {
-  # environment = {
-  #   persistence."/persist" = {
-  #     directories = [
-  #       "/var/lib/immich"
-  #       "/var/lib/redis-immich"
-  #     ];
-  #   };
-  # };
+  environment = {
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/mysql"
+      ];
+    };
+  };
+
+  users = {
+    groups.firefox-syncserver = {};
+    users.firefox-syncserver = {
+      isSystemUser = true;
+      group = "firefox-syncserver";
+      extraGroups = [config.users.groups.keys.name];
+    };
+  };
 
   services = {
-    # nginx = {
-    #   virtualHosts = {
-    #     "firefox.szczepan.ski" = {
-    #       forceSSL = true;
-    #       enableACME = true;
-    #       locations = {"/" = {proxyPass = "http://[::1]:2283/";};};
-    #     };
-    #   };
-    # };
-
-    # postgresql = {
-    #   enable = true;
-    #   ensureDatabases = [
-    #     config.services.nextcloud.config.dbname
-    #   ];
-    #   ensureUsers = [
-    #     {
-    #       name = config.services..config.dbuser;
-    #       ensureDBOwnership = true;
-    #       # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGEnS";
-    #     }
-    #   ];
-    # };
-
+    mysql.package = pkgs.mariadb;
     firefox-syncserver = {
       enable = true;
       secrets = config.sops.secrets."syncserver-secrets".path;
+      logLevel = "trace";
       singleNode = {
         enable = true;
         hostname = "firefox-sync.szczepan.ski";

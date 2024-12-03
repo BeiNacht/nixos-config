@@ -35,7 +35,7 @@
       goaccess-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
-        mode = "0440"
+        mode = "0440";
       };
 
       frigate-htpasswd = {
@@ -56,7 +56,7 @@
       gitea-password = {
         owner = config.services.gitea.user;
         group = config.services.gitea.group;
-        mode = "0440"
+        mode = "0440";
       };
     };
   };
