@@ -11,7 +11,7 @@ in {
   imports = [
     ./hardware-configuration.nix
     ../../configs/browser.nix
-    ../../configs/common.nix
+    ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/games.nix
     ../../configs/virtualization.nix

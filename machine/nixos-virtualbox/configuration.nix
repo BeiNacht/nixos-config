@@ -7,7 +7,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../configs/common.nix
+    ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/user.nix
   ];

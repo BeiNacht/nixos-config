@@ -8,7 +8,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../configs/docker.nix
-    ../../configs/common.nix
+    ../../configs/common-linux.nix
     ../../configs/user.nix
   ];
 

@@ -7,7 +7,7 @@
     insomnia
     meld
 
-    #rust
+    # rust
     cargo
     nodejs
 
