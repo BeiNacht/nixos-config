@@ -21,23 +21,12 @@ in {
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets/secrets.yaml;
-    validateSopsFiles = true;
-    age = {
-      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
-      keyFile = "/var/lib/sops-nix/key.txt";
-      generateKey = true;
-    };
+    defaultSopsFile = ../../secrets-framework.yaml;
 
     secrets = {
       borg-key = {
-        sopsFile = ../../secrets/secrets-framework.yaml;
         owner = config.users.users.alex.name;
         group = config.users.users.alex.group;
-      };
-
-      hashedPassword = {
-        neededForUsers = true;
       };
     };
   };
@@ -224,11 +213,6 @@ in {
       # fahviewer
       # fahcontrol
     ];
-    # persistence."/persist" = {
-    #   directories = [
-    #     # "/var/lib/samba"
-    #   ];
-    # };
   };
 
   # Partition swapfile is on (after LUKS decryption)
