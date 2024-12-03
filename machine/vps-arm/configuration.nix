@@ -5,24 +5,22 @@
   outputs,
   inputs,
   ...
-}: let
-  secrets = import ../../configs/secrets.nix;
-  be = import ../../configs/borg-exclude.nix;
-in {
+}: {
   imports = [
     ./hardware-configuration.nix
     ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/user.nix
 
-    ../../services/atuin.nix
     ../../services/adguardhome.nix
+    ../../services/atuin.nix
     ../../services/frigate.nix
     ../../services/gitea.nix
+    ../../services/goaccess.nix
+    ../../services/headscale.nix
+    ../../services/immich.nix
     ../../services/nextcloud.nix
     ../../services/uptime-kuma.nix
-    ../../services/headscale.nix
-    ../../services/goaccess.nix
   ];
 
   sops = {

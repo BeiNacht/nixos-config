@@ -20,7 +20,7 @@ in {
           forceSSL = true;
           enableACME = true;
           locations = {
-            "/" = {proxyPass = "https://127.0.0.1:3003/";};
+            "/" = {proxyPass = "https://127.0.0.1:3004/";};
           };
         };
       };
@@ -71,7 +71,7 @@ in {
           allow_unencrypted_doh = false;
           port_dns_over_tls = 853;
           port_dns_over_quic = 0;
-          port_https = 3003;
+          port_https = 3004;
           certificate_chain = "";
           private_key = "";
           certificate_path = "/var/lib/AdGuardHome/chain.pem";

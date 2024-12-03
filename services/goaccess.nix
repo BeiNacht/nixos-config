@@ -3,9 +3,7 @@
   lib,
   pkgs,
   ...
-}: let
-  secrets = import ../configs/secrets.nix;
-in {
+}: {
   environment = {
     systemPackages = with pkgs; [
       goaccess

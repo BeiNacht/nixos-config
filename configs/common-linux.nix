@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    ./configs/common.nix
+    ./common.nix
   ];
 
   boot = {

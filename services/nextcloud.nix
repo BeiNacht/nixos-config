@@ -5,11 +5,6 @@
   ...
 }: {
   environment = {
-    systemPackages = with pkgs; [
-      goaccess
-      xd
-      nyx
-    ];
     persistence."/persist" = {
       directories = [
         "/var/lib/nextcloud"

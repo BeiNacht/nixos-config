@@ -8,8 +8,7 @@ OLD_TRANSID=${OLD_TRANSID#transid marker was }
 sudo btrfs subvolume find-new "/fs-diff/root" "$OLD_TRANSID" |
 sed '$d' |
 cut -f17- -d' ' |
-sort |
-uniq |
+sort |uniq |
 while read path; do
   path="/$path"
   if [ -L "$path" ]; then
