@@ -85,24 +85,24 @@
       fsType = "vfat";
       options = ["fmask=0022" "dmask=0022"];
     };
-    "/home/alex/shared/storage" = {
-      device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
-      fsType = "btrfs";
-      options = [
-        "subvol=@data"
-        "discard=async"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-        "nofail"
-        "x-systemd.automount"
-      ];
-    };
+    # "/home/alex/shared/storage" = {
+    #   device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
+    #   fsType = "btrfs";
+    #   options = [
+    #     "subvol=@data"
+    #     "discard=async"
+    #     "compress=zstd"
+    #     "nodiratime"
+    #     "noatime"
+    #     "nofail"
+    #     "x-systemd.automount"
+    #   ];
+    # };
   };
 
-  environment.etc.crypttab.text = ''
-    luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /persist/luks-key01
-  '';
+  # environment.etc.crypttab.text = ''
+  #   luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /persist/luks-key01
+  # '';
 
   swapDevices = [
     {

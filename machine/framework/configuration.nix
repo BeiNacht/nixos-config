@@ -14,6 +14,7 @@ in {
     ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/games.nix
+    ../../configs/hardware.nix
     ../../configs/virtualization.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
@@ -21,7 +22,7 @@ in {
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets-framework.yaml;
+    defaultSopsFile = ../../secrets/secrets-framework.yaml;
 
     secrets = {
       borg-key = {
@@ -85,11 +86,11 @@ in {
             }
             {
               temp = 65;
-              speed = 25;
+              speed = 20;
             }
             {
               temp = 70;
-              speed = 35;
+              speed = 25;
             }
             {
               temp = 75;
@@ -205,13 +206,8 @@ in {
       msr-tools
       quota
 
-      mergerfs
-      snapraid
-
       gparted
       homebank
-      # fahviewer
-      # fahcontrol
     ];
   };
 
