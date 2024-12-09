@@ -57,7 +57,6 @@
       "i686-linux"
       "x86_64-linux"
       "aarch64-darwin"
-      "x86_64-darwin"
     ];
 
     # This is a function that generates an attribute by calling a function you

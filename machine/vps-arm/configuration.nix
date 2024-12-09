@@ -12,16 +12,16 @@
     ../../configs/docker.nix
     ../../configs/user.nix
 
-    ../../services/adguardhome.nix
-    ../../services/atuin.nix
-    ../../services/firefox-syncserver.nix
-    ../../services/frigate.nix
-    ../../services/gitea.nix
-    ../../services/goaccess.nix
-    ../../services/headscale.nix
-    ../../services/immich.nix
-    ../../services/nextcloud.nix
-    ../../services/uptime-kuma.nix
+    ../../configs/services/adguardhome.nix
+    ../../configs/services/atuin.nix
+    ../../configs/services/firefox-syncserver.nix
+    ../../configs/services/frigate.nix
+    ../../configs/services/gitea.nix
+    ../../configs/services/goaccess.nix
+    ../../configs/services/headscale.nix
+    ../../configs/services/immich.nix
+    ../../configs/services/nextcloud.nix
+    ../../configs/services/uptime-kuma.nix
   ];
 
   sops = {
