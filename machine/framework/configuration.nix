@@ -48,7 +48,7 @@ in {
 
   boot = {
     tmp.useTmpfs = false;
-    kernelPackages = pkgs.linuxPackages_6_11;
+    kernelPackages = pkgs.linuxPackages_latest;
 
     initrd = {
       luks.devices = {
