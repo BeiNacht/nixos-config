@@ -19,7 +19,12 @@
         "immich.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
-          locations = {"/" = {proxyPass = "http://[::1]:2283/";};};
+          locations = {
+            "/" = {
+              proxyPass = "http://[::1]:2283/";
+              proxyWebsockets = true;
+            };
+          };
         };
       };
     };
