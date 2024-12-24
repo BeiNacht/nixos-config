@@ -11,6 +11,7 @@
     ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/user.nix
+    # ../../configs/borg.nix
 
     ../../configs/services/adguardhome.nix
     ../../configs/services/atuin.nix
@@ -104,7 +105,7 @@
       };
       luks.devices = {
         root = {
-          device = "/dev/disk/by-uuid/d17f6d8b-aec8-4c48-834d-f88d6308e281";
+          device = "/dev/disk/by-uuid/cad303e1-16d8-4c15-b6c6-1f5bfc498419";
           preLVM = true;
         };
       };
@@ -133,7 +134,7 @@
       useDHCP = true;
       ipv6.addresses = [
         {
-          address = "2a0a:4cc0:1:124c::1";
+          address = "2a0a:4cc0:c0:30aa::1";
           prefixLength = 64;
         }
       ];
@@ -254,40 +255,42 @@
       };
     };
 
-    borgbackup.jobs.home = rec {
-      compression = "auto,zstd";
-      encryption = {
-        mode = "repokey-blake2";
-        passCommand = "cat ${config.sops.secrets.borg-key.path}";
-      };
-      extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
-      extraPruneArgs = [
-        "--save-space"
-        "--stats"
-      ];
-      extraCompactArgs = [
-        "--cleanup-commits"
-      ];
-      environment = {
-        BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
-        BORG_BASE_DIR = "/persist/borg";
-      };
-      readWritePaths = ["/persist/borg"];
-      paths = ["/home/alex" "/persist"];
-      repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
-      startAt = "daily";
-      prune.keep = {
-        daily = 7;
-        weekly = 4;
-        monthly = 6;
-      };
-      exclude = [
-        "/home/alex/mounted"
-        "/home/alex/.cache"
-        "/persist/borg"
-      ];
-    };
+    # borgbackup.jobs.home = rec {
+    #   compression = "auto,zstd";
+    #   encryption = {
+    #     mode = "repokey-blake2";
+    #     passCommand = "cat ${config.sops.secrets.borg-key.path}";
+    #   };
+    #   extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
+    #   extraPruneArgs = [
+    #     "--save-space"
+    #     "--stats"
+    #   ];
+    #   extraCompactArgs = [
+    #     "--cleanup-commits"
+    #   ];
+    #   environment = {
+    #     BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
+    #     BORG_BASE_DIR = "/persist/borg";
+    #   };
+    #   readWritePaths = ["/persist/borg"];
+    #   paths = ["/home/alex" "/persist"];
+    #   repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
+    #   startAt = "daily";
+    #   prune.keep = {
+    #     daily = 7;
+    #     weekly = 4;
+    #     monthly = 6;
+    #   };
+    #   exclude = [
+    #     "/home/alex/mounted"
+    #     "/home/alex/.cache"
+    #     "/persist/borg"
+    #   ];
+    # };
+
+    journald = {extraConfig = "SystemMaxUse=10G";};
   };
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "24.11";
 }

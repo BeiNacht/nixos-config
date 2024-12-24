@@ -92,12 +92,12 @@ in {
 
         matchBlocks."szczepan.ski" = {hostname = "szczepan.ski";};
         matchBlocks."mini" = {hostname = "mini";};
+        matchBlocks."desktop" = {hostname = "desktop";};
+        matchBlocks."framework" = {hostname = "framework";};
         matchBlocks."nixos-vm" = {
           hostname = "127.0.0.1";
           port = 1337;
         };
-
-        matchBlocks."thinkpad" = {hostname = "thinkpad";};
       };
 
       git = {

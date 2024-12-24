@@ -84,7 +84,6 @@
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
-      extraUpFlags = "--advertise-exit-node --login-server=https://headscale.szczepan.ski";
     };
 
     borgbackup.jobs.all = rec {
