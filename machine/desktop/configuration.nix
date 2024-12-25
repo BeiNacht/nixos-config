@@ -74,7 +74,7 @@ in {
       availableKernelModules = ["r8169"];
       systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
-        enable = true;
+        enable = true;z
         ssh = {
           enable = true;
           port = 22;
