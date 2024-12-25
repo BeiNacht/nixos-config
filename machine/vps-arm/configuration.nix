@@ -11,7 +11,7 @@
     ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/user.nix
-    # ../../configs/borg.nix
+    ../../configs/borg.nix
 
     ../../configs/services/adguardhome.nix
     ../../configs/services/atuin.nix
@@ -19,6 +19,7 @@
     ../../configs/services/frigate.nix
     ../../configs/services/gitea.nix
     ../../configs/services/goaccess.nix
+    ../../configs/services/grafana.nix
     ../../configs/services/headscale.nix
     ../../configs/services/immich.nix
     ../../configs/services/nextcloud.nix
@@ -255,39 +256,14 @@
       };
     };
 
-    # borgbackup.jobs.home = rec {
-    #   compression = "auto,zstd";
-    #   encryption = {
-    #     mode = "repokey-blake2";
-    #     passCommand = "cat ${config.sops.secrets.borg-key.path}";
-    #   };
-    #   extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
-    #   extraPruneArgs = [
-    #     "--save-space"
-    #     "--stats"
-    #   ];
-    #   extraCompactArgs = [
-    #     "--cleanup-commits"
-    #   ];
-    #   environment = {
-    #     BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_rsa";
-    #     BORG_BASE_DIR = "/persist/borg";
-    #   };
-    #   readWritePaths = ["/persist/borg"];
-    #   paths = ["/home/alex" "/persist"];
-    #   repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
-    #   startAt = "daily";
-    #   prune.keep = {
-    #     daily = 7;
-    #     weekly = 4;
-    #     monthly = 6;
-    #   };
-    #   exclude = [
-    #     "/home/alex/mounted"
-    #     "/home/alex/.cache"
-    #     "/persist/borg"
-    #   ];
-    # };
+    borgbackup.jobs.all = rec {
+      repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
+      exclude = [
+        "/home/alex/mounted"
+        "/home/alex/.cache"
+        "/persist/borg"
+      ];
+    };
 
     journald = {extraConfig = "SystemMaxUse=10G";};
   };
