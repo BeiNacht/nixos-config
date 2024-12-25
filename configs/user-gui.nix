@@ -61,6 +61,8 @@
       # kdenlive
       # shotcut
 
+      telegram-desktop
+
       vorta
       kitty
 
