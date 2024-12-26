@@ -8,8 +8,9 @@
   imports = [
     ./hardware-configuration.nix
     ../../configs/borg.nix
-    ../../configs/docker.nix
     ../../configs/common-linux.nix
+    ../../configs/docker.nix
+    ../../configs/libvirtd.nix
     ../../configs/user.nix
   ];
 
@@ -51,8 +52,12 @@
     useDHCP = false;
     firewall = {enable = false;};
     interfaces = {
-      enp3s0.useDHCP = true;
+      br0 = {
+        useDHCP = true;
+      };
     };
+
+    bridges.br0.interfaces = ["enp3s0"];
 
     nftables.enable = true;
   };
@@ -96,7 +101,7 @@
     };
 
     locate = {
-      prunePaths = [ "/mnt" "/nix" ];
+      prunePaths = ["/mnt" "/nix"];
     };
   };
 
