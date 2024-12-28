@@ -104,6 +104,7 @@
           tor -f ${torRc} &
         '';
       };
+
       luks.devices = {
         root = {
           device = "/dev/disk/by-uuid/cad303e1-16d8-4c15-b6c6-1f5bfc498419";
@@ -210,6 +211,7 @@
           enableACME = true;
           globalRedirect = "alexander.szczepan.ski";
         };
+
         "alexander.szczepan.ski" = {
           forceSSL = true;
           enableACME = true;
@@ -257,7 +259,7 @@
     };
 
     borgbackup.jobs.all = rec {
-      repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg-arm";
+      repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg";
       exclude = [
         "/home/alex/mounted"
         "/home/alex/.cache"
