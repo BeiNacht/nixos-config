@@ -15,7 +15,7 @@ in {
     ../../configs/games.nix
     ../../configs/develop.nix
     ../../configs/hardware.nix
-    ../../configs/virtualization.nix
+    ../../configs/virtualbox.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix
