@@ -29,11 +29,6 @@
         "noatime"
       ];
     };
-    # "/" = {
-    #   device = "none";
-    #   fsType = "tmpfs";
-    #   options = ["defaults" "size=16G" "mode=755"];
-    # };
     "/home" = {
       device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
       fsType = "btrfs";

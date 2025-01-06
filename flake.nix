@@ -137,12 +137,22 @@
           ./machine/nixos-vm/configuration.nix
         ];
       };
+
+      nixos-virtualbox = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.sops-nix.nixosModules.sops
+          impermanence.nixosModules.impermanence
+          ./machine/nixos-virtualbox/configuration.nix
+        ];
+      };
     };
 
     darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
-          ./machine/macbook/configuration.nix
+        ./machine/macbook/configuration.nix
         # home-manager.darwinModules.home-manager
         # {
         #   home-manager.useGlobalPkgs = true;
