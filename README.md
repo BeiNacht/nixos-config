@@ -6,7 +6,7 @@
 
 
 ```
-nix flake update .
+nix flake update
 
 sudo mergerfs -o cache.files=partial,dropcacheonclose=true,category.create=mfs /run/media/alex/disk1:/run/media/alex/disk2:/run/media/alex/disk3 /home/alex/shared/raid
 

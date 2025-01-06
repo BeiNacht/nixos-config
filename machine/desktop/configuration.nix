@@ -36,10 +36,6 @@ in {
         owner = config.users.users.alex.name;
         group = config.users.users.alex.group;
       };
-
-      hashedPassword = {
-        neededForUsers = true;
-      };
     };
   };
 
@@ -69,6 +65,10 @@ in {
     kernelPackages = pkgs.linuxPackages_cachyos;
     kernelParams = ["clearcpuid=514" "ip=dhcp"];
     kernelModules = ["nct6775"];
+    kernel.sysctl = {
+      "vm.max_map_count" = 262144;
+      "vm.nr_hugepages" = 1280;
+    };
     extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
     initrd = {
       availableKernelModules = ["r8169"];

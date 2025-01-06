@@ -20,12 +20,6 @@
       keyFile = "/var/lib/sops-nix/key.txt";
       generateKey = true;
     };
-
-    secrets = {
-      hashedPassword = {
-        neededForUsers = true;
-      };
-    };
   };
 
   time.timeZone = "Europe/Berlin";

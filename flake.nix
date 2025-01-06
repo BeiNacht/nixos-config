@@ -105,6 +105,18 @@
         ];
       };
 
+      thinkpad = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          impermanence.nixosModules.impermanence
+          chaotic.nixosModules.default
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
+          inputs.sops-nix.nixosModules.sops
+          ./machine/thinkpad/configuration.nix
+        ];
+      };
+
       mini = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {inherit inputs outputs;};
