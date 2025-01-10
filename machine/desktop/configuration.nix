@@ -46,7 +46,6 @@ in {
       "big-parallel"
       "kvm"
       "gccarch-znver3"
-      # "gccarch-x86-64-v3"
     ];
     max-jobs = 4;
 
@@ -66,7 +65,6 @@ in {
     kernelParams = ["clearcpuid=514" "ip=dhcp"];
     kernelModules = ["nct6775"];
     kernel.sysctl = {
-      "vm.max_map_count" = 262144;
       "vm.nr_hugepages" = 1280;
     };
     extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
@@ -74,7 +72,7 @@ in {
       availableKernelModules = ["r8169"];
       systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
-        enable = true;z
+        enable = true;
         ssh = {
           enable = true;
           port = 22;
@@ -166,8 +164,6 @@ in {
     # cpu.x86.msr = {
     #   enable = true;
     # };
-
-    pulseaudio.enable = false;
   };
 
   # powerManagement = {

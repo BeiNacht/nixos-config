@@ -90,13 +90,15 @@ in {
         serverAliveInterval = 60;
         forwardAgent = true;
 
-        matchBlocks."szczepan.ski" = {hostname = "szczepan.ski";};
-        matchBlocks."mini" = {hostname = "mini";};
-        matchBlocks."desktop" = {hostname = "desktop";};
-        matchBlocks."framework" = {hostname = "framework";};
-        matchBlocks."nixos-vm" = {
-          hostname = "127.0.0.1";
-          port = 1337;
+        matchBlocks = {
+          "szczepan.ski" = {hostname = "szczepan.ski";};
+          "mini" = {hostname = "mini";};
+          "desktop" = {hostname = "desktop";};
+          "framework" = {hostname = "framework";};
+          "nixos-vm" = {
+            hostname = "127.0.0.1";
+            port = 1337;
+          };
         };
       };
 

@@ -21,7 +21,7 @@ creation_rules:
       - *nixos-virtualbox
       - *nixos-vm
       - *thinkpad
-  - path_regex: secrets-desktop.y`aml$
+  - path_regex: secrets-desktop.yaml$
     key_groups:
     - age:
       - *alex

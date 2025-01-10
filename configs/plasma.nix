@@ -52,7 +52,7 @@
       kdiskmark
       maliit-keyboard
 
-      deskflow
+      # deskflow
     ];
 
     persistence."/persist" = {
