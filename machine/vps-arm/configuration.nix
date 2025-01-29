@@ -228,7 +228,7 @@
           enableACME = true;
           locations = {
             "/" = {
-              proxyPass = "http://mini.main.szczepan.ski:8123/";
+              proxyPass = "http://192.168.178.45:8123/";
               proxyWebsockets = true;
             };
           };
