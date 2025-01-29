@@ -158,7 +158,8 @@ in {
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [rocmPackages.clr.icd];
+      # doesnt build atm
+      # extraPackages = with pkgs; [rocmPackages.clr.icd];
     };
 
     # cpu.x86.msr = {
@@ -166,10 +167,10 @@ in {
     # };
   };
 
-  # powerManagement = {
-  #   enable = true;
-  #   powertop.enable = true;
-  # };
+  powerManagement = {
+    enable = true;
+    powertop.enable = true;
+  };
 
   services = {
     power-profiles-daemon.enable = true;
@@ -181,11 +182,6 @@ in {
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-    };
-
-    sunshine = {
-      enable = true;
-      capSysAdmin = true;
     };
 
     samba = {
@@ -215,17 +211,6 @@ in {
         };
       };
     };
-
-    duplicati = {
-      enable = true;
-      user = "alex";
-    };
-
-    # jellyfin = {
-    #   enable = true;
-    #   user = "alex";
-    #   group = "users";
-    # };
 
     borgbackup.jobs = {
       home = rec {

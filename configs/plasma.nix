@@ -5,6 +5,10 @@
   lib,
   ...
 }: {
+  nixpkgs.config.permittedInsecurePackages = [
+    "deskflow-1.18.0"
+  ];
+
   programs = {
     dconf.enable = true;
     kdeconnect.enable = true;
@@ -52,7 +56,7 @@
       kdiskmark
       maliit-keyboard
 
-      # deskflow
+      deskflow
     ];
 
     persistence."/persist" = {
@@ -69,7 +73,7 @@
         enable = true;
         wayland.enable = true;
       };
-      # defaultSession = "plasmax11";
+      defaultSession = "plasma";
     };
 
     # xserver = {
