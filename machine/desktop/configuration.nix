@@ -159,12 +159,13 @@ in {
       enable = true;
       enable32Bit = true;
       # doesnt build atm
-      # extraPackages = with pkgs; [rocmPackages.clr.icd];
+      extraPackages = with pkgs; [
+        clinfo
+        rocmPackages.clr.icd
+        rocmPackages.rocminfo
+        rocmPackages.rocm-runtime
+      ];
     };
-
-    # cpu.x86.msr = {
-    #   enable = true;
-    # };
   };
 
   powerManagement = {
@@ -183,6 +184,17 @@ in {
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+
+    ollama = {
+      enable = true;
+      acceleration = "rocm";
+      environmentVariables = {
+        HCC_AMDGPU_TARGET = "gfx1100"; # used to be necessary, but doesn't seem to anymore
+      };
+      rocmOverrideGfx = "11.0.0";
+    };
+
+    open-webui.enable = true;
 
     samba = {
       enable = true;
