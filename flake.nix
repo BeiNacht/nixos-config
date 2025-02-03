@@ -71,7 +71,6 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           impermanence.nixosModules.impermanence
-          # stylix.nixosModules.stylix
           chaotic.nixosModules.default
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-cpu-amd-pstate

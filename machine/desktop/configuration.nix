@@ -48,9 +48,6 @@ in {
       "gccarch-znver3"
     ];
     max-jobs = 4;
-
-    trusted-substituters = ["https://ai.cachix.org"];
-    trusted-public-keys = ["ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="];
   };
 
   # nixpkgs.localSystem = {
@@ -126,8 +123,6 @@ in {
       amdgpu_top
       # python3
       # python311Packages.tkinter
-      # snapraid
-      # mergerfs
       gimp
       clinfo
       gparted
@@ -140,6 +135,9 @@ in {
 
       xmrig
       monero-gui
+
+      snapraid
+      mergerfs
     ];
     persistence."/persist" = {
       directories = [

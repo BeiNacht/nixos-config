@@ -14,6 +14,7 @@
     # "Games/guild-wars/drive_c/Program Files/Guild Wars/Gw.dat"
 
     "Nextcloud"
+    "NextcloudEncrypted"
     "VirtualBox VMs"
     "shared"
 

@@ -184,6 +184,7 @@
       };
       flake = "/home/alex/nixos-config";
     };
+    fuse.userAllowOther = true;
   };
 
   services = {
