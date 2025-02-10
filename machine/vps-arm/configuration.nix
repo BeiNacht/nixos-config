@@ -15,7 +15,7 @@
 
     ../../configs/services/adguardhome.nix
     ../../configs/services/atuin.nix
-    ../../configs/services/firefox-syncserver.nix
+    # ../../configs/services/firefox-syncserver.nix
     ../../configs/services/frigate.nix
     ../../configs/services/gitea.nix
     ../../configs/services/goaccess.nix
@@ -46,9 +46,9 @@
         mode = "0440";
       };
 
-      syncserver-secrets = {
-        owner = config.users.users.firefox-syncserver.name;
-      };
+#      syncserver-secrets = {
+#        owner = config.users.users.firefox-syncserver.name;
+#      };
 
       nextcloud-password = {
         owner = "nextcloud";
