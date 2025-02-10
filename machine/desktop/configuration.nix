@@ -192,7 +192,7 @@ in {
       rocmOverrideGfx = "11.0.0";
     };
 
-    open-webui.enable = true;
+    # open-webui.enable = true;
 
     samba = {
       enable = true;
