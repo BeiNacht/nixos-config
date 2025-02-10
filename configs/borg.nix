@@ -25,6 +25,7 @@
       environment = {
         BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
         BORG_BASE_DIR = "/persist/borg";
+        BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
       };
       readWritePaths = ["/persist/borg"];
       paths = ["/home/alex" "/persist"];
