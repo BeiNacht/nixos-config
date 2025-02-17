@@ -16,6 +16,7 @@ in {
     ../../configs/develop.nix
     ../../configs/hardware.nix
     ../../configs/virtualbox.nix
+    ../../configs/libvirtd.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix

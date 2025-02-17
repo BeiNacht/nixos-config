@@ -1,12 +1,16 @@
 {pkgs, ...}: {
   users.extraGroups.libvirtd.members = ["alex"];
 
+  programs.virt-manager.enable = true;
+
   virtualisation = {
     libvirtd = {
       enable = true;
       # Used for UEFI boot of Home Assistant OS guest image
       qemu.ovmf.enable = true;
     };
+
+    spiceUSBRedirection.enable = true;
   };
 
   environment = {

@@ -5,10 +5,6 @@
   lib,
   ...
 }: {
-  nixpkgs.config.permittedInsecurePackages = [
-    "deskflow-1.18.0"
-  ];
-
   programs = {
     dconf.enable = true;
     kdeconnect.enable = true;
@@ -55,8 +51,6 @@
       kdiff3
       kdiskmark
       maliit-keyboard
-
-      deskflow
     ];
 
     persistence."/persist" = {
