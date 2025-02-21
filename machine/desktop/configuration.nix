@@ -173,16 +173,8 @@ in {
   };
 
   services = {
-    power-profiles-daemon.enable = true;
     # netdata.enable = true;
     # printing.enable = true;
-
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-    };
 
     ollama = {
       enable = true;

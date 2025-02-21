@@ -14,6 +14,7 @@ in {
     ../../configs/common-linux.nix
     ../../configs/docker.nix
     ../../configs/games.nix
+    ../../configs/develop.nix
     ../../configs/hardware.nix
     ../../configs/virtualbox.nix
     ../../configs/plasma.nix
@@ -49,6 +50,7 @@ in {
   boot = {
     tmp.useTmpfs = false;
     kernelPackages = pkgs.linuxPackages_latest;
+    extraModulePackages = with pkgs.linuxPackages_latest; [cpupower];
 
     initrd = {
       luks.devices = {
@@ -125,28 +127,20 @@ in {
         vpl-gpu-rt
       ];
     };
-    pulseaudio.enable = false;
   };
 
   # Bring in some audio
   security.rtkit.enable = true;
   # rtkit is optional but recommended
   services = {
-    power-profiles-daemon.enable = true;
     colord.enable = true;
     fprintd.enable = false;
+    cpupower-gui.enable = true;
 
     btrfs.autoScrub = {
       enable = true;
       interval = "monthly";
       fileSystems = ["/home/alex/shared/storage"];
-    };
-
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
     };
 
     borgbackup.jobs.home = rec {
