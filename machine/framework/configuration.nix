@@ -16,7 +16,7 @@ in {
     ../../configs/games.nix
     ../../configs/develop.nix
     ../../configs/hardware.nix
-    ../../configs/virtualbox.nix
+    ../../configs/libvirtd.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
     ../../configs/user.nix
@@ -202,6 +202,9 @@ in {
 
       gparted
       homebank
+
+      powerstat # for measuring power consumption
+      powercap # setting power consumption
     ];
   };
 
