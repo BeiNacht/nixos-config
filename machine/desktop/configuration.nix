@@ -15,7 +15,6 @@ in {
     ../../configs/games.nix
     ../../configs/develop.nix
     ../../configs/hardware.nix
-    ../../configs/virtualbox.nix
     ../../configs/libvirtd.nix
     ../../configs/plasma.nix
     ../../configs/user-gui.nix
@@ -175,6 +174,7 @@ in {
   services = {
     # netdata.enable = true;
     # printing.enable = true;
+    bpftune.enable = true;
 
     ollama = {
       enable = true;
