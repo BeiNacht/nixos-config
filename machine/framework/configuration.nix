@@ -67,8 +67,6 @@ in {
     hostName = "framework";
   };
 
-  time.timeZone = "Europe/Berlin";
-
   programs.fw-fanctrl = {
     enable = true;
     config = {

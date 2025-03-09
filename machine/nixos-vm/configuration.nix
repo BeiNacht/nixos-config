@@ -24,7 +24,6 @@
   ];
 
   networking.hostName = "nixos-vm"; # Define your hostname.
-  time.timeZone = "Europe/Berlin";
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
   };

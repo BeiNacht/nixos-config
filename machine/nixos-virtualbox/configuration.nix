@@ -21,8 +21,6 @@
     };
   };
 
-  time.timeZone = "Europe/Berlin";
-
   boot = {
     initrd = {
       enable = true;

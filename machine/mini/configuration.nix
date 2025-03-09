@@ -46,7 +46,6 @@
     extraModulePackages = with pkgs.linuxPackages_latest; [rtl88x2bu];
   };
 
-  time.timeZone = "Europe/Berlin";
   networking = {
     hostName = "mini";
     useDHCP = false;

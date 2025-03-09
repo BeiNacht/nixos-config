@@ -6,21 +6,22 @@
   ...
 }: {
   imports = [
-    ../../configs/filesystem.nix
-    ../../configs/browser.nix
-    ../../configs/common-linux.nix
-    ../../configs/docker.nix
-    ../../configs/games.nix
-    ../../configs/develop.nix
-    ../../configs/hardware.nix
-    ../../configs/libvirtd.nix
-    ../../configs/plasma.nix
-    ../../configs/user-gui.nix
-    ../../configs/user.nix
+    ../configs/filesystem.nix
+    ../configs/borg.nix
+    ../configs/browser.nix
+    ../configs/common-linux.nix
+    ../configs/docker.nix
+    ../configs/games.nix
+    ../configs/develop.nix
+    ../configs/hardware.nix
+    ../configs/libvirtd.nix
+    ../configs/plasma.nix
+    ../configs/user-gui.nix
+    ../configs/user.nix
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets/secrets.yaml;
+    defaultSopsFile = ../secrets/secrets.yaml;
     validateSopsFiles = true;
     age = {
       sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
@@ -30,7 +31,7 @@
 
     secrets = {
       borg-key = {
-        sopsFile = ../../secrets/secrets-desktop.yaml;
+        sopsFile = ../secrets/secrets-desktop.yaml;
         owner = config.users.users.alex.name;
         group = config.users.users.alex.group;
       };
@@ -132,8 +133,6 @@
   networking = {
     hostName = "desktop";
   };
-
-  time.timeZone = "Europe/Berlin";
 
   programs = {
     coolercontrol.enable = true;

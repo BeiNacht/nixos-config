@@ -46,9 +46,9 @@
         mode = "0440";
       };
 
-#      syncserver-secrets = {
-#        owner = config.users.users.firefox-syncserver.name;
-#      };
+      #      syncserver-secrets = {
+      #        owner = config.users.users.firefox-syncserver.name;
+      #      };
 
       nextcloud-password = {
         owner = "nextcloud";
@@ -121,8 +121,6 @@
       '';
     };
   };
-
-  time.timeZone = "Europe/Berlin";
 
   networking = {
     hostName = "vps-arm"; # Define your hostname.

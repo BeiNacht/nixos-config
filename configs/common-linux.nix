@@ -9,6 +9,8 @@
     ./common.nix
   ];
 
+  time.timeZone = "Europe/Berlin";
+
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;
