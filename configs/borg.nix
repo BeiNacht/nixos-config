@@ -38,7 +38,20 @@
       exclude = [
         "/home/alex/mounted"
         "/home/alex/.cache"
+        "/home/alex/.config/Nextcloud/logs"
+        "/home/alex/.local/share/baloo" # KDE File indexer
+        # ".local/share/libvirt/images"
+        "/home/alex/.local/share/Steam"
+        "/home/alex/.local/share/Trash"
+        "/home/alex/Downloads"
+        "/home/alex/Games"
+        "/home/alex/Nextcloud"
+        "/home/alex/NextcloudEncrypted" # Decrypted File from Nextcloud
+        "/home/alex/VirtualBox VMs"
+        "/home/alex/shared"
+
         "/persist/borg"
+        "/persist/var/lib/libvirt"
       ];
     };
   };

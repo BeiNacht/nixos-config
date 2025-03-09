@@ -77,7 +77,7 @@
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
           nixos-hardware.nixosModules.common-pc-ssd
           sops-nix.nixosModules.sops
-          ./machine/desktop/configuration.nix
+          ./machine/desktop.nix
         ];
       };
 

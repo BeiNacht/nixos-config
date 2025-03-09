@@ -4,11 +4,9 @@
   inputs,
   outputs,
   ...
-}: let
-  be = import ../../configs/borg-exclude.nix;
-in {
+}: {
   imports = [
-    ./hardware-configuration.nix
+    ../../configs/filesystem.nix
     ../../configs/browser.nix
     ../../configs/common-linux.nix
     ../../configs/docker.nix
@@ -39,6 +37,34 @@ in {
     };
   };
 
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+    };
+
+    "/home" = {
+      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+    };
+
+    "/nix" = {
+      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+    };
+
+    "/persist" = {
+      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+    };
+
+    "/var/log" = {
+      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/4339-5A4C";
+    };
+  };
+
+  swapDevices = [{device = "/dev/disk/by-uuid/831be7b8-5b1b-4bda-a27d-5a1c4efb2c4d";}];
+
   nix.settings = {
     system-features = [
       "nixos-test"
@@ -64,7 +90,7 @@ in {
     kernel.sysctl = {
       "vm.nr_hugepages" = 1280;
     };
-    extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
+    # extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
     initrd = {
       # availableKernelModules = ["r8169"];
       # systemd.users.root.shell = "/bin/cryptsetup-askpass";
@@ -149,6 +175,12 @@ in {
   };
 
   hardware = {
+    enableRedistributableFirmware = true;
+    cpu.amd = {
+      updateMicrocode = true;
+      ryzen-smu.enable = true;
+    };
+
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
     xone.enable = true;
@@ -215,26 +247,31 @@ in {
       };
     };
 
-    borgbackup.jobs = {
-      home = rec {
-        compression = "auto,zstd";
-        encryption = {
-          mode = "repokey-blake2";
-          passCommand = "cat ${config.sops.secrets.borg-key.path}";
-        };
-        extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-        environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
-        paths = ["/home/alex" "/persist"];
-        repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
-        startAt = "daily";
-        prune.keep = {
-          daily = 7;
-          weekly = 4;
-          monthly = 6;
-        };
-        extraPruneArgs = "--save-space --list --stats";
-        exclude = map (x: "/home/alex/" + x) be.borg-exclude;
-      };
+    # borgbackup.jobs = {
+    #   home = rec {
+    #     compression = "auto,zstd";
+    #     encryption = {
+    #       mode = "repokey-blake2";
+    #       passCommand = "cat ${config.sops.secrets.borg-key.path}";
+    #     };
+    #     extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
+    #     environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
+    #     paths = ["/home/alex" "/persist"];
+    #     repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
+    #     startAt = "daily";
+    #     prune.keep = {
+    #       daily = 7;
+    #       weekly = 4;
+    #       monthly = 6;
+    #     };
+    #     extraPruneArgs = "--save-space --list --stats";
+    #     exclude = map (x: "/home/alex/" + x) be.borg-exclude;
+    #   };
+
+    # };
+
+    borgbackup.jobs.all = rec {
+      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
     };
   };
 
