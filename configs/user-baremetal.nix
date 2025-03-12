@@ -39,7 +39,6 @@
     keepassxc
     nextcloud-client
     pinta
-    rustdesk-flutter
     simple-scan
     discord
     kdenlive

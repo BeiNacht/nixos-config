@@ -34,21 +34,22 @@
   };
 
   environment.systemPackages = with pkgs; [
-    lutris
     heroic
-
     vkbasalt
-
     protontricks
     protonup-qt
     vulkan-tools
-
     gamemode
-
     wine
     winetricks
     # proton-ge-bin
     # pcsx2
     mangohud_git
+
+    (lutris.override {
+      extraLibraries = pkgs: [
+        gamemode
+      ];
+    })
   ];
 }
