@@ -85,7 +85,8 @@
 
   boot = {
     tmp.useTmpfs = false;
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    # kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = ["clearcpuid=514" "ip=dhcp"];
     kernelModules = ["nct6775"];
     kernel.sysctl = {
@@ -119,7 +120,7 @@
     };
   };
 
-  chaotic.mesa-git.enable = true;
+  # chaotic.mesa-git.enable = true;
 
   systemd.services = {
     monitor = {
