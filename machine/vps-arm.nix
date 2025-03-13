@@ -4,30 +4,32 @@
   pkgs,
   outputs,
   inputs,
+  modulesPath,
   ...
 }: {
   imports = [
-    ./hardware-configuration.nix
-    ../../configs/common-linux.nix
-    ../../configs/docker.nix
-    ../../configs/user.nix
-    ../../configs/borg.nix
+    ../configs/common-linux.nix
+    ../configs/docker.nix
+    ../configs/user.nix
+    ../configs/borg.nix
 
-    ../../configs/services/adguardhome.nix
-    ../../configs/services/atuin.nix
-    # ../../configs/services/firefox-syncserver.nix
-    ../../configs/services/frigate.nix
-    ../../configs/services/gitea.nix
-    ../../configs/services/goaccess.nix
-    ../../configs/services/grafana.nix
-    ../../configs/services/headscale.nix
-    ../../configs/services/immich.nix
-    ../../configs/services/nextcloud.nix
-    ../../configs/services/uptime-kuma.nix
+    ../configs/services/adguardhome.nix
+    ../configs/services/atuin.nix
+    ../configs/services/frigate.nix
+    ../configs/services/gitea.nix
+    ../configs/services/goaccess.nix
+    ../configs/services/grafana.nix
+    ../configs/services/headscale.nix
+    ../configs/services/immich.nix
+    ../configs/services/nextcloud.nix
+    ../configs/services/paperless.nix
+    ../configs/services/uptime-kuma.nix
+    # ../configs/services/firefox-syncserver.nix
+    (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets/secrets-vps-arm.yaml;
+    defaultSopsFile = ../secrets/secrets-vps-arm.yaml;
     secrets = {
       borg-key = {
         owner = config.users.users.alex.name;
@@ -46,9 +48,9 @@
         mode = "0440";
       };
 
-      #      syncserver-secrets = {
-      #        owner = config.users.users.firefox-syncserver.name;
-      #      };
+      # syncserver-secrets = {
+      #   owner = config.users.users.firefox-syncserver.name;
+      # };
 
       nextcloud-password = {
         owner = "nextcloud";
@@ -63,11 +65,63 @@
     };
   };
 
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
+      fsType = "btrfs";
+      options = ["subvol=root"];
+    };
+
+    "/home" = {
+      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
+      fsType = "btrfs";
+      options = ["subvol=home"];
+    };
+
+    "/nix" = {
+      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
+      fsType = "btrfs";
+      options = ["subvol=nix"];
+    };
+
+    "/persist" = {
+      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
+      fsType = "btrfs";
+      options = ["subvol=persist"];
+      neededForBoot = true;
+    };
+
+    "/var/log" = {
+      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
+      fsType = "btrfs";
+      options = ["subvol=log"];
+      neededForBoot = true;
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/DE94-E9C1";
+      fsType = "vfat";
+      options = ["fmask=0022" "dmask=0022"];
+    };
+  };
+
+  swapDevices = [
+    {device = "/dev/disk/by-uuid/3c63b075-76ca-403f-bf75-53269b6bf4fa";}
+  ];
+
+  nixpkgs.hostPlatform = "aarch64-linux";
+
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = ["ip=dhcp"];
     initrd = {
-      availableKernelModules = ["virtio-pci"];
+      availableKernelModules = [
+        "sr_mod"
+        "virtio_scsi"
+        "virtio-pci"
+        "xhci_pci"
+      ];
+      kernelModules = ["dm-snapshot"];
       systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
         enable = true;

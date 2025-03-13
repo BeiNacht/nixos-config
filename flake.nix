@@ -98,7 +98,7 @@
         modules = [
           impermanence.nixosModules.impermanence
           inputs.sops-nix.nixosModules.sops
-          ./machine/vps-arm/configuration.nix
+          ./machine/vps-arm.nix
         ];
       };
 
