@@ -85,14 +85,12 @@
 
   boot = {
     tmp.useTmpfs = false;
-    # kernelPackages = pkgs.linuxPackages_cachyos;
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_cachyos;
     kernelParams = ["clearcpuid=514" "ip=dhcp"];
     kernelModules = ["nct6775"];
     kernel.sysctl = {
       "vm.nr_hugepages" = 1280;
     };
-    # extraModulePackages = with pkgs.linuxPackages_cachyos; [ryzen-smu];
     initrd = {
       # availableKernelModules = ["r8169"];
       # systemd.users.root.shell = "/bin/cryptsetup-askpass";
@@ -120,7 +118,7 @@
     };
   };
 
-  # chaotic.mesa-git.enable = true;
+  chaotic.mesa-git.enable = true;
 
   systemd.services = {
     monitor = {

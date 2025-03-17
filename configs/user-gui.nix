@@ -57,7 +57,7 @@
       simple-scan
 
       # discord
-      # kdenlive
+      kdePackages.kdenlive
       # shotcut
 
       telegram-desktop
