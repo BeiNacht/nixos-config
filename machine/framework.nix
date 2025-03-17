@@ -4,26 +4,27 @@
   lib,
   outputs,
   inputs,
+  modulesPath,
   ...
-}: let
-  be = import ../../configs/borg-exclude.nix;
-in {
+}: {
   imports = [
-    ./hardware-configuration.nix
-    ../../configs/browser.nix
-    ../../configs/common-linux.nix
-    ../../configs/docker.nix
-    ../../configs/games.nix
-    ../../configs/develop.nix
-    ../../configs/hardware.nix
-    ../../configs/libvirtd.nix
-    ../../configs/plasma.nix
-    ../../configs/user-gui.nix
-    ../../configs/user.nix
+    ../configs/borg.nix
+    ../configs/filesystem.nix
+    ../configs/browser.nix
+    ../configs/common-linux.nix
+    ../configs/docker.nix
+    ../configs/games.nix
+    ../configs/develop.nix
+    ../configs/hardware.nix
+    ../configs/libvirtd.nix
+    ../configs/plasma.nix
+    ../configs/user-gui.nix
+    ../configs/user.nix
+    (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
   sops = {
-    defaultSopsFile = ../../secrets/secrets-framework.yaml;
+    defaultSopsFile = ../secrets/secrets-framework.yaml;
 
     secrets = {
       borg-key = {
@@ -32,6 +33,53 @@ in {
       };
     };
   };
+
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+    };
+    "/home" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+    };
+    "/nix" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+    };
+    "/var/log" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+    };
+    "/persist" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+    };
+    "/boot" = {
+      device = "/dev/disk/by-uuid/427A-97BA";
+    };
+    # "/home/alex/shared/storage" = {
+    #   device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
+    #   fsType = "btrfs";
+    #   options = [
+    #     "subvol=@data"
+    #     "discard=async"
+    #     "compress=zstd"
+    #     "nodiratime"
+    #     "noatime"
+    #     "nofail"
+    #     "x-systemd.automount"
+    #   ];
+    # };
+  };
+
+  # environment.etc.crypttab.text = ''
+  #   luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /persist/luks-key01
+  # '';
+
+  swapDevices = [
+    {
+      device = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
+    }
+  ];
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   nix.settings.system-features = [
     "nixos-test"
@@ -53,6 +101,14 @@ in {
     extraModulePackages = with pkgs.linuxPackages_latest; [cpupower];
 
     initrd = {
+      availableKernelModules = [
+        "xhci_pci"
+        "thunderbolt"
+        "nvme"
+        "usb_storage"
+        "sd_mod"
+      ];
+
       luks.devices = {
         root = {
           device = "/dev/disk/by-uuid/eddab069-d369-4b26-8b4e-f3b907ba6f6c";
@@ -141,35 +197,8 @@ in {
       fileSystems = ["/home/alex/shared/storage"];
     };
 
-    borgbackup.jobs.home = rec {
-      repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
-
-      compression = "auto,zstd";
-      encryption = {
-        mode = "repokey-blake2";
-        passCommand = "cat ${config.sops.secrets.borg-key.path}";
-      };
-      extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
-      extraPruneArgs = [
-        "--save-space"
-        "--stats"
-      ];
-      extraCompactArgs = [
-        "--cleanup-commits"
-      ];
-      environment = {
-        BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
-        BORG_BASE_DIR = "/persist/borg";
-      };
-      readWritePaths = ["/persist/borg"];
-      paths = ["/home/alex" "/persist"];
-      startAt = "daily";
-      prune.keep = {
-        daily = 7;
-        weekly = 4;
-        monthly = 6;
-      };
-      exclude = map (x: "/home/alex/" + x) be.borg-exclude;
+    borgbackup.jobs.all = rec {
+      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
     };
   };
 

@@ -88,7 +88,7 @@
           chaotic.nixosModules.default
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
           inputs.sops-nix.nixosModules.sops
-          ./machine/framework/configuration.nix
+          ./machine/framework.nix
         ];
       };
 
