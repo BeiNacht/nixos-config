@@ -23,6 +23,8 @@
       virt-manager
       # For lsusb
       usbutils
+      # quick install vms
+      quickemu
     ];
     persistence."/persist" = {
       directories = [
@@ -30,4 +32,6 @@
       ];
     };
   };
+
+  systemd.tmpfiles.rules = [ "L+ /var/lib/qemu/firmware - - - - ${pkgs.qemu}/share/qemu/firmware" ];
 }
