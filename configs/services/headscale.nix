@@ -64,8 +64,8 @@
             region_code = "headscale";
             region_name = "Headscale Embedded DERP";
             stun_listen_addr = "0.0.0.0:3478";
-            ipv4 = "152.53.18.107";
-            ipv6 = "2a0a:4cc0:1:124c::1";
+            ipv4 = "152.53.119.246";
+            ipv6 = "2a0a:4cc0:c0:30aa::1";
           };
         };
       };
