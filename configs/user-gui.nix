@@ -61,6 +61,7 @@
       # shotcut
 
       telegram-desktop
+      signal-desktop
 
       vorta
       kitty
