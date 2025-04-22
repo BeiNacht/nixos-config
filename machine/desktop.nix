@@ -207,15 +207,13 @@
     bpftune.enable = true;
 
     ollama = {
-      enable = true;
+      enable = false;
       acceleration = "rocm";
       environmentVariables = {
         HCC_AMDGPU_TARGET = "gfx1100"; # used to be necessary, but doesn't seem to anymore
       };
       rocmOverrideGfx = "11.0.0";
     };
-
-    # open-webui.enable = true;
 
     samba = {
       enable = true;
@@ -244,29 +242,6 @@
         };
       };
     };
-
-    # borgbackup.jobs = {
-    #   home = rec {
-    #     compression = "auto,zstd";
-    #     encryption = {
-    #       mode = "repokey-blake2";
-    #       passCommand = "cat ${config.sops.secrets.borg-key.path}";
-    #     };
-    #     extraCreateArgs = "--checkpoint-interval 600 --exclude-caches";
-    #     environment.BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";
-    #     paths = ["/home/alex" "/persist"];
-    #     repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
-    #     startAt = "daily";
-    #     prune.keep = {
-    #       daily = 7;
-    #       weekly = 4;
-    #       monthly = 6;
-    #     };
-    #     extraPruneArgs = "--save-space --list --stats";
-    #     exclude = map (x: "/home/alex/" + x) be.borg-exclude;
-    #   };
-
-    # };
 
     borgbackup.jobs.all = rec {
       repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";

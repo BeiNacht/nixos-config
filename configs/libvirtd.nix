@@ -10,7 +10,7 @@
       qemu = {
         ovmf.enable = true;
         swtpm.enable = true;
-        # vhostUserPackages = [pkgs.virtiofsd];
+        vhostUserPackages = [pkgs.virtiofsd];
       };
     };
 
@@ -26,6 +26,8 @@
       usbutils
       # quick install vms
       quickemu
+
+      virtiofsd
     ];
     persistence."/persist" = {
       directories = [
