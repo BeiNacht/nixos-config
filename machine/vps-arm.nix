@@ -15,6 +15,7 @@
 
     ../configs/services/adguardhome.nix
     ../configs/services/atuin.nix
+    ../configs/services/firefly.nix
     ../configs/services/frigate.nix
     ../configs/services/gitea.nix
     ../configs/services/goaccess.nix

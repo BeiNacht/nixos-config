@@ -29,20 +29,6 @@
       };
     };
 
-    # postgresql = {
-    #   enable = true;
-    #   ensureDatabases = [
-    #     config.services.nextcloud.config.dbname
-    #   ];
-    #   ensureUsers = [
-    #     {
-    #       name = config.services..config.dbuser;
-    #       ensureDBOwnership = true;
-    #       # ensurePermissions."DATABASE ${config.services.gitea.database.name}" = "ALL PRIVILEGES";
-    #     }
-    #   ];
-    # };
-
     immich = {
       enable = true;
       settings.server.externalDomain = "https://immich.szczepan.ski";
