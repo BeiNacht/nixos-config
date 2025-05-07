@@ -121,7 +121,7 @@
           inputs.nixos-hardware.nixosModules.common-cpu-intel
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
-          ./machine/mini/configuration.nix
+          ./machine/mini.nix
         ];
       };
 
