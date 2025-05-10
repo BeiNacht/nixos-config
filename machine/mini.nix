@@ -69,7 +69,7 @@
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uui.cpu.intel.updateMicrocode708a67816";}
+    {device = "/dev/disk/by-uuid/e59a0c55-7859-40ad-bf55-345708a67816";}
   ];
 
   boot = {
@@ -128,6 +128,7 @@
       directories = [
         # "/var/lib/docker"
         "/var/lib/tor"
+        "/var/lib/unifi"
       ];
     };
   };
@@ -148,6 +149,12 @@
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
+    };
+
+    unifi = {
+      enable = true;
+      unifiPackage = pkgs.unifi8;
+      mongodbPackage = pkgs.mongodb-7_0;
     };
 
     borgbackup.jobs.all = rec {
