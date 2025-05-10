@@ -15,7 +15,7 @@
   ];
 
   sops = {
-    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFile = ../secrets/secrets-mini.yaml;
   };
 
   fileSystems = {
