@@ -43,3 +43,4 @@ creation_rules:
     - age:
       - *alex
       - *mini
+      - *homeserver

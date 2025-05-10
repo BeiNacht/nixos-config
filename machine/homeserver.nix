@@ -14,9 +14,9 @@
     ../configs/user.nix
   ];
 
-  # sops = {
-  #   defaultSopsFile = ../secrets/secrets.yaml;
-  # };
+  sops = {
+    defaultSopsFile = ../secrets/secrets.yaml;
+  };
 
   fileSystems = {
     "/" = {
@@ -124,22 +124,22 @@
       useRoutingFeatures = "both";
     };
 
-    # borgbackup.jobs.all = rec {
-    #   # preHook = ''
-    #   #   ${pkgs.libvirt}/bin/virsh shutdown hass
-    #   #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
-    #   # '';
-    #   # postHook = ''
-    #   #   ${pkgs.libvirt}/bin/virsh start hass
-    #   # '';
-    #   repo = "ssh://u278697-sub8@u278697.your-storagebox.de:23/./borg-backup-homeserver";
-    #   exclude = [
-    #     "/home/alex/mounted"
-    #     "/home/alex/.cache"
-    #     "/persist/borg"
-    #     "/var/lib/libvirt/images"
-    #   ];
-    # };
+    borgbackup.jobs.all = rec {
+      # preHook = ''
+      #   ${pkgs.libvirt}/bin/virsh shutdown hass
+      #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
+      # '';
+      # postHook = ''
+      #   ${pkgs.libvirt}/bin/virsh start hass
+      # '';
+      repo = "ssh://u278697-sub8@u278697.your-storagebox.de:23/./borg-backup-homeserver";
+      exclude = [
+        "/home/alex/mounted"
+        "/home/alex/.cache"
+        "/persist/borg"
+        "/var/lib/libvirt/images"
+      ];
+    };
 
     locate = {
       prunePaths = ["/mnt" "/nix"];
