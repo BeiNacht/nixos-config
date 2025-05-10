@@ -6,16 +6,17 @@
   ...
 }: {
   imports = [
-    ../configs/filesystem.nix
     ../configs/borg.nix
     ../configs/browser.nix
     ../configs/common-linux.nix
-    ../configs/docker.nix
-    ../configs/games.nix
     ../configs/develop.nix
+    ../configs/docker.nix
+    ../configs/filesystem.nix
+    ../configs/games.nix
     ../configs/hardware.nix
     ../configs/libvirtd.nix
     ../configs/plasma.nix
+    ../configs/printing.nix
     ../configs/user-gui.nix
     ../configs/user.nix
   ];
