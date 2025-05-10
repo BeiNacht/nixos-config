@@ -9,6 +9,7 @@ keys:
     - &nixos-virtualbox age1zs6k39g6kz740z3p9f0r2tc8dwn677zn3v5963g42p6lsljh7y0qzfn9ql
     - &nixos-vm age120fg86wv7vrcw6aeuunkzr7nerpwg8w0vu08xp8v8feqawtzqquq4763cw
     - &thinkpad age1dmkhlzvxemlufsydaed7vajm4cdpjwmqj3pmpvlljkjzlck8t4rswwph4j
+    - &homeserver age1kq7qemasg43al3wr28j5za4j9q4h53qwfnmgdcqydrf0vvu9fs2scv5jqk
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
@@ -21,6 +22,7 @@ creation_rules:
       - *nixos-virtualbox
       - *nixos-vm
       - *thinkpad
+      - *homeserver
   - path_regex: secrets-desktop.yaml$
     key_groups:
     - age:

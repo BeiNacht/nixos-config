@@ -125,6 +125,17 @@
         ];
       };
 
+      homeserver = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.nixos-hardware.nixosModules.common-cpu-intel
+          inputs.sops-nix.nixosModules.sops
+          impermanence.nixosModules.impermanence
+          ./machine/homeserver.nix
+        ];
+      };
+
       nixos-vm = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
         specialArgs = {inherit inputs outputs;};
