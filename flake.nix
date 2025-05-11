@@ -161,12 +161,15 @@
       system = "aarch64-darwin";
       modules = [
         ./machine/macbook/configuration.nix
-        # home-manager.darwinModules.home-manager
-        # {
-        #   home-manager.useGlobalPkgs = true;
-        #   home-manager.useUserPackages = true;
-        #   home-manager.users.omerxx = import ./home.nix;
-        # }
+        home-manager.darwinModules.home-manager
+        {
+          users.users.alex.home = /Users/alex;
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.alex = import ./configs/home.nix;
+          };
+        }
       ];
     };
   };
