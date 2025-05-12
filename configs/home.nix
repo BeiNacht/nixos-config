@@ -38,19 +38,17 @@
       forwardAgent = true;
       addKeysToAgent = "yes";
 
-      matchBlocks."szczepan.ski" = {hostname = "szczepan.ski";};
-      matchBlocks."mini" = {hostname = "mini";};
-      matchBlocks."nixos-vm" = {
-        hostname = "127.0.0.1";
-        port = 1337;
+      matchBlocks = {
+        "szczepan.ski" = {hostname = "szczepan.ski";};
+        "mini" = {hostname = "mini";};
+        "desktop" = {hostname = "desktop";};
+        "framework" = {hostname = "framework";};
+        "thinkpad" = {hostname = "thinkpad";};
+        "nixos-vm" = {
+          hostname = "127.0.0.1";
+          port = 1337;
+        };
       };
-
-      matchBlocks."thinkpad" = {hostname = "thinkpad";};
-  #     matchBlocks."*" = {
-  #  UseKeychain yes
-  #  AddKeysToAgent yes
-  #  IdentityFile ~/.ssh/id_ed25519
-  #     }
     };
 
     git = {

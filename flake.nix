@@ -76,6 +76,14 @@
           nixos-hardware.nixosModules.common-pc-ssd
           sops-nix.nixosModules.sops
           ./machine/desktop.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -89,6 +97,14 @@
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
           inputs.sops-nix.nixosModules.sops
           ./machine/framework.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -99,6 +115,14 @@
           impermanence.nixosModules.impermanence
           inputs.sops-nix.nixosModules.sops
           ./machine/vps-arm.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -111,6 +135,14 @@
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
           inputs.sops-nix.nixosModules.sops
           ./machine/thinkpad/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -122,6 +154,14 @@
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/mini.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -133,6 +173,14 @@
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/homeserver.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -143,6 +191,14 @@
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/nixos-vm/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
 
@@ -153,6 +209,14 @@
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/nixos-virtualbox/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
         ];
       };
     };

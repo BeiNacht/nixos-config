@@ -43,4 +43,8 @@ creation_rules:
     - age:
       - *alex
       - *mini
+  - path_regex: secrets-homeserver.yaml$
+    key_groups:
+    - age:
+      - *alex
       - *homeserver
