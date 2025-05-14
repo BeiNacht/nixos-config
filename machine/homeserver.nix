@@ -15,7 +15,13 @@
   ];
 
   sops = {
-    defaultSopsFile = ../secrets/secrets-mini.yaml;
+    defaultSopsFile = ../secrets/secrets-homeserver.yaml;
+    secrets = {
+      netdata-token = {
+        owner = config.services.netdata.user;
+        group = config.services.netdata.group;
+      };
+    };
   };
 
   fileSystems = {
@@ -50,7 +56,7 @@
 
   boot = {
     initrd = {
-      availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "r8169"];
+      availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "igc"];
       kernelModules = ["dm-snapshot"];
       systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
@@ -74,23 +80,30 @@
       };
     };
     kernelPackages = pkgs.linuxPackages_latest;
-
+    kernelParams = ["ip=dhcp"];
     kernelModules = ["kvm-intel"];
   };
 
   networking = {
     hostName = "homeserver";
-    useDHCP = false;
     firewall = {enable = false;};
-    interfaces = {
+    nftables.enable = true;
+    useDHCP = false;
+    bridges = {
       br0 = {
-        useDHCP = true;
+        interfaces = [
+          "enp1s0"
+          "enp2s0"
+          "enp3s0"
+          "enp4s0"
+        ];
+        rstp = true;
       };
     };
-
-    bridges.br0.interfaces = ["enp1s0"];
-
-    nftables.enable = true;
+    interfaces = {
+      br0.useDHCP = true;
+      enp1s0.useDHCP = false;
+    };
   };
 
   environment = {
@@ -112,12 +125,76 @@
   };
 
   services = {
-    # tor = {
+    tor = {
+      enable = true;
+      #   # openFirewall = true;
+    };
+
+    # suricata = {
     #   enable = true;
-    #   # openFirewall = true;
+    #   settings = {
+    #     vars.address-groups.HOME_NET = "192.168.178.0/24";
+    #     outputs = [
+    #       {
+    #         fast = {
+    #           enabled = true;
+    #           filename = "fast.log";
+    #           append = "yes";
+    #         };
+    #       }
+    #       {
+    #         eve-log = {
+    #           enabled = true;
+    #           filetype = "regular";
+    #           filename = "eve.json";
+    #           community-id = true;
+    #           types = [
+    #             {
+    #               alert.tagged-packets = "yes";
+    #             }
+    #           ];
+    #         };
+    #       }
+    #     ];
+    #     af-packet = [
+    #       {
+    #         interface = "br0";
+    #         cluster-id = "99";
+    #         cluster-type = "cluster_flow";
+    #         defrag = "yes";
+    #       }
+    #       {
+    #         interface = "default";
+    #       }
+    #     ];
+    #     af-xdp = [
+    #       {
+    #         interface = "br0";
+    #       }
+    #     ];
+    #     dpdk.interfaces = [
+    #       {
+    #         interface = "br0";
+    #       }
+    #     ];
+    #     pcap = [
+    #       {
+    #         interface = "br0";
+    #       }
+    #     ];
+    #     app-layer.protocols = {
+    #       telnet.enabled = "yes";
+    #       dnp3.enabled = "yes";
+    #       modbus.enabled = "yes";
+    #     };
+    #   };
     # };
 
-    netdata.enable = true;
+    netdata = {
+      enable = true;
+      package = pkgs.netdata.override {withCloudUi = true;};
+      claimTokenFile = config.sops.secrets.netdata-token.path;
+    };
 
     tailscale = {
       enable = true;
