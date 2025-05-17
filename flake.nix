@@ -223,7 +223,7 @@
     darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
-        ./machine/macbook/configuration.nix
+        ./machine/macbook.nix
         home-manager.darwinModules.home-manager
         {
           users.users.alex.home = /Users/alex;

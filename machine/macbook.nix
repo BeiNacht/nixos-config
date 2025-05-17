@@ -9,7 +9,7 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   imports = [
-    ../../configs/common.nix
+    ../configs/common.nix
   ];
 
   # system.defaults = {
