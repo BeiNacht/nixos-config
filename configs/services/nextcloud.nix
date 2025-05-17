@@ -53,7 +53,7 @@
       hostName = "nextcloud.szczepan.ski";
 
       # Need to manually increment with every major upgrade.
-      package = pkgs.nextcloud30;
+      package = pkgs.nextcloud31;
 
       # Let NixOS install and configure the database automatically.
       database.createLocally = true;
@@ -81,7 +81,7 @@
           deck
           end_to_end_encryption
           mail
-          maps
+          
           memories
           music
           notes
@@ -92,6 +92,7 @@
           tasks
           unroundedcorners
           ;
+        # maps
         # user_migration = pkgs.fetchNextcloudApp {
         #   sha256 = "sha256-OwALAM/WPJ4gXHQado0njfJL+ciDsvfbPjqGWk23Pm8=";
         #   url = "https://github.com/nextcloud-releases/user_migration/releases/download/v6.0.0/user_migration-v6.0.0.tar.gz";

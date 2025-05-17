@@ -39,7 +39,6 @@
     fw-fanctrl,
     home-manager,
     nixos-hardware,
-    # nixpkgs-stable,
     nixpkgs-unstable,
     sops-nix,
     impermanence,

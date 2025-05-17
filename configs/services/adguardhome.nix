@@ -20,7 +20,10 @@ in {
           forceSSL = true;
           enableACME = true;
           locations = {
-            "/" = {proxyPass = "https://127.0.0.1:3004/";};
+            "/" = {
+              proxyPass = "https://127.0.0.1:3004/";
+              proxyWebsockets = true;
+            };
           };
         };
       };

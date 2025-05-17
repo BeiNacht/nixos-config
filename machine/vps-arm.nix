@@ -13,7 +13,9 @@
     ../configs/user.nix
     ../configs/borg.nix
 
+    ../configs/services/actual.nix
     ../configs/services/adguardhome.nix
+    ../configs/services/audiobookshelf.nix
     ../configs/services/atuin.nix
     ../configs/services/firefly.nix
     ../configs/services/frigate.nix
@@ -281,7 +283,7 @@
           enableACME = true;
           locations = {
             "/" = {
-              proxyPass = "http://192.168.178.45:8123/";
+              proxyPass = "http://homeassistant:8123/";
               proxyWebsockets = true;
             };
           };
