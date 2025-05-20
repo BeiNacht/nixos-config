@@ -323,6 +323,44 @@
     };
 
     journald = {extraConfig = "SystemMaxUse=10G";};
+
+    samba = {
+      enable = true;
+      settings = {
+        global = {
+          "workgroup" = "WORKGROUP";
+          "server string" = "server";
+          "netbios name" = "server";
+          "security" = "user";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+          "logging" = "systemd";
+          "max log size" = 50;
+          "invalid users" = [
+            "root"
+          ];
+          "passwd program" = "/run/wrappers/bin/passwd %u";
+        };
+        homeassistant = {
+          "path" = "/home/alex/homeassistant";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+        timemachine = {
+          "path" = "/home/alex/timemachine";
+          "valid users" = "alex";
+          "public" = "no";
+          "writeable" = "yes";
+          "force user" = "alex";
+          "fruit:aapl" = "yes";
+          "fruit:time machine" = "yes";
+          "vfs objects" = "catia fruit streams_xattr";
+        };
+      };
+    };
   };
 
   system.stateVersion = "24.11";

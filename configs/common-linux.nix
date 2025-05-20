@@ -154,6 +154,7 @@
       # Keep dmesg/journalctl -k output readable by NOT logging
       # each refused connection on the open internet.
       logRefusedConnections = false;
+      trustedInterfaces = ["tailscale0"];
     };
 
     # useNetworkd = true;
