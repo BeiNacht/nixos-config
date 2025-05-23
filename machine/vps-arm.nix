@@ -224,6 +224,7 @@
         "/var/lib/acme"
         "/var/lib/fail2ban"
         "/var/lib/private"
+        "/var/lib/samba"
         "/var/www/alexander.szczepan.ski"
       ];
     };
