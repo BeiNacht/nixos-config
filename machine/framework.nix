@@ -198,7 +198,7 @@
     };
 
     borgbackup.jobs.all = rec {
-      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
+      repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
     };
 
     samba = {
