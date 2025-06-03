@@ -167,10 +167,10 @@
     enableAllFirmware = true;
     xone.enable = true;
 
-    openrazer = {
-      enable = true;
-      users = ["alex"];
-    };
+    # openrazer = {
+    #   enable = true;
+    #   users = ["alex"];
+    # };
 
     graphics = {
       enable = true;
