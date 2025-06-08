@@ -78,12 +78,6 @@
     max-jobs = 4;
   };
 
-  # nixpkgs.localSystem = {
-  #   gcc.arch = "znver3";
-  #   gcc.tune = "znver3";
-  #   system = "x86_64-linux";
-  # };
-
   boot = {
     tmp.useTmpfs = false;
     kernelPackages = pkgs.linuxPackages_cachyos;
@@ -138,7 +132,7 @@
     coolercontrol.enable = true;
     corectrl = {
       enable = true;
-      gpuOverclock.enable = true;
+      # gpuOverclock.enable = true;
     };
   };
 
@@ -157,6 +151,8 @@
       ryzen-monitor-ng
       qdiskinfo
       jdk
+
+      haruna
 
       xmrig
       monero-gui
@@ -179,6 +175,7 @@
       updateMicrocode = true;
       ryzen-smu.enable = true;
     };
+    amdgpu.overdrive.enable = true;
 
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
