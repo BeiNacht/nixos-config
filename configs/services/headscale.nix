@@ -57,17 +57,17 @@
           ];
         };
 
-        derp = {
-          server = {
-            enabled = true;
-            region_id = 999;
-            region_code = "headscale";
-            region_name = "Headscale Embedded DERP";
-            stun_listen_addr = "0.0.0.0:3478";
-            ipv4 = "152.53.119.246";
-            ipv6 = "2a0a:4cc0:c0:30aa::1";
-          };
-        };
+        # derp = {
+        #   server = {
+        #     enabled = true;
+        #     region_id = 999;
+        #     region_code = "headscale";
+        #     region_name = "Headscale Embedded DERP";
+        #     stun_listen_addr = "0.0.0.0:3478";
+        #     ipv4 = "152.53.119.246";
+        #     ipv6 = "2a0a:4cc0:c0:30aa::1";
+        #   };
+        # };
       };
     };
   };
