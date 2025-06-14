@@ -86,9 +86,8 @@
 
   networking = {
     hostName = "homeserver";
-    firewall = {enable = false;};
-    nftables.enable = true;
     useDHCP = false;
+    firewall = {enable = false;};
     bridges = {
       br0 = {
         interfaces = [
@@ -104,6 +103,7 @@
       br0.useDHCP = true;
       enp1s0.useDHCP = false;
     };
+    nftables.enable = true;
   };
 
   environment = {
@@ -115,6 +115,7 @@
     persistence."/persist" = {
       directories = [
         "/var/lib/tor"
+        "/var/lib/unifi"
       ];
     };
   };
@@ -201,6 +202,12 @@
       useRoutingFeatures = "both";
     };
 
+    unifi = {
+      enable = true;
+      unifiPackage = pkgs.unifi;
+      mongodbPackage = pkgs.mongodb-7_0;
+    };
+
     borgbackup.jobs.all = rec {
       # preHook = ''
       #   ${pkgs.libvirt}/bin/virsh shutdown hass
@@ -221,6 +228,10 @@
     locate = {
       prunePaths = ["/mnt" "/nix"];
     };
+
+    # zigbee2mqtt = {
+    #   enable = true;
+    # };
   };
 
   powerManagement = {
