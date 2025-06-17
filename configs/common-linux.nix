@@ -188,6 +188,8 @@
       flake = "/home/alex/nixos-config";
     };
     fuse.userAllowOther = true;
+
+    command-not-found.enable = true;
   };
 
   services = {
