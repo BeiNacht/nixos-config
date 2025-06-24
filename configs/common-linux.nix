@@ -30,7 +30,7 @@
     };
     consoleLogLevel = 0;
     kernel.sysctl = {"vm.max_map_count" = 262144;};
-    supportedFilesystems = ["ntfs" "btrfs"];
+    supportedFilesystems = ["ntfs" "btrfs" "nfs"];
 
     initrd = {
       postDeviceCommands = pkgs.lib.mkBefore ''

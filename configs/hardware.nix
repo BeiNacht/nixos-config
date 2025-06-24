@@ -4,6 +4,8 @@
     sane.enable = true;
   };
 
+  # optional for pipewire
+  security.rtkit.enable = true;
   services = {
     fwupd.enable = true;
     power-profiles-daemon.enable = true;

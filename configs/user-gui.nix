@@ -37,15 +37,15 @@
     ];
   };
 
-  programs = {
-    ssh = {startAgent = true;};
-    # dconf.enable = true;
-    # gnupg.agent = {
-    #   enable = true;
-    #   pinentryFlavor = "curses";
-    #   # enableSSHSupport = true;
-    # };
-  };
+  # programs = {
+  #   ssh = {startAgent = true;};
+  #   dconf.enable = true;
+  #   gnupg.agent = {
+  #     enable = true;
+  #     pinentryFlavor = "curses";
+  #     # enableSSHSupport = true;
+  #   };
+  # };
 
   environment = {
     systemPackages = with pkgs; [

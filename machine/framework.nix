@@ -183,9 +183,6 @@
     };
   };
 
-  # Bring in some audio
-  security.rtkit.enable = true;
-  # rtkit is optional but recommended
   services = {
     colord.enable = true;
     fprintd.enable = false;

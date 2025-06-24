@@ -40,7 +40,7 @@
 
     systemPackages = with pkgs; [
       inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
-      kdePackages.ksshaskpass
+      # kdePackages.ksshaskpass
       kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
       kdePackages.qtstyleplugin-kvantum
@@ -75,21 +75,13 @@
       defaultSession = "plasma";
     };
 
-    # xserver = {
-    #   enable = true;
-    #   excludePackages = [pkgs.xterm];
-    #   # xkb.layout = "us";
-    #   # # Enable touchpad support.
-    #   # updateDbusEnvironment = true;
-    # };
-
     libinput.enable = true;
   };
 
-  programs = {
-    ssh = {
-      startAgent = true;
-      askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
-    };
-  };
+  # programs = {
+  #   ssh = {
+  #     startAgent = true;
+  #     askPassword = pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
+  #   };
+  # };
 }

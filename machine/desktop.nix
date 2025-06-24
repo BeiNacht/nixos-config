@@ -63,7 +63,22 @@
     "/boot" = {
       device = "/dev/disk/by-uuid/4339-5A4C";
     };
+
+    "/home/alex/shared/storage" = {
+      device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
+      fsType = "btrfs";
+      options = [
+        "autodefrag"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+    };
   };
+
+  environment.etc.crypttab.text = ''
+    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
+  '';
 
   swapDevices = [{device = "/dev/disk/by-uuid/831be7b8-5b1b-4bda-a27d-5a1c4efb2c4d";}];
 
@@ -115,12 +130,26 @@
 
   chaotic.mesa-git.enable = true;
 
-  systemd.services = {
-    monitor = {
-      description = "AMDGPU Control Daemon";
-      wantedBy = ["multi-user.target"];
-      after = ["multi-user.target"];
-      serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
+  systemd = {
+    tmpfiles.rules = let
+      rocmEnv = pkgs.symlinkJoin {
+        name = "rocm-combined";
+        paths = with pkgs.rocmPackages; [
+          rocblas
+          hipblas
+          clr
+        ];
+      };
+    in [
+      "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
+    ];
+    services = {
+      monitor = {
+        description = "AMDGPU Control Daemon";
+        wantedBy = ["multi-user.target"];
+        after = ["multi-user.target"];
+        serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
+      };
     };
   };
 
@@ -175,7 +204,10 @@
       updateMicrocode = true;
       ryzen-smu.enable = true;
     };
-    amdgpu.overdrive.enable = true;
+    amdgpu = {
+      overdrive.enable = true;
+      initrd.enable = true;
+    };
 
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
