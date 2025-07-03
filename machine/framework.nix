@@ -53,24 +53,7 @@
     "/boot" = {
       device = "/dev/disk/by-uuid/427A-97BA";
     };
-    # "/home/alex/shared/storage" = {
-    #   device = "/dev/disk/by-uuid/58259976-4f63-4f60-a755-7870b08286e7";
-    #   fsType = "btrfs";
-    #   options = [
-    #     "subvol=@data"
-    #     "discard=async"
-    #     "compress=zstd"
-    #     "nodiratime"
-    #     "noatime"
-    #     "nofail"
-    #     "x-systemd.automount"
-    #   ];
-    # };
   };
-
-  # environment.etc.crypttab.text = ''
-  #   luks-e36ec189-2211-4bcc-bb9d-46650443d76b UUID=e36ec189-2211-4bcc-bb9d-46650443d76b /persist/luks-key01
-  # '';
 
   swapDevices = [
     {
@@ -79,7 +62,6 @@
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   nix.settings.system-features = [
     "nixos-test"
@@ -171,6 +153,7 @@
     #   enable = true;
     #   users = ["alex"];
     # };
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     graphics = {
       enable = true;

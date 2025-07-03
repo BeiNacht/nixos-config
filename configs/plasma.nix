@@ -41,21 +41,23 @@
     systemPackages = with pkgs; [
       inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
       # kdePackages.ksshaskpass
-      kdePackages.kde-gtk-config
       kdePackages.breeze-gtk
-      kdePackages.qtstyleplugin-kvantum
       kdePackages.filelight
-      kdePackages.plasma-disks
       kdePackages.kalk
+      kdePackages.kde-gtk-config
+      kdePackages.kdepim-addons
+      kdePackages.plasma-disks
       kdePackages.powerdevil
       kdePackages.qtlocation
-      kdePackages.kdepim-addons
-      krusader
-      ktimetracker
+      kdePackages.qtstyleplugin-kvantum
+      kdePackages.sddm-kcm
+      deskflow
+      hardinfo2
       kdiff3
       kdiskmark
+      krusader
+      ktimetracker
       maliit-keyboard
-      deskflow
     ];
 
     persistence."/persist" = {
