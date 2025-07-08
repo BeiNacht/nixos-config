@@ -24,6 +24,7 @@
 
   xdg.portal = {
     enable = true;
+    extraPortals = [pkgs.kdePackages.xdg-desktop-portal-kde];
   };
 
   environment = {
@@ -39,7 +40,7 @@
     ];
 
     systemPackages = with pkgs; [
-      inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
+      # inputs.kwin-effects-forceblur.packages.${pkgs.system}.default
       # kdePackages.ksshaskpass
       kdePackages.breeze-gtk
       kdePackages.filelight

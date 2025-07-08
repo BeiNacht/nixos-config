@@ -33,7 +33,11 @@
     };
   };
 
-  home-manager.users.alex = {config, pkgs, ...}: {
+  home-manager.users.alex = {
+    config,
+    pkgs,
+    ...
+  }: {
     home.packages = with pkgs; [
       gamemode
       heroic
@@ -41,6 +45,7 @@
       pcsx2
       protontricks
       protonup-qt
+      shadps4
       steamtinkerlaunch
       vkbasalt
       vulkan-tools
