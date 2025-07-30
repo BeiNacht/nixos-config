@@ -189,7 +189,14 @@
     };
     fuse.userAllowOther = true;
 
-    command-not-found.enable = true;
+    # command-not-found = {
+    #   enable = true;
+    # };
+
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
   };
 
   services = {

@@ -88,7 +88,23 @@
           hwdec = "auto-safe";
           vo = "gpu";
           profile = "gpu-hq";
+          ytdl-format = "bestvideo+bestaudio";
+          cache-default = 4000000;
         };
+
+        package = (
+          pkgs.mpv-unwrapped.wrapper {
+            scripts = with pkgs.mpvScripts; [
+              easycrop
+              uosc
+              sponsorblock
+            ];
+
+            mpv = pkgs.mpv-unwrapped.override {
+              waylandSupport = true;
+            };
+          }
+        );
       };
 
       kitty = {

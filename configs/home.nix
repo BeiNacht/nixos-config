@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   lib,
   ...
 }: {
@@ -17,6 +18,9 @@
         executable = true;
         source = ../home/bin/backup-to-stick;
       };
+
+      # ".cache/nix-index/files".source =
+      #   inputs.nix-index-database.legacyPackages.${pkgs.system}.database;
     };
 
     packages = with pkgs; [ueberzugpp];
