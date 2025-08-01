@@ -284,7 +284,7 @@
           enableACME = true;
           locations = {
             "/" = {
-              proxyPass = "http://homeassistant:8123/";
+              proxyPass = "http://homeassistant.main.szczepan.ski:8123/";
               proxyWebsockets = true;
             };
           };
@@ -320,6 +320,7 @@
         "/home/alex/mounted"
         "/home/alex/.cache"
         "/persist/borg"
+        "/persist/var/lib/private/AdGuardHome/data/querylog.json"
       ];
     };
 
@@ -344,6 +345,14 @@
         };
         homeassistant = {
           "path" = "/home/alex/homeassistant";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+        paperless = {
+          "path" = "/var/lib/paperless/consume";
           "browseable" = "yes";
           "guest ok" = "no";
           "read only" = "no";

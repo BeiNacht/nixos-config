@@ -16,6 +16,7 @@
     paperless = {
       enable = true;
       address = "127.0.0.1";
+      consumptionDirIsPublic = true;
       settings = {
         PAPERLESS_CONSUMER_IGNORE_PATTERN = [
           ".DS_STORE/*"
