@@ -16,42 +16,44 @@
 
   sops = {
     defaultSopsFile = ../secrets/secrets-homeserver.yaml;
-    secrets = {
-      netdata-token = {
-        owner = config.services.netdata.user;
-        group = config.services.netdata.group;
-      };
-    };
+    # secrets = {
+    #   netdata-token = {
+    #     owner = config.services.netdata.user;
+    #     group = config.services.netdata.group;
+    #   };
+    # };
   };
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/99bebe82-b399-455a-af0f-3bb2384e2d6f";
+      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
     };
 
     "/home" = {
-      device = "/dev/disk/by-uuid/99bebe82-b399-455a-af0f-3bb2384e2d6f";
+      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
     };
 
     "/nix" = {
-      device = "/dev/disk/by-uuid/99bebe82-b399-455a-af0f-3bb2384e2d6f";
+      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
     };
 
     "/persist" = {
-      device = "/dev/disk/by-uuid/99bebe82-b399-455a-af0f-3bb2384e2d6f";
+      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
     };
 
     "/var/log" = {
-      device = "/dev/disk/by-uuid/99bebe82-b399-455a-af0f-3bb2384e2d6f";
+      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
     };
 
     "/boot" = {
-      device = "/dev/disk/by-uuid/1C72-6F6E";
+      device = "/dev/disk/by-uuid/2906-DD19";
     };
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/9ea87328-c50b-4a93-8cd1-3fabfa5791b6";}
+    {
+      device = "/dev/disk/by-uuid/dcc19b48-b064-4160-af30-20eabb6dde30";
+    }
   ];
 
   boot = {
@@ -74,7 +76,7 @@
       };
       luks.devices = {
         root = {
-          device = "/dev/disk/by-uuid/1bfbde8d-c669-4c95-8e40-9aaddb07d0c9";
+          device = "/dev/disk/by-uuid/f6809a64-d23d-4940-a0e7-c256ce7a2e90";
           preLVM = true;
         };
       };
@@ -190,11 +192,11 @@
     #   };
     # };
 
-#    netdata = {
-#      enable = true;
-#      package = pkgs.netdata.override {withCloudUi = true;};
-#      claimTokenFile = config.sops.secrets.netdata-token.path;
-#    };
+    #    netdata = {
+    #      enable = true;
+    #      package = pkgs.netdata.override {withCloudUi = true;};
+    #      claimTokenFile = config.sops.secrets.netdata-token.path;
+    #    };
 
     tailscale = {
       enable = true;
