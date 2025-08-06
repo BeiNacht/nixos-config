@@ -92,16 +92,15 @@
       br0 = {
         interfaces = [
           "enp1s0"
-          "enp2s0"
-          "enp3s0"
-          "enp4s0"
+          # "enp2s0"
+          # "enp3s0"
+          # "enp4s0"
         ];
         rstp = true;
       };
     };
     interfaces = {
       br0.useDHCP = true;
-      enp1s0.useDHCP = false;
     };
     nftables.enable = true;
   };
@@ -191,11 +190,11 @@
     #   };
     # };
 
-    netdata = {
-      enable = true;
-      package = pkgs.netdata.override {withCloudUi = true;};
-      claimTokenFile = config.sops.secrets.netdata-token.path;
-    };
+#    netdata = {
+#      enable = true;
+#      package = pkgs.netdata.override {withCloudUi = true;};
+#      claimTokenFile = config.sops.secrets.netdata-token.path;
+#    };
 
     tailscale = {
       enable = true;
