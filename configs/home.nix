@@ -45,6 +45,7 @@
       matchBlocks = {
         "szczepan.ski" = {hostname = "szczepan.ski";};
         "mini" = {hostname = "mini";};
+        "homeserver" = {hostname = "homeserver";};
         "desktop" = {hostname = "desktop";};
         "framework" = {hostname = "framework";};
         "thinkpad" = {hostname = "thinkpad";};
