@@ -56,7 +56,7 @@
       pinta
       simple-scan
 
-      discord
+#      discord
       kdePackages.kdenlive
       # shotcut
 

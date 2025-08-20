@@ -223,6 +223,24 @@
           }
         ];
       };
+
+      nixos-vm-fusion = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.sops-nix.nixosModules.sops
+          impermanence.nixosModules.impermanence
+          ./machine/nixos-vm-fusion.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
+        ];
+      };
     };
 
     darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {

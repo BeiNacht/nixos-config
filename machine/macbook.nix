@@ -19,6 +19,8 @@
         autohide = true;
         expose-animation-duration = 0.0;
         mru-spaces = false;
+        orientation = "left";
+        show-recents = false;
       };
       finder = {
         _FXSortFoldersFirst = true;
@@ -49,18 +51,24 @@
       "battery-toolkit"
       "brave-browser"
       "comfyui"
+      "crossover"
       "deskflow"
       "discord"
+      "docker-desktop"
+      "easy-move+resize"
       "firefox"
       "font-meslo-lg-nerd-font"
+      "font-roboto-mono-nerd-font"
+      "font-sauce-code-pro-nerd-font"
+      "font-sf-mono-nerd-font-ligaturized"
       "iina"
       "iterm2"
       "keepassxc"
       "macfuse"
       "microsoft-teams"
       "middleclick"
-      "easy-move+resize"
       "nextcloud"
+      "pcsx2"
       "rectangle"
       "sol"
       "steam"
@@ -68,6 +76,7 @@
       "tor-browser"
       "visual-studio-code"
       "vorta"
+      "whisky"
     ];
     taps = [
       "mhaeuser/mhaeuser"

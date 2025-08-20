@@ -6,10 +6,10 @@ keys:
     - &framework age1w3nq2g9ctm43f43lyzfrznywqpqlrk6x9de2qy3sr05mm4yk4u3s05slw4
     - &vps-arm age1hcnyvwydfrhl9sz0dv4j5dsv2jzwmxvvhq6w7ejy0y5yxuj034es08gz9s
     - &mini age1hdv2nz7r5fv6glq7jac27uf864t2668a97ptx52q57yfg4jd7ypqkag7wd
-    - &nixos-virtualbox age1zs6k39g6kz740z3p9f0r2tc8dwn677zn3v5963g42p6lsljh7y0qzfn9ql
     - &nixos-vm age120fg86wv7vrcw6aeuunkzr7nerpwg8w0vu08xp8v8feqawtzqquq4763cw
     - &thinkpad age1dmkhlzvxemlufsydaed7vajm4cdpjwmqj3pmpvlljkjzlck8t4rswwph4j
     - &homeserver age1kq7qemasg43al3wr28j5za4j9q4h53qwfnmgdcqydrf0vvu9fs2scv5jqk
+    - &nixos-vm-fusion age158dtqchstg2h3austpp9g7kzap63a82fgx6k8lufdgr6tddhls4qezn6kw
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
@@ -19,10 +19,10 @@ creation_rules:
       - *vps-arm
       - *framework
       - *mini
-      - *nixos-virtualbox
       - *nixos-vm
       - *thinkpad
       - *homeserver
+      - *nixos-vm-fusion
   - path_regex: secrets-desktop.yaml$
     key_groups:
     - age:
