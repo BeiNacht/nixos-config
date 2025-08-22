@@ -44,6 +44,24 @@
     enable = true;
   };
 
+  environment = {
+    systemPackages = with pkgs; [
+      mactop
+      nh
+    ];
+  };
+
+  # programs = {
+  #   nh = {
+  #     enable = true;
+      # clean = {
+      #   enable = true;
+      #   extraArgs = "--keep-since 14d";
+      # };
+      # flake = "/User/alex/nixos-config";
+  #   };
+  # };
+
   homebrew = {
     enable = true;
     casks = [
@@ -63,7 +81,9 @@
       "font-sf-mono-nerd-font-ligaturized"
       "iina"
       "iterm2"
+      "handbrake"
       "keepassxc"
+      "keepingyouawake"
       "macfuse"
       "microsoft-teams"
       "middleclick"
@@ -77,6 +97,8 @@
       "visual-studio-code"
       "vorta"
       "whisky"
+      "jordanbaird-ice"
+      "bartender"
     ];
     taps = [
       "mhaeuser/mhaeuser"
