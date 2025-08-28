@@ -10,6 +10,7 @@
 
   imports = [
     ../configs/common.nix
+    ../configs/develop.nix
   ];
 
   system = {
@@ -54,11 +55,11 @@
   # programs = {
   #   nh = {
   #     enable = true;
-      # clean = {
-      #   enable = true;
-      #   extraArgs = "--keep-since 14d";
-      # };
-      # flake = "/User/alex/nixos-config";
+  # clean = {
+  #   enable = true;
+  #   extraArgs = "--keep-since 14d";
+  # };
+  # flake = "/User/alex/nixos-config";
   #   };
   # };
 
@@ -66,6 +67,7 @@
     enable = true;
     casks = [
       "alt-tab"
+      "appcleaner"
       "battery-toolkit"
       "brave-browser"
       "comfyui"
@@ -79,26 +81,30 @@
       "font-roboto-mono-nerd-font"
       "font-sauce-code-pro-nerd-font"
       "font-sf-mono-nerd-font-ligaturized"
+      "ghostty"
+      "handbrake-app"
       "iina"
       "iterm2"
-      "handbrake"
+      "jordanbaird-ice"
       "keepassxc"
       "keepingyouawake"
       "macfuse"
       "microsoft-teams"
       "middleclick"
       "nextcloud"
+      "only-switch"
       "pcsx2"
       "rectangle"
       "sol"
+      "spotify"
       "steam"
-      "tailscale"
+      "tailscale-app"
       "tor-browser"
       "visual-studio-code"
       "vorta"
+      "warp"
+      "utm"
       "whisky"
-      "jordanbaird-ice"
-      "bartender"
     ];
     taps = [
       "mhaeuser/mhaeuser"

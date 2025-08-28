@@ -13,9 +13,11 @@
     # rust
     cargo
     nodejs
+
+    harlequin # tui sql client
   ];
 
-  programs = {
-    adb.enable = true;
-  };
+  # programs = {
+  #   adb.enable = true;
+  # };
 }
