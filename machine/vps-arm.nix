@@ -18,7 +18,6 @@
     ../configs/services/audiobookshelf.nix
     ../configs/services/atuin.nix
     ../configs/services/firefly.nix
-    ../configs/services/frigate.nix
     ../configs/services/gitea.nix
     ../configs/services/goaccess.nix
     ../configs/services/grafana.nix
@@ -27,6 +26,8 @@
     ../configs/services/nextcloud.nix
     ../configs/services/paperless.nix
     ../configs/services/uptime-kuma.nix
+
+    #../configs/services/frigate.nix
     # ../configs/services/firefox-syncserver.nix
     (modulesPath + "/profiles/qemu-guest.nix")
   ];

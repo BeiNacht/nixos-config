@@ -109,7 +109,7 @@
         "memories.exiftool" = "${lib.getExe pkgs.exiftool}";
         "memories.vod.ffmpeg" = "${lib.getExe pkgs.ffmpeg-headless}";
         "memories.vod.ffprobe" = "${pkgs.ffmpeg-headless}/bin/ffprobe";
-        "overwrite.cli.url" = "${config.services.nextcloud.hostName}";
+        "overwrite.cli.url" = "https://${config.services.nextcloud.hostName}";
         "maintenance_window_start" = "1";
       };
 
