@@ -70,6 +70,7 @@
       "appcleaner"
       "battery-toolkit"
       "brave-browser"
+      "cog-app"
       "comfyui"
       "crossover"
       "deskflow"

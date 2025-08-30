@@ -60,8 +60,9 @@
 
       broot
       git-secret
-      neofetch
+      # neofetch
       ranger # terminal filemanager
+      superfile # terminal filemanager
 
       unrar
       unzip
