@@ -14,7 +14,7 @@
     cargo
     nodejs
 
-    harlequin # tui sql client
+    # harlequin # tui sql client
   ];
 
   # programs = {

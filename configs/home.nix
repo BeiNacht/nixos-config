@@ -37,12 +37,14 @@
 
     ssh = {
       enable = true;
-      compression = true;
-      serverAliveInterval = 60;
-      forwardAgent = true;
-      addKeysToAgent = "yes";
 
       matchBlocks = {
+        "*" = {
+          compression = true;
+          serverAliveInterval = 60;
+          forwardAgent = true;
+          addKeysToAgent = "yes";
+        };
         "szczepan.ski" = {hostname = "szczepan.ski";};
         "mini" = {hostname = "mini";};
         "homeserver" = {hostname = "homeserver";};

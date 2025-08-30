@@ -171,11 +171,11 @@
     fprintd.enable = false;
     cpupower-gui.enable = true;
 
-    btrfs.autoScrub = {
-      enable = true;
-      interval = "monthly";
-      fileSystems = ["/home/alex/shared/storage"];
-    };
+    # btrfs.autoScrub = {
+    #   enable = true;
+    #   interval = "monthly";
+    #   fileSystems = ["/home/alex/shared/storage"];
+    # };
 
     borgbackup.jobs.all = rec {
       repo = "ssh://u278697-sub9@u278697.your-storagebox.de:23/./borg";
@@ -215,10 +215,6 @@
     powertop.enable = true;
   };
 
-  systemd.extraConfig = ''
-    DefaultTimeoutStopSec=10s
-  '';
-
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
   environment = {
@@ -252,15 +248,19 @@
   boot.kernelParams = ["mem_sleep_default=deep"];
 
   # Suspend-then-hibernate everywhere
-  services.logind = {
-    lidSwitch = "suspend-then-hibernate";
-    extraConfig = ''
-      HandlePowerKey=suspend-then-hibernate
-      IdleAction=suspend-then-hibernate
-      IdleActionSec=2m
-    '';
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend-then-hibernate";
+    HandlePowerKey = "suspend-then-hibernate";
+    IdleAction = "suspend-then-hibernate";
+    IdleActionSec = "15m";
   };
-  systemd.sleep.extraConfig = "HibernateDelaySec=60m";
+
+  systemd = {
+    sleep.extraConfig = "HibernateDelaySec=60m";
+    settings.Manager = {
+      DefaultTimeoutStopSec = "10s";
+    };
+  };
 
   system.stateVersion = "24.11";
 }
