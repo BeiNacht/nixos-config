@@ -10,6 +10,7 @@
     ../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/docker.nix
+    ../configs/services/frigate.nix
     ../configs/libvirtd.nix
     ../configs/user.nix
   ];
@@ -124,6 +125,7 @@
   hardware = {
     enableAllFirmware = true;
     cpu.intel.updateMicrocode = true;
+    coral.pcie.enable = true;
   };
 
   services = {
@@ -217,7 +219,7 @@
       # postHook = ''
       #   ${pkgs.libvirt}/bin/virsh start hass
       # '';
-      repo = "ssh://u278697-sub8@u278697.your-storagebox.de:23/./borg-backup-homeserver";
+      repo = "ssh://u278697-sub10@u278697.your-storagebox.de:23/./borg-homeserver";
       exclude = [
         "/home/alex/mounted"
         "/home/alex/.cache"
