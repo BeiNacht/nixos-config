@@ -95,7 +95,7 @@
 
   boot = {
     tmp.useTmpfs = false;
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = ["clearcpuid=514" "ip=dhcp"];
     kernelModules = ["nct6775"];
     kernel.sysctl = {
@@ -177,7 +177,7 @@
       # mission-center
       resources
       stressapptest
-      ryzen-monitor-ng
+      #ryzen-monitor-ng
       qdiskinfo
       jdk
 
@@ -202,7 +202,7 @@
     enableRedistributableFirmware = true;
     cpu.amd = {
       updateMicrocode = true;
-      ryzen-smu.enable = true;
+      #ryzen-smu.enable = true;
     };
     amdgpu = {
       overdrive.enable = true;
