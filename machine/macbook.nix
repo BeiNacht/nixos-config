@@ -65,8 +65,14 @@
 
   homebrew = {
     enable = true;
+    brews = [
+      "virt-manager"
+      "virt-viewer"
+    ];
     casks = [
+      "adobe-acrobat-reader"
       "alt-tab"
+      "android-file-transfer"
       "appcleaner"
       "battery-toolkit"
       "brave-browser"
@@ -75,6 +81,7 @@
       "crossover"
       "deskflow"
       "discord"
+      "dolphin"
       "docker-desktop"
       "easy-move+resize"
       "firefox"
@@ -101,15 +108,16 @@
       "steam"
       "tailscale-app"
       "tor-browser"
+      "utm"
       "visual-studio-code"
       "vorta"
       "warp"
-      "utm"
       "whisky"
     ];
     taps = [
       "mhaeuser/mhaeuser"
       "deskflow/homebrew-tap"
+      "jeffreywildman/homebrew-virt-manager"
     ];
   };
   system.stateVersion = 5;
