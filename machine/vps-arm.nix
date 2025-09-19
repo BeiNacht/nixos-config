@@ -242,7 +242,7 @@
   };
 
   services = {
-    dnscrypt-proxy2.enable = lib.mkForce false;
+    dnscrypt-proxy.enable = lib.mkForce false;
     qemuGuest.enable = true;
 
     nginx = {
@@ -286,6 +286,17 @@
           locations = {
             "/" = {
               proxyPass = "http://homeassistant.main.szczepan.ski:8123/";
+              proxyWebsockets = true;
+            };
+          };
+        };
+
+        "frigate.szczepan.ski" = {
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://homeserver.main.szczepan.ski/";
               proxyWebsockets = true;
             };
           };

@@ -240,7 +240,7 @@
       openFirewall = true;
     };
 
-    dnscrypt-proxy2 = {
+    dnscrypt-proxy = {
       enable = true;
       settings = {
         ipv6_servers = true;
