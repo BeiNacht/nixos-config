@@ -62,7 +62,11 @@
       enable = true;
       userName = "Alexander Szczepanski";
       userEmail = "alexander@szczepan.ski";
-      extraConfig = {
+      settings = {
+        user = {
+          name = "Alexander Szczepanski";
+          email = "alexander@szczepan.ski";
+        };
         core = {autocrlf = false;};
         color = {ui = "auto";};
         push = {default = "current";};

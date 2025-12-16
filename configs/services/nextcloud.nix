@@ -81,6 +81,7 @@
           deck
           end_to_end_encryption
           mail
+          maps
           # memories
           music
           notes

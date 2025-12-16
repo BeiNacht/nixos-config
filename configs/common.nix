@@ -16,7 +16,7 @@
       borgbackup
       # btrfs-progs # utils for btrfs
       doggo # DNS Resolver
-      du-dust
+      dust
       ncdu
       duf # dfc alternative
       lsd # eza alternative

@@ -80,6 +80,10 @@ in {
           certificate_path = "/var/lib/AdGuardHome/chain.pem";
           private_key_path = "/var/lib/AdGuardHome/key.pem";
         };
+        querylog = {
+          enabled = true;
+          interval = "1h";
+        };
         # The following notation uses map
         # to not have to manually create {enabled = true; url = "";} for every filter
         # This is,qq however, fully optional

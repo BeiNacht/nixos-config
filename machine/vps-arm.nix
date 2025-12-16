@@ -383,6 +383,30 @@
         };
       };
     };
+
+    monero = {
+      enable = true;
+      # limits = { threads = 4; };
+      # rpc = {
+      #   user = "alex";
+      #   password = secrets.moneroUserPassword;
+      #   #address = "10.100.0.1";
+      # };
+      limits = {
+        download = 1048576;
+        upload = 1048576;
+      };
+      extraConfig = ''
+        enforce-dns-checkpointing=true
+        enable-dns-blocklist=true # Block known-malicious nodes
+        no-igd=true # Disable UPnP port mapping
+        no-zmq=true # ZMQ configuration
+
+        # bandwidth settings
+        out-peers=32 # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
+        in-peers=32 # The default is unlimited; we prefer to put a cap on this
+      '';
+    };
   };
 
   system.stateVersion = "24.11";
