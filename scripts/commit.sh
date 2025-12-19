@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-git commit --message `hostname`-`date "+%F-%H-%M-%S"`
+git commit --message `hostname -s`-`date "+%F-%H-%M-%S"`

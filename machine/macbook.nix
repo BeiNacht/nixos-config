@@ -32,6 +32,9 @@
       };
       screencapture.location = "~/Pictures/screenshots";
       #   screensaver.askForPasswordDelay = 10;
+
+      # AutoFillCreditCardData = false;  # Enable AutoFill for credit cards
+      # AutoFillPasswords = false; # Enable AutoFill for passwords
     };
   };
 
@@ -66,8 +69,10 @@
   homebrew = {
     enable = true;
     brews = [
+      "gstreamer"
       "virt-manager"
       "virt-viewer"
+      "rom-tools"
     ];
     casks = [
       "adobe-acrobat-reader"
@@ -75,7 +80,9 @@
       "android-file-transfer"
       "appcleaner"
       "battery-toolkit"
+      "bit-slicer"
       "brave-browser"
+      "cinebench"
       "cog-app"
       "comfyui"
       "crossover"
@@ -93,23 +100,25 @@
       "handbrake-app"
       "iina"
       "iterm2"
-      "jordanbaird-ice"
       "keepassxc"
       "keepingyouawake"
       "lulu"
       "macfuse"
       "macpacker"
+      "microsoft-auto-update"
       "microsoft-teams"
       "middleclick"
+      "monero-wallet"
       "nextcloud"
+      "nook"
       "only-switch"
       "pcsx2"
       "rectangle"
       "signal"
       "sol"
-      "spotify"
       "steam"
       "tailscale-app"
+      "telegram-desktop"
       "tor-browser"
       "utm"
       "visual-studio-code"

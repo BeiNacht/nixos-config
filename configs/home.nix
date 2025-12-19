@@ -55,6 +55,10 @@
           hostname = "127.0.0.1";
           port = 1337;
         };
+        "router" = {
+          hostname = "192.168.8.1";
+          user = "root";
+        };
       };
     };
 

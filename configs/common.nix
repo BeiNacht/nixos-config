@@ -74,6 +74,10 @@
       tealdeer # shorter man pages
       man-pages
       man-pages-posix
+
+      stow
+      jq
+      mas
     ];
   };
 

@@ -85,6 +85,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -106,6 +107,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -124,6 +126,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -144,6 +147,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -163,6 +167,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -182,6 +187,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -200,6 +206,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -218,6 +225,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
@@ -236,6 +244,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = ".nix-backup";
               users.alex = import ./configs/home.nix;
             };
           }
