@@ -211,6 +211,7 @@
         443 # nginx
         853 # adguardhome DoT
         3478 # headscale
+        51820 # wireguard
       ];
     };
   };

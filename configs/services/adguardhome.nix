@@ -67,6 +67,7 @@ in {
         };
         statistics = {
           enabled = true;
+          interval = "24h";
         };
         tls = {
           server_name = dns-domain;

@@ -37,7 +37,7 @@
 
     ssh = {
       enable = true;
-
+      enableDefaultConfig = false;
       matchBlocks = {
         "*" = {
           compression = true;
@@ -60,8 +60,6 @@
 
     git = {
       enable = true;
-      userName = "Alexander Szczepanski";
-      userEmail = "alexander@szczepan.ski";
       settings = {
         user = {
           name = "Alexander Szczepanski";
