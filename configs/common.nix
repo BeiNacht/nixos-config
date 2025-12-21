@@ -77,7 +77,6 @@
 
       stow
       jq
-      mas
     ];
   };
 

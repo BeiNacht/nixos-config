@@ -3,6 +3,6 @@
     firefox
     brave
     librewolf
-    tor-browser-bundle-bin
+    tor-browser
   ];
 }

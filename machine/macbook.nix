@@ -52,6 +52,8 @@
     systemPackages = with pkgs; [
       mactop
       nh
+
+      mas
     ];
   };
 

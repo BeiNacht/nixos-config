@@ -29,8 +29,7 @@
       gyre-fonts
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-emoji
-      noto-fonts-extra
+      noto-fonts-color-emoji
       open-sans
       stix-two
       twemoji-color-font
