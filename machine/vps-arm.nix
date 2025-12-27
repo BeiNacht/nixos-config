@@ -35,10 +35,10 @@
   sops = {
     defaultSopsFile = ../secrets/secrets-vps-arm.yaml;
     secrets = {
-      borg-key = {
-        owner = config.users.users.alex.name;
-        group = config.users.users.alex.group;
-      };
+      # borg-key = {
+      #   owner = config.users.users.alex.name;
+      #   group = config.users.users.alex.group;
+      # };
 
       goaccess-htpasswd = {
         owner = config.services.nginx.user;
@@ -65,6 +65,16 @@
         owner = config.services.gitea.user;
         group = config.services.gitea.group;
         mode = "0440";
+      };
+
+      wireguard-private-key = {
+        owner = "systemd-network";
+        group = "systemd-network";
+      };
+
+      wireguard-preshared-key = {
+        owner = "systemd-network";
+        group = "systemd-network";
       };
     };
   };
@@ -214,6 +224,13 @@
         51820 # wireguard
       ];
     };
+    useNetworkd = true;
+    nat = {
+      enable = true;
+      enableIPv6 = true;
+      externalInterface = "enp7s0";
+      internalInterfaces = ["wg0"];
+    };
   };
 
   environment = {
@@ -306,7 +323,7 @@
     };
 
     tailscale = {
-      enable = true;
+      enable = lib.mkForce false;
       useRoutingFeatures = "both";
       openFirewall = true;
     };
@@ -386,7 +403,7 @@
     };
 
     monero = {
-      enable = true;
+      enable = false;
       # limits = { threads = 4; };
       # rpc = {
       #   user = "alex";
@@ -407,6 +424,84 @@
         out-peers=32 # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
         in-peers=32 # The default is unlimited; we prefer to put a cap on this
       '';
+    };
+  };
+
+  systemd.network = {
+    enable = true;
+
+    networks = {
+      # "10-wan" = {
+      #   matchConfig.Name = "enp1s0";
+      #   networkConfig = {
+      #     # start a DHCP Client for IPv4 Addressing/Routing
+      #     DHCP = "ipv4";
+      #     # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+      #     IPv6AcceptRA = true;
+      #   };
+      #   # make routing on this interface a dependency for network-online.target
+      #   linkConfig.RequiredForOnline = "routable";
+      # };
+      "50-wg0" = {
+        matchConfig.Name = "wg0";
+
+        address = [
+          # /32 and /128 specifies a single address
+          # for use on this wg peer machine
+          # "fd31:bf08:57cb::7/128"
+          "fd7a:115c:a1e0::1/64"
+          "100.64.0.1/24"
+        ];
+
+        networkConfig = {
+          # do not use IPMasquerade,
+          # unnecessary, causes problems with host ipv6
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
+        };
+      };
+    };
+
+    netdevs."50-wg0" = {
+      netdevConfig = {
+        Kind = "wireguard";
+        Name = "wg0";
+      };
+
+      wireguardConfig = {
+        ListenPort = 51820;
+
+        # ensure file is readable by `systemd-network` user
+        PrivateKeyFile = config.sops.secrets.wireguard-private-key.path;
+
+        # To automatically create routes for everything in AllowedIPs,
+        # add RouteTable=main
+        RouteTable = "main";
+
+        # FirewallMark marks all packets send and received by wg0
+        # with the number 42, which can be used to define policy rules on these packets.
+        FirewallMark = 42;
+      };
+
+      wireguardPeers = [
+        {
+          # laptop wg conf
+          PublicKey = "E+79YXdARLsXJxzLFCrhkszEH63drP03lVKIjXTlRxE=";
+          PresharedKeyFile = config.sops.secrets.wireguard-preshared-key.path;
+          AllowedIPs = [
+            "fd7a:115c:a1e0::2/128"
+            "100.64.0.2/32"
+            "192.168.178.0/24"
+            "fdc1:52e1:bbb4::/64"
+          ];
+          Endpoint = "8cj4irjqnbqf3rt4.myfritz.net:55171";
+          PersistentKeepalive = 25;
+
+          # RouteTable can also be set in wireguardPeers
+          # RouteTable in wireguardConfig will then be ignored.
+          # RouteTable = 1000;
+        }
+      ];
     };
   };
 

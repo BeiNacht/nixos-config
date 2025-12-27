@@ -77,8 +77,9 @@
 
       stow
       jq
+      # mas
     ];
-  };
+  };`
 
   programs = {
     ssh.knownHosts = {
