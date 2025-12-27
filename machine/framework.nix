@@ -105,46 +105,46 @@
     hostName = "framework";
   };
 
-  programs.fw-fanctrl = {
-    enable = true;
-    config = {
-      defaultStrategy = "lazy";
-      strategies = {
-        "lazy" = {
-          fanSpeedUpdateFrequency = 5;
-          movingAverageInterval = 30;
-          speedCurve = [
-            {
-              temp = 0;
-              speed = 15;
-            }
-            {
-              temp = 50;
-              speed = 15;
-            }
-            {
-              temp = 65;
-              speed = 20;
-            }
-            {
-              temp = 70;
-              speed = 25;
-            }
-            {
-              temp = 75;
-              speed = 50;
-            }
-            {
-              temp = 85;
-              speed = 100;
-            }
-          ];
+  hardware = {
+    fw-fanctrl = {
+      enable = true;
+      config = {
+        defaultStrategy = "lazy";
+        strategies = {
+          "lazy" = {
+            fanSpeedUpdateFrequency = 5;
+            movingAverageInterval = 30;
+            speedCurve = [
+              {
+                temp = 0;
+                speed = 15;
+              }
+              {
+                temp = 50;
+                speed = 15;
+              }
+              {
+                temp = 65;
+                speed = 20;
+              }
+              {
+                temp = 70;
+                speed = 25;
+              }
+              {
+                temp = 75;
+                speed = 50;
+              }
+              {
+                temp = 85;
+                speed = 100;
+              }
+            ];
+          };
         };
       };
     };
-  };
 
-  hardware = {
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
     xone.enable = true;

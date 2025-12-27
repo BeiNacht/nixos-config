@@ -21,12 +21,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    # Framework Fancontrol
-    fw-fanctrl = {
-      url = "github:TamtamHero/fw-fanctrl/packaging/nix";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -41,7 +35,6 @@
   outputs = {
     self,
     chaotic,
-    fw-fanctrl,
     home-manager,
     nixos-hardware,
     nixpkgs-unstable,
@@ -96,7 +89,6 @@
         system = "x86_64-linux";
         specialArgs = {inherit inputs outputs;};
         modules = [
-          fw-fanctrl.nixosModules.default
           impermanence.nixosModules.impermanence
           chaotic.nixosModules.default
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel

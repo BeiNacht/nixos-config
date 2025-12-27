@@ -79,7 +79,7 @@
       jq
       # mas
     ];
-  };`
+  };
 
   programs = {
     ssh.knownHosts = {
