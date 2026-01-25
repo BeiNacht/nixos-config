@@ -214,6 +214,8 @@
         80 # nginxs
         443 # nginx
         853 # adguardhome DoT
+        9898 # i2p
+        9899 # i2p
       ];
       allowedUDPPorts = [
         53 # adguardhome
@@ -221,16 +223,25 @@
         443 # nginx
         853 # adguardhome DoT
         3478 # headscale
+        9898 # i2p
         51820 # wireguard
       ];
+
+      interfaces.tailscale0 = {
+        allowedTCPPorts = [
+          4444 # i2p http proxy
+          7070 # i2p control
+          7654 # i2p torrent
+        ];
+      };
     };
-    useNetworkd = true;
-    nat = {
-      enable = true;
-      enableIPv6 = true;
-      externalInterface = "enp7s0";
-      internalInterfaces = ["wg0"];
-    };
+    # useNetworkd = true;
+    # nat = {
+    #   enable = true;
+    #   enableIPv6 = true;
+    #   externalInterface = "enp7s0";
+    #   internalInterfaces = ["wg0"];
+    # };
   };
 
   environment = {
@@ -246,6 +257,16 @@
         "/var/lib/samba"
         "/var/www/alexander.szczepan.ski"
       ];
+    };
+
+    etc = {
+      # Adapted failregex for syslogs
+      "fail2ban/filter.d/nextcloud.local".text = pkgs.lib.mkDefault (pkgs.lib.mkAfter ''
+        [Definition]
+        failregex = ^.*"remoteAddr":"&lt;HOST&gt;".*"message":"Login failed:
+                    ^.*"remoteAddr":"&lt;HOST&gt;".*"message":"Two-factor challenge failed:
+                    ^.*"remoteAddr":"&lt;HOST&gt;".*"message":"Trusted domain error.
+      '');
     };
   };
 
@@ -323,7 +344,8 @@
     };
 
     tailscale = {
-      enable = lib.mkForce false;
+      enable = true;
+      # enable = lib.mkForce false;
       useRoutingFeatures = "both";
       openFirewall = true;
     };
@@ -341,6 +363,19 @@
             enabled = true;
           };
         };
+        # nextcloud.settings = {
+        #   # START modification to work with syslog instead of logile
+        #   backend = "systemd";
+        #   journalmatch = "SYSLOG_IDENTIFIER=Nextcloud";
+        #   # END modification to work with syslog instead of logile
+        #   enabled = true;
+        #   port = 443;
+        #   protocol = "tcp";
+        #   filter = "nextcloud";
+        #   maxretry = 3;
+        #   bantime = 86400;
+        #   findtime = 43200;
+        # };
       };
     };
 
@@ -351,6 +386,7 @@
         "/home/alex/.cache"
         "/persist/borg"
         "/persist/var/lib/private/AdGuardHome/data/querylog.json"
+        "/persist/var/lib/private/AdGuardHome/data/querylog.json.1"
       ];
     };
 
@@ -425,6 +461,65 @@
         in-peers=32 # The default is unlimited; we prefer to put a cap on this
       '';
     };
+
+    i2pd = {
+      enable = true;
+      ifname = "enp7s0:";
+      address = "152.53.119.246";
+      # TCP & UDP
+      port = 9898;
+      ntcp2.port = 9899;
+      # websocket = {
+      #   enable = true;
+      #   address = "10.100.0.1";
+      # };
+      proto = {
+        http = {
+          enable = true;
+          address = "100.84.253.36";
+        };
+
+        httpProxy = {
+          enable = true;
+          address = "100.84.253.36";
+        };
+
+        socksProxy = {
+          enable = true;
+          address = "100.84.253.36";
+        };
+
+        i2cp = {
+          enable = true;
+          address = "100.84.253.36";
+        };
+
+        sam = {enable = true;};
+      };
+
+      # inTunnels = {
+      #   foo = {
+      #     enable = true;
+      #     # keys = "foo-keys.dat";
+      #     inPort = 80;
+      #     address = "127.0.0.1";
+      #     destination = "127.0.0.1";
+      #     port = 8008;
+      #   };
+      #   foo2 = {
+      #     enable = true;
+      #     # keys = "foo-keys.dat";
+      #     inPort = 80;
+      #     address = "127.0.0.1";
+      #     destination = "127.0.0.1";
+      #     port = 8009;
+      #   };
+      # };
+
+      logLevel = "error";
+      enableIPv4 = true;
+      enableIPv6 = true;
+    };
   };
 
   systemd.network = {
@@ -449,7 +544,7 @@
           # /32 and /128 specifies a single address
           # for use on this wg peer machine
           # "fd31:bf08:57cb::7/128"
-          "fd7a:115c:a1e0::1/64"
+          # "fd7a:115c:a1e0::1/64"
           "100.64.0.1/24"
         ];
 
@@ -489,10 +584,10 @@
           PublicKey = "E+79YXdARLsXJxzLFCrhkszEH63drP03lVKIjXTlRxE=";
           PresharedKeyFile = config.sops.secrets.wireguard-preshared-key.path;
           AllowedIPs = [
-            "fd7a:115c:a1e0::2/128"
+            # "fd7a:115c:a1e0::2/128"
             "100.64.0.2/32"
             "192.168.178.0/24"
-            "fdc1:52e1:bbb4::/64"
+            # "fdc1:52e1:bbb4::/64"
           ];
           Endpoint = "8cj4irjqnbqf3rt4.myfritz.net:55171";
           PersistentKeepalive = 25;

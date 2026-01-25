@@ -276,7 +276,7 @@
     # followed by a delayed `systemctl start`.
     services.systemd-networkd.stopIfChanged = false;
     # Services that are only restarted might be not able to resolve when resolved is stopped before
-    # services.systemd-resolved.stopIfChanged = false;
+    services.systemd-resolved.stopIfChanged = false;
 
     services.nix-gc.serviceConfig = {
       CPUSchedulingPolicy = "batch";
