@@ -31,7 +31,7 @@
       # monitoring
       btop
       htop
-      glances
+      # glances # baut aktuell nicht
       nmap
       bandwhich
       lsof

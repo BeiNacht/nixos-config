@@ -4,6 +4,20 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./postgres.nix
+  ];
+
+  sops = {
+    secrets = {
+      gitea-password = {
+        owner = config.services.gitea.user;
+        group = config.services.gitea.group;
+        mode = "0440";
+      };
+    };
+  };
+
   environment = {
     persistence."/persist" = {
       directories = [
@@ -24,7 +38,6 @@
     };
 
     postgresql = {
-      enable = true;
       ensureDatabases = [
         config.services.gitea.user
       ];

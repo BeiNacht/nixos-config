@@ -16,18 +16,15 @@
     ../configs/services/actual.nix
     ../configs/services/adguardhome.nix
     ../configs/services/audiobookshelf.nix
-    ../configs/services/atuin.nix
-    ../configs/services/firefly.nix
     ../configs/services/gitea.nix
     ../configs/services/goaccess.nix
-    ../configs/services/grafana.nix
-    ../configs/services/headscale.nix
     ../configs/services/immich.nix
     ../configs/services/nextcloud.nix
     ../configs/services/paperless.nix
+    ../configs/services/aniworld.nix
     ../configs/services/uptime-kuma.nix
 
-    #../configs/services/frigate.nix
+    # ../configs/services/frigate.nix
     # ../configs/services/firefox-syncserver.nix
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
@@ -35,11 +32,6 @@
   sops = {
     defaultSopsFile = ../secrets/secrets-vps-arm.yaml;
     secrets = {
-      # borg-key = {
-      #   owner = config.users.users.alex.name;
-      #   group = config.users.users.alex.group;
-      # };
-
       goaccess-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
@@ -49,21 +41,6 @@
       frigate-htpasswd = {
         owner = config.services.nginx.user;
         group = config.services.nginx.group;
-        mode = "0440";
-      };
-
-      # syncserver-secrets = {
-      #   owner = config.users.users.firefox-syncserver.name;
-      # };
-
-      nextcloud-password = {
-        owner = "nextcloud";
-        group = "nextcloud";
-      };
-
-      gitea-password = {
-        owner = config.services.gitea.user;
-        group = config.services.gitea.group;
         mode = "0440";
       };
 
@@ -146,6 +123,7 @@
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN99h5reZdz9+DOyTRh8bPYWO+Dtv7TbkLbMdvi+Beio alex@desktop"
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkURF5v9vRyEPhsK80kUgYh1vsS0APL4XyH4F3Fpyic alex@macbook"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH77R8HUxwajhXf4ibEeKxIBukhjz63nHLM9/1Om5OdM alex@macbook"
           ];
           hostKeys = ["/persist/pre_boot_ssh_key"];
         };
@@ -209,39 +187,22 @@
     };
     firewall = {
       allowPing = true;
+      checkReversePath = "loose";
       allowedTCPPorts = [
         53 # adguardhome DNS
         80 # nginxs
         443 # nginx
         853 # adguardhome DoT
-        9898 # i2p
-        9899 # i2p
       ];
       allowedUDPPorts = [
         53 # adguardhome
         80 # nginx
         443 # nginx
         853 # adguardhome DoT
-        3478 # headscale
-        9898 # i2p
         51820 # wireguard
+        41641 # Tailscale default
       ];
-
-      interfaces.tailscale0 = {
-        allowedTCPPorts = [
-          4444 # i2p http proxy
-          7070 # i2p control
-          7654 # i2p torrent
-        ];
-      };
     };
-    # useNetworkd = true;
-    # nat = {
-    #   enable = true;
-    #   enableIPv6 = true;
-    #   externalInterface = "enp7s0";
-    #   internalInterfaces = ["wg0"];
-    # };
   };
 
   environment = {
@@ -253,6 +214,7 @@
       directories = [
         "/var/lib/acme"
         "/var/lib/fail2ban"
+        "/var/lib/nginx"
         "/var/lib/private"
         "/var/lib/samba"
         "/var/www/alexander.szczepan.ski"
@@ -319,27 +281,37 @@
           };
         };
 
-        "homeassistant.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://homeassistant.main.szczepan.ski:8123/";
-              proxyWebsockets = true;
-            };
+        "vps-arm.meteor-altered.ts.net" = {
+          addSSL = true;
+          sslCertificate = "/var/lib/nginx/vps-arm.meteor-altered.ts.net.crt";
+          sslCertificateKey = "/var/lib/nginx/vps-arm.meteor-altered.ts.net.key";
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:3011"; # Your Docker container port
+            proxyWebsockets = true;
           };
         };
 
-        "frigate.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://homeserver.main.szczepan.ski/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        # "homeassistant.szczepan.ski" = {
+        #   forceSSL = true;
+        #   enableACME = true;
+        #   locations = {
+        #     "/" = {
+        #       proxyPass = "http://homeassistant.main.szczepan.ski:8123/";
+        #       proxyWebsockets = true;
+        #     };
+        #   };
+        # };
+
+        # "frigate.szczepan.ski" = {
+        #   forceSSL = true;
+        #   enableACME = true;
+        #   locations = {
+        #     "/" = {
+        #       proxyPass = "http://homeserver.main.szczepan.ski/";
+        #       proxyWebsockets = true;
+        #     };
+        #   };
+        # };
       };
     };
 
@@ -409,6 +381,14 @@
           ];
           "passwd program" = "/run/wrappers/bin/passwd %u";
         };
+        storage = {
+          "path" = "/home/alex/storage";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
         homeassistant = {
           "path" = "/home/alex/homeassistant";
           "browseable" = "yes";
@@ -461,142 +441,106 @@
         in-peers=32 # The default is unlimited; we prefer to put a cap on this
       '';
     };
-
-    i2pd = {
-      enable = true;
-      ifname = "enp7s0:";
-      address = "152.53.119.246";
-      # TCP & UDP
-      port = 9898;
-      ntcp2.port = 9899;
-      # websocket = {
-      #   enable = true;
-      #   address = "10.100.0.1";
-      # };
-      proto = {
-        http = {
-          enable = true;
-          address = "100.84.253.36";
-        };
-
-        httpProxy = {
-          enable = true;
-          address = "100.84.253.36";
-        };
-
-        socksProxy = {
-          enable = true;
-          address = "100.84.253.36";
-        };
-
-        i2cp = {
-          enable = true;
-          address = "100.84.253.36";
-        };
-
-        sam = {enable = true;};
-      };
-
-      # inTunnels = {
-      #   foo = {
-      #     enable = true;
-      #     # keys = "foo-keys.dat";
-      #     inPort = 80;
-      #     address = "127.0.0.1";
-      #     destination = "127.0.0.1";
-      #     port = 8008;
-      #   };
-      #   foo2 = {
-      #     enable = true;
-      #     # keys = "foo-keys.dat";
-      #     inPort = 80;
-      #     address = "127.0.0.1";
-      #     destination = "127.0.0.1";
-      #     port = 8009;
-      #   };
-      # };
-
-      logLevel = "error";
-      enableIPv4 = true;
-      enableIPv6 = true;
-    };
   };
 
-  systemd.network = {
-    enable = true;
-
-    networks = {
-      # "10-wan" = {
-      #   matchConfig.Name = "enp1s0";
-      #   networkConfig = {
-      #     # start a DHCP Client for IPv4 Addressing/Routing
-      #     DHCP = "ipv4";
-      #     # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
-      #     IPv6AcceptRA = true;
-      #   };
-      #   # make routing on this interface a dependency for network-online.target
-      #   linkConfig.RequiredForOnline = "routable";
-      # };
-      "50-wg0" = {
-        matchConfig.Name = "wg0";
-
-        address = [
-          # /32 and /128 specifies a single address
-          # for use on this wg peer machine
-          # "fd31:bf08:57cb::7/128"
-          # "fd7a:115c:a1e0::1/64"
-          "100.64.0.1/24"
-        ];
-
-        networkConfig = {
-          # do not use IPMasquerade,
-          # unnecessary, causes problems with host ipv6
-          IPv4Forwarding = true;
-          IPv6Forwarding = true;
+  systemd = {
+    services = {
+      tailscale-cert-fetch = {
+        description = "Fetch Tailscale SSL certificates";
+        after = ["network-online.target" "tailscaled.service"];
+        wants = ["network-online.target"];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.tailscale}/bin/tailscale cert --cert-file /var/lib/nginx/vps-arm.meteor-altered.ts.net.crt --key-file /var/lib/nginx/vps-arm.meteor-altered.ts.net.key vps-arm.meteor-altered.ts.net";
+          # Ensure the nginx user can read the files after they are created
+          ExecStartPost = "${pkgs.coreutils}/bin/chown nginx:nginx /var/lib/nginx/vps-arm.meteor-altered.ts.net.crt /var/lib/nginx/vps-arm.meteor-altered.ts.net.key";
         };
+        # Run this daily to keep certs fresh
+        startAt = "daily";
+      };
+
+      nginx.serviceConfig = {
+        # This ensures it doesn't use a private /var/tmp that might hide things
+        PrivateTmp = true;
       };
     };
 
-    netdevs."50-wg0" = {
-      netdevConfig = {
-        Kind = "wireguard";
-        Name = "wg0";
-      };
+    network = {
+      enable = true;
 
-      wireguardConfig = {
-        ListenPort = 51820;
+      networks = {
+        # "10-wan" = {
+        #   matchConfig.Name = "enp1s0";
+        #   networkConfig = {
+        #     # start a DHCP Client for IPv4 Addressing/Routing
+        #     DHCP = "ipv4";
+        #     # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+        #     IPv6AcceptRA = true;
+        #   };
+        #   # make routing on this interface a dependency for network-online.target
+        #   linkConfig.RequiredForOnline = "routable";
+        # };
+        "50-wg0" = {
+          matchConfig.Name = "wg0";
 
-        # ensure file is readable by `systemd-network` user
-        PrivateKeyFile = config.sops.secrets.wireguard-private-key.path;
-
-        # To automatically create routes for everything in AllowedIPs,
-        # add RouteTable=main
-        RouteTable = "main";
-
-        # FirewallMark marks all packets send and received by wg0
-        # with the number 42, which can be used to define policy rules on these packets.
-        FirewallMark = 42;
-      };
-
-      wireguardPeers = [
-        {
-          # laptop wg conf
-          PublicKey = "E+79YXdARLsXJxzLFCrhkszEH63drP03lVKIjXTlRxE=";
-          PresharedKeyFile = config.sops.secrets.wireguard-preshared-key.path;
-          AllowedIPs = [
-            # "fd7a:115c:a1e0::2/128"
-            "100.64.0.2/32"
-            "192.168.178.0/24"
-            # "fdc1:52e1:bbb4::/64"
+          address = [
+            # /32 and /128 specifies a single address
+            # for use on this wg peer machine
+            # "fd31:bf08:57cb::7/128"
+            # "fd7a:115c:a1e0::1/64"
+            "100.64.0.1/24"
           ];
-          Endpoint = "8cj4irjqnbqf3rt4.myfritz.net:55171";
-          PersistentKeepalive = 25;
 
-          # RouteTable can also be set in wireguardPeers
-          # RouteTable in wireguardConfig will then be ignored.
-          # RouteTable = 1000;
-        }
-      ];
+          networkConfig = {
+            # do not use IPMasquerade,
+            # unnecessary, causes problems with host ipv6
+            IPv4Forwarding = true;
+            IPv6Forwarding = true;
+          };
+        };
+      };
+
+      netdevs."50-wg0" = {
+        netdevConfig = {
+          Kind = "wireguard";
+          Name = "wg0";
+        };
+
+        wireguardConfig = {
+          ListenPort = 51820;
+
+          # ensure file is readable by `systemd-network` user
+          PrivateKeyFile = config.sops.secrets.wireguard-private-key.path;
+
+          # To automatically create routes for everything in AllowedIPs,
+          # add RouteTable=main
+          RouteTable = "main";
+
+          # FirewallMark marks all packets send and received by wg0
+          # with the number 42, which can be used to define policy rules on these packets.
+          FirewallMark = 42;
+        };
+
+        wireguardPeers = [
+          {
+            # laptop wg conf
+            PublicKey = "E+79YXdARLsXJxzLFCrhkszEH63drP03lVKIjXTlRxE=";
+            PresharedKeyFile = config.sops.secrets.wireguard-preshared-key.path;
+            AllowedIPs = [
+              # "fd7a:115c:a1e0::2/128"
+              "100.64.0.2/32"
+              "192.168.178.0/24"
+              # "fdc1:52e1:bbb4::/64"
+            ];
+            Endpoint = "8cj4irjqnbqf3rt4.myfritz.net:55171";
+            PersistentKeepalive = 25;
+
+            # RouteTable can also be set in wireguardPeers
+            # RouteTable in wireguardConfig will then be ignored.
+            # RouteTable = 1000;
+          }
+        ];
+      };
     };
   };
 

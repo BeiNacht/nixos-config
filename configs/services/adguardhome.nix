@@ -29,6 +29,16 @@ in {
       };
     };
 
+    resolved = {
+      enable = true;
+      # This prevents resolved from listening on 127.0.0.53:53
+      settings = {
+        Resolve = {
+          DNSStubListener = false;
+        };
+      };
+    };
+
     adguardhome = {
       enable = true;
       mutableSettings = true;

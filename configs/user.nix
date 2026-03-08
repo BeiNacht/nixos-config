@@ -36,14 +36,15 @@ in {
       uid = 1000;
       hashedPasswordFile = config.sops.secrets.hashedPassword.path;
       extraGroups = [
-        "wheel"
-        "networkmanager"
+        "adbusers"
+        "davfs2"
+        "locatedb"
         "lp"
+        "networkmanager"
         "nginx"
         "scanner"
-        "adbusers"
-        "locatedb"
-        "davfs2"
+        "tailscale"
+        "wheel"
       ];
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
