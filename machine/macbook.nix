@@ -95,7 +95,7 @@
       "font-roboto-mono-nerd-font"
       "font-sauce-code-pro-nerd-font"
       "font-sf-mono-nerd-font-ligaturized"
-      "ghostty"
+      # "ghostty"
       "handbrake-app"
       "iina"
       "iterm2"
