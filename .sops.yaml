@@ -2,7 +2,7 @@ keys:
   - &users
     - &alex age1gjhlw6vkfers3f76yug3alwupe4jckjhg8ncr8kll5gj5g6wlqtqacqa73
   - &hosts:
-    - &desktop age1m873zl0umr6huvs7ft98t7dg3wqx7skzgdrd6vjzeh8h6kkgdghsy5atvx
+    - &desktop age1qur0fs906fjxln7fmeqsv6wc3jw9eh78n6agphk7h4nccdpcxqkqdzuxk7
     - &framework age1w3nq2g9ctm43f43lyzfrznywqpqlrk6x9de2qy3sr05mm4yk4u3s05slw4
     - &vps-arm age1hcnyvwydfrhl9sz0dv4j5dsv2jzwmxvvhq6w7ejy0y5yxuj034es08gz9s
     - &mini age1hdv2nz7r5fv6glq7jac27uf864t2668a97ptx52q57yfg4jd7ypqkag7wd
