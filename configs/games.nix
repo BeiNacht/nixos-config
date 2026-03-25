@@ -22,13 +22,13 @@
       enable = true;
       extraPackages = with pkgs; [
         gamescope
-        mangohud_git
+        # mangohud_git
         libkrb5
         keyutils
       ];
 
       extraCompatPackages = with pkgs; [
-        proton-ge-bin
+        # proton-ge-bin
       ];
     };
   };
@@ -41,11 +41,11 @@
     home.packages = with pkgs; [
       gamemode
       heroic
-      mangohud_git
+      # mangohud_git
       pcsx2
       protontricks
       protonup-qt
-      shadps4
+      # shadps4
       steamtinkerlaunch
       vkbasalt
       vulkan-tools

@@ -3,7 +3,6 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     impermanence.url = "github:nix-community/impermanence";
 
     sops-nix = {
@@ -34,7 +33,6 @@
 
   outputs = {
     self,
-    chaotic,
     home-manager,
     nixos-hardware,
     nixpkgs-unstable,
@@ -66,7 +64,6 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           impermanence.nixosModules.impermanence
-          chaotic.nixosModules.default
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-cpu-amd-pstate
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
@@ -90,7 +87,6 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           impermanence.nixosModules.impermanence
-          chaotic.nixosModules.default
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
           inputs.sops-nix.nixosModules.sops
           ./machine/framework.nix
@@ -130,7 +126,6 @@
         specialArgs = {inherit inputs outputs;};
         modules = [
           impermanence.nixosModules.impermanence
-          chaotic.nixosModules.default
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
           inputs.sops-nix.nixosModules.sops
           ./machine/thinkpad/configuration.nix

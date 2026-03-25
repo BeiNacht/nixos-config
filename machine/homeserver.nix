@@ -91,19 +91,19 @@
     hostName = "homeserver";
     useDHCP = false;
     firewall = {enable = false;};
-    bridges = {
-      br0 = {
-        interfaces = [
-          "enp1s0"
-          # "enp2s0"
-          # "enp3s0"
-          # "enp4s0"
-        ];
-        rstp = true;
-      };
-    };
+    # bridges = {
+    #   br0 = {
+    #     interfaces = [
+    #       "enp1s0"
+    #       # "enp2s0"
+    #       # "enp3s0"
+    #       # "enp4s0"
+    #     ];
+    #     rstp = true;
+    #   };
+    # };
     interfaces = {
-      br0.useDHCP = true;
+      enp1s0.useDHCP = true;
     };
     nftables.enable = true;
   };
@@ -208,7 +208,7 @@
     unifi = {
       enable = true;
       unifiPackage = pkgs.unifi;
-      mongodbPackage = pkgs.mongodb-7_0;
+      mongodbPackage = pkgs.mongodb-ce;
     };
 
     borgbackup.jobs.all = rec {
