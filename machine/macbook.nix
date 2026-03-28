@@ -50,7 +50,7 @@
 
   environment = {
     systemPackages = with pkgs; [
-      mactop
+      # mactop
       nh
 
       mas
@@ -88,6 +88,7 @@
       "crossover"
       "deskflow"
       "discord"
+      "sozercan/repo/kaset"
       "docker-desktop"
       "easy-move+resize"
       "firefox"
