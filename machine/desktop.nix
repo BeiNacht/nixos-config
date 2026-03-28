@@ -41,46 +41,46 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/home" = {
-      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/nix" = {
-      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/persist" = {
-      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/var/log" = {
-      device = "/dev/disk/by-uuid/87c6b0fb-b921-47d5-a3a1-4b4c0a4f02ad";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/boot" = {
-      device = "/dev/disk/by-uuid/4339-5A4C";
+      device = "/dev/disk/by-uuid/7061-25CD";
     };
 
-    "/home/alex/shared/storage" = {
-      device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
-      fsType = "btrfs";
-      options = [
-        "autodefrag"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-      ];
-    };
+   "/home/alex/shared/storage" = {
+     device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
+     fsType = "btrfs";
+     options = [
+       "autodefrag"
+       "compress=zstd"
+       "nodiratime"
+       "noatime"
+     ];
+   };
   };
 
-  environment.etc.crypttab.text = ''
-    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
-  '';
+ environment.etc.crypttab.text = ''
+   storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
+ '';
 
-  swapDevices = [{device = "/dev/disk/by-uuid/831be7b8-5b1b-4bda-a27d-5a1c4efb2c4d";}];
+  swapDevices = [{device = "/dev/mapper/lvm-swap";}];
 
   nix.settings = {
     system-features = [
@@ -120,7 +120,7 @@
 
       luks.devices = {
         root = {
-          device = "/dev/disk/by-uuid/cc43f1eb-49c3-41a6-9279-6766de3659e7";
+          device = "/dev/disk/by-uuid/ad6eaac3-97e1-46cf-83df-ddcc5004dfc0";
           allowDiscards = true;
           preLVM = true;
         };
@@ -128,30 +128,18 @@
     };
   };
 
-  chaotic.mesa-git.enable = true;
+#  chaotic.mesa-git.enable = true;
 
-  systemd = {
-    tmpfiles.rules = let
-      rocmEnv = pkgs.symlinkJoin {
-        name = "rocm-combined";
-        paths = with pkgs.rocmPackages; [
-          rocblas
-          hipblas
-          clr
-        ];
-      };
-    in [
-      "L+    /opt/rocm   -    -    -     -    ${rocmEnv}"
-    ];
-    services = {
-      monitor = {
-        description = "AMDGPU Control Daemon";
-        wantedBy = ["multi-user.target"];
-        after = ["multi-user.target"];
-        serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
-      };
-    };
-  };
+#  systemd = {
+#    services = {
+#      monitor = {
+#        description = "AMDGPU Control Daemon";
+#        wantedBy = ["multi-user.target"];
+#        after = ["multi-user.target"];
+#        serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
+#      };
+#    };
+#  };
 
   networking = {
     hostName = "desktop";
@@ -159,10 +147,10 @@
 
   programs = {
     coolercontrol.enable = true;
-    corectrl = {
-      enable = true;
-      # gpuOverclock.enable = true;
-    };
+#    corectrl = {
+#      enable = true;
+#      # gpuOverclock.enable = true;
+#    };
   };
 
   environment = {
@@ -204,10 +192,10 @@
       updateMicrocode = true;
       #ryzen-smu.enable = true;
     };
-    amdgpu = {
-      overdrive.enable = true;
-      initrd.enable = true;
-    };
+#    amdgpu = {
+#      overdrive.enable = true;
+#      initrd.enable = true;
+#    };
 
     keyboard.qmk.enable = true;
     enableAllFirmware = true;
@@ -217,12 +205,12 @@
       enable = true;
       enable32Bit = true;
       # doesnt build atm
-      extraPackages = with pkgs; [
-        clinfo
-        rocmPackages.clr.icd
-        rocmPackages.rocminfo
-        rocmPackages.rocm-runtime
-      ];
+#      extraPackages = with pkgs; [
+#        clinfo
+#        rocmPackages.clr.icd
+#        rocmPackages.rocminfo
+#        rocmPackages.rocm-runtime
+#      ];
     };
   };
 
@@ -235,15 +223,6 @@
     # netdata.enable = true;
     # printing.enable = true;
     bpftune.enable = true;
-
-    ollama = {
-      enable = false;
-      acceleration = "rocm";
-      environmentVariables = {
-        HCC_AMDGPU_TARGET = "gfx1100"; # used to be necessary, but doesn't seem to anymore
-      };
-      rocmOverrideGfx = "11.0.0";
-    };
 
     samba = {
       enable = true;
@@ -262,7 +241,7 @@
           ];
           "passwd program" = "/run/wrappers/bin/passwd %u";
         };
-        shares = {
+        storage = {
           browseable = "yes";
           "guest ok" = "no";
           path = "/home/alex/shared/storage";
@@ -278,5 +257,5 @@
     };
   };
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.11";
 }

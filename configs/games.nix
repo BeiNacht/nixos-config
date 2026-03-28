@@ -27,9 +27,9 @@
         keyutils
       ];
 
-      extraCompatPackages = with pkgs; [
-        # proton-ge-bin
-      ];
+#      extraCompatPackages = with pkgs; [
+#        proton-ge-bin
+#      ];
     };
   };
 
@@ -41,11 +41,11 @@
     home.packages = with pkgs; [
       gamemode
       heroic
-      # mangohud_git
+      mangohud
       pcsx2
       protontricks
       protonup-qt
-      # shadps4
+#      shadps4
       steamtinkerlaunch
       vkbasalt
       vulkan-tools
@@ -57,33 +57,5 @@
         ];
       })
     ];
-
-    xdg.dataFile = {
-      "Steam/compatibilitytools.d/SteamTinkerLaunch/compatibilitytool.vdf".text = ''
-        "compatibilitytools"
-        {
-          "compat_tools"
-          {
-            "Proton-stl" // Internal name of this tool
-            {
-              "install_path" "."
-              "display_name" "Steam Tinker Launch"
-
-              "from_oslist"  "windows"
-              "to_oslist"    "linux"
-            }
-          }
-        }
-      '';
-      "Steam/compatibilitytools.d/SteamTinkerLaunch/steamtinkerlaunch".source =
-        config.lib.file.mkOutOfStoreSymlink "${pkgs.steamtinkerlaunch}/bin/steamtinkerlaunch";
-      "Steam/compatibilitytools.d/SteamTinkerLaunch/toolmanifest.vdf".text = ''
-        "manifest"
-        {
-          "commandline" "/steamtinkerlaunch run"
-          "commandline_waitforexitandrun" "/steamtinkerlaunch waitforexitandrun"
-        }
-      '';
-    };
   };
 }

@@ -59,8 +59,8 @@
       kdePackages.kdenlive
       # shotcut
 
-      telegram-desktop
-      signal-desktop-bin
+#      telegram-desktop
+#      signal-desktop-bin
 
       vorta
       kitty
@@ -91,19 +91,19 @@
           cache-default = 4000000;
         };
 
-        package = (
-          pkgs.mpv-unwrapped.wrapper {
-            scripts = with pkgs.mpvScripts; [
-              easycrop
-              uosc
-              sponsorblock
-            ];
+#        package = (
+#          pkgs.mpv-.wrapper {
+#            scripts = with pkgs.mpvScripts; [
+#              easycrop
+#              uosc
+#              sponsorblock
+#            ];
 
-            mpv = pkgs.mpv-unwrapped.override {
-              waylandSupport = true;
-            };
-          }
-        );
+#            mpv = pkgs.mpv-unwrapped.override {
+#              waylandSupport = true;
+#            };
+#          }
+#        );
       };
 
       kitty = {
