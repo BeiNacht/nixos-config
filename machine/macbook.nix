@@ -52,7 +52,6 @@
     systemPackages = with pkgs; [
       # mactop
       nh
-
       mas
     ];
   };
@@ -81,7 +80,6 @@
       "alt-tab"
       "android-file-transfer"
       "appcleaner"
-      "battery-toolkit"
       "bit-slicer"
       "brave-browser"
       "cog-app"
