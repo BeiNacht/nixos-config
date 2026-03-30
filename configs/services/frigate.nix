@@ -13,16 +13,6 @@
   };
 
   services = {
-    nginx = {
-      virtualHosts = {
-        "frigate.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          basicAuthFile = config.sops.secrets.frigate-htpasswd.path;
-        };
-      };
-    };
-
     frigate = {
       enable = false;
       package = pkgs.frigate;
@@ -38,59 +28,112 @@
 
         mqtt.enabled = false;
 
-        detectors.cpu1 = {
-          type = "cpu";
-          num_threads = 4;
+        detectors.coral = {
+          type = "edgetpu";
+          device = "pci";
+        };
+
+        record = {
+          enabled = true;
+          retain = {
+            days = 7;
+            mode = "all";
+          };
+
+          preview = {
+            quality = "medium";
+          };
+          alerts = {
+            pre_capture = 5;
+            post_capture = 5;
+            retain = {
+              days = 14;
+              mode = "motion";
+            };
+          };
+          detections = {
+            pre_capture = 5;
+            post_capture = 5;
+            # Optional: Retention settings for recordings of detections
+
+            retain = {
+              days = 14;
+              mode = "motion";
+            };
+          };
         };
 
         cameras = {
-          # home = {
-          #   ffmpeg.inputs = [{
-          #     path = "rtsp://admin:REMOVED@192.168.178.34:554/H.264";
-          #     # input_args = "preset-rtsp-restream";
-          #     # roles = [ "record" "detect" ];
-          #     roles = [ "record" ];
-          #   }];
+          outside = {
+            ffmpeg.inputs = [
+              {
+                path = "rtsp://admin:NosferatuCameras@192.168.178.68:554/H.264";
+                input_args = "preset-rtsp-restream";
+                roles = ["record" "detect"];
+                #roles = [ "record" ];
+              }
+            ];
+          };
 
-          #   record = {
-          #     enabled = true;
-          #     retain = {
-          #       days = 7;
-          #       mode = "all";
-          #     };
-          #     # events = {
-          #     #   retain = {
-          #     #     default = 14;
-          #     #   };
-          #     # };
-          #   };
-          # };
+          bad = {
+            ffmpeg.inputs = [
+              {
+                path = "rtsp://admin:NosferatuCameras@192.168.178.69:554/H.264";
+                input_args = "preset-rtsp-restream";
+                roles = ["record" "detect"];
+                #roles = [ "record" ];
+              }
+            ];
+          };
+
+          wohnzimmer = {
+            ffmpeg.inputs = [
+              {
+                path = "rtsp://admin:NosferatuCameras@192.168.178.34:554/H.264";
+                input_args = "preset-rtsp-restream";
+                roles = ["record" "detect"];
+                #roles = [ "record" ];
+              }
+            ];
+          };
 
           garage = {
             ffmpeg.inputs = [
               {
-                path = "rtsp://admin:REMOVED@192.168.178.42:554/H.264";
-                # input_args = "preset-rtsp-restream";
-                # roles = [ "record" "detect" ];
-                roles = ["record"];
+                path = "rtsp://admin:STJXSO@192.168.178.32:554/H.264";
+                input_args = "preset-rtsp-restream";
+                roles = ["record" "detect"];
+                #roles = [ "record" ];
               }
             ];
-
-            record = {
-              enabled = true;
-              retain = {
-                days = 7;
-                mode = "all";
-              };
-              events = {
-                retain = {
-                  default = 14;
-                };
-              };
-            };
           };
         };
       };
     };
   };
+
+  # systemd.services.frigate = {
+  #   # Erweitere Abhängigkeiten
+  #   after = ["network.target" "docker.service"];
+  #   requires = ["docker.service"];
+
+  #   # Überschreibe Service-Konfiguration
+  #   serviceConfig = {
+  #     Restart = "always";
+  #     RestartSec = 30;
+
+  #     # Zusätzliche Capabilities
+  #     AmbientCapabilities = ["CAP_SYS_ADMIN"];
+
+  #     # Memory/CPU Limits
+  #     MemoryMax = "2G";
+  #     CPUQuota = "200%";
+  #   };
+
+  #   # Zusätzliche Environment Variables
+  #   environment = {
+  #     FRIGATE_CONFIG_FILE = "/etc/frigate/config.yml";
+  #     PYTHONPATH = "/opt/frigate";
+  #   };
+  # };
 }

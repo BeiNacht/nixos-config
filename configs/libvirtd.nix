@@ -1,18 +1,20 @@
 {pkgs, ...}: {
   users.extraGroups.libvirtd.members = ["alex"];
 
-  programs.virt-manager.enable = true;
+  # programs.virt-manager.enable = true;
 
   virtualisation = {
     libvirtd = {
       enable = true;
       # Used for UEFI boot of Home Assistant OS guest image
       qemu = {
+        # ovmf.enable = true;
         swtpm.enable = true;
         vhostUserPackages = [pkgs.virtiofsd];
       };
     };
 
+    # useEFIBoot = true;
     spiceUSBRedirection.enable = true;
   };
 
@@ -25,7 +27,7 @@
       usbutils
       # quick install vms
       quickemu
-
+      # OVMF
       virtiofsd
     ];
     persistence."/persist" = {
@@ -35,11 +37,11 @@
     };
   };
 
-  systemd.tmpfiles.rules = let
-    firmware = pkgs.runCommandLocal "qemu-firmware" {} ''
-      mkdir $out
-      cp ${pkgs.qemu}/share/qemu/firmware/*.json $out
-      substituteInPlace $out/*.json --replace ${pkgs.qemu} /run/current-system/sw
-    '';
-  in ["L+ /var/lib/qemu/firmware - - - - ${firmware}"];
+  # systemd.tmpfiles.rules = let
+  #   firmware = pkgs.runCommandLocal "qemu-firmware" {} ''
+  #     mkdir $out
+  #     cp ${pkgs.qemu}/share/qemu/firmware/*.json $out
+  #     substituteInPlace $out/*.json --replace ${pkgs.qemu} /run/current-system/sw
+  #   '';
+  # in ["L+ /var/lib/qemu/firmware - - - - ${firmware}"];
 }

@@ -7,7 +7,7 @@
 }: {
   imports = [
     ../configs/filesystem.nix
-    ../configs/borg.nix
+    # ../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/docker.nix
     ../configs/services/frigate.nix
@@ -17,12 +17,6 @@
 
   sops = {
     defaultSopsFile = ../secrets/secrets-homeserver.yaml;
-    # secrets = {
-    #   netdata-token = {
-    #     owner = config.services.netdata.user;
-    #     group = config.services.netdata.group;
-    #   };
-    # };
   };
 
   fileSystems = {
@@ -91,21 +85,10 @@
     hostName = "homeserver";
     useDHCP = false;
     firewall = {enable = false;};
-    # bridges = {
-    #   br0 = {
-    #     interfaces = [
-    #       "enp1s0"
-    #       # "enp2s0"
-    #       # "enp3s0"
-    #       # "enp4s0"
-    #     ];
-    #     rstp = true;
-    #   };
-    # };
     interfaces = {
       enp1s0.useDHCP = true;
     };
-    nftables.enable = true;
+    nftables.enable = false;
   };
 
   environment = {
@@ -116,6 +99,7 @@
     ];
     persistence."/persist" = {
       directories = [
+        "/var/lib/samba"
         "/var/lib/tor"
         "/var/lib/unifi"
       ];
@@ -205,28 +189,28 @@
       useRoutingFeatures = "both";
     };
 
-    unifi = {
-      enable = true;
-      unifiPackage = pkgs.unifi;
-      mongodbPackage = pkgs.mongodb-ce;
-    };
+   # unifi = {
+   #   enable = true;
+   #   unifiPackage = pkgs.unifi;
+   #   mongodbPackage = pkgs.mongodb-ce;
+   # };
 
-    borgbackup.jobs.all = rec {
-      # preHook = ''
-      #   ${pkgs.libvirt}/bin/virsh shutdown hass
-      #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
-      # '';
-      # postHook = ''
-      #   ${pkgs.libvirt}/bin/virsh start hass
-      # '';
-      repo = "ssh://u278697-sub10@u278697.your-storagebox.de:23/./borg-homeserver";
-      exclude = [
-        "/home/alex/mounted"
-        "/home/alex/.cache"
-        "/persist/borg"
-        "/var/lib/libvirt/images"
-      ];
-    };
+    # borgbackup.jobs.all = rec {
+    #   # preHook = ''
+    #   #   ${pkgs.libvirt}/bin/virsh shutdown hass
+    #   #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
+    #   # '';
+    #   # postHook = ''
+    #   #   ${pkgs.libvirt}/bin/virsh start hass
+    #   # '';
+    #   repo = "ssh://u278697-sub10@u278697.your-storagebox.de:23/./borg-homeserver";
+    #   exclude = [
+    #     "/home/alex/mounted"
+    #     "/home/alex/.cache"
+    #     "/persist/borg"
+    #     "/var/lib/libvirt/images"
+    #   ];
+    # };
 
     locate = {
       prunePaths = ["/mnt" "/nix"];
@@ -235,6 +219,44 @@
     # zigbee2mqtt = {
     #   enable = true;
     # };
+
+    samba = {
+      enable = false;
+      settings = {
+        global = {
+          "workgroup" = "WORKGROUP";
+          "server string" = "server";
+          "netbios name" = "server";
+          "security" = "user";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+          "logging" = "systemd";
+          "max log size" = 50;
+          "invalid users" = [
+            "root"
+          ];
+          "passwd program" = "/run/wrappers/bin/passwd %u";
+        };
+        storage = {
+          "path" = "/home/alex/mounted/external";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+        # timemachine = {
+        #   "path" = "/home/alex/timemachine";
+        #   "valid users" = "alex";
+        #   "public" = "no";
+        #   "writeable" = "yes";
+        #   "force user" = "alex";
+        #   "fruit:aapl" = "yes";
+        #   "fruit:time machine" = "yes";
+        #   "vfs objects" = "catia fruit streams_xattr";
+        # };
+      };
+    };
   };
 
   powerManagement = {
