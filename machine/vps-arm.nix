@@ -291,16 +291,16 @@
           };
         };
 
-        # "homeassistant.szczepan.ski" = {
-        #   forceSSL = true;
-        #   enableACME = true;
-        #   locations = {
-        #     "/" = {
-        #       proxyPass = "http://homeassistant.main.szczepan.ski:8123/";
-        #       proxyWebsockets = true;
-        #     };
-        #   };
-        # };
+        "homeassistant.szczepan.ski" = {
+           forceSSL = true;
+           enableACME = true;
+           locations = {
+             "/" = {
+               proxyPass = "http://homeassistant.meteor-altered.ts.net:8123/";
+               proxyWebsockets = true;
+             };
+           };
+        };
 
         # "frigate.szczepan.ski" = {
         #   forceSSL = true;
