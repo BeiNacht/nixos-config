@@ -12,6 +12,7 @@
     ../configs/docker.nix
     ../configs/user.nix
     ../configs/borg.nix
+    ../configs/plasma-desktop.nix
 
     ../configs/services/actual.nix
     ../configs/services/adguardhome.nix

@@ -9,7 +9,7 @@
     ../configs/common-linux.nix
     ../configs/docker.nix
     ../configs/filesystem.nix
-    ../configs/plasma.nix
+    ../configs/plasma-desktop.nix
     ../configs/user.nix
     ../configs/user-gui.nix
   ];

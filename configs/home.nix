@@ -64,6 +64,7 @@
 
     git = {
       enable = true;
+      signing.format = "openpgp";
       settings = {
         user = {
           name = "Alexander Szczepanski";

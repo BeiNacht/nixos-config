@@ -15,7 +15,7 @@
     ../configs/games.nix
     ../configs/hardware.nix
     ../configs/libvirtd.nix
-    ../configs/plasma.nix
+    ../configs/plasma-desktop.nix
     ../configs/printing.nix
     ../configs/user-gui.nix
     ../configs/user.nix

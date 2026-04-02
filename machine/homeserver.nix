@@ -6,13 +6,15 @@
   ...
 }: {
   imports = [
-    ../configs/filesystem.nix
     # ../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/docker.nix
+    ../configs/filesystem.nix
+    # ../configs/libvirtd.nix
+    ../configs/plasma-rdp.nix
     ../configs/services/frigate.nix
-    ../configs/libvirtd.nix
     ../configs/user.nix
+    ../configs/virtualbox.nix
   ];
 
   sops = {
@@ -76,7 +78,7 @@
         };
       };
     };
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_6_19;
     kernelParams = ["ip=dhcp"];
     kernelModules = ["kvm-intel"];
   };
@@ -96,6 +98,10 @@
       nyx
       snapraid
       mergerfs
+
+      wayland-utils
+      wl-clipboard
+      xclip # Required for clipboard support over X11 RDP sessions
     ];
     persistence."/persist" = {
       directories = [
@@ -189,11 +195,11 @@
       useRoutingFeatures = "both";
     };
 
-   # unifi = {
-   #   enable = true;
-   #   unifiPackage = pkgs.unifi;
-   #   mongodbPackage = pkgs.mongodb-ce;
-   # };
+    # unifi = {
+    #   enable = true;
+    #   unifiPackage = pkgs.unifi;
+    #   mongodbPackage = pkgs.mongodb-ce;
+    # };
 
     # borgbackup.jobs.all = rec {
     #   # preHook = ''

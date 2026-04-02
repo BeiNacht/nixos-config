@@ -48,6 +48,7 @@
 
   environment = {
     systemPackages = with pkgs; [
+      firefox
       czkawka # fslint before
       handbrake
       keepassxc
@@ -55,17 +56,16 @@
       pinta
       simple-scan
 
-#      discord
-      kdePackages.kdenlive
+      # discord
+      # kdePackages.kdenlive
+      # libreoffice
       # shotcut
 
-#      telegram-desktop
-#      signal-desktop-bin
+      # telegram-desktop
+      # signal-desktop-bin
 
       vorta
       kitty
-
-      libreoffice
     ];
     persistence."/persist" = {
       directories = [
@@ -91,19 +91,19 @@
           cache-default = 4000000;
         };
 
-#        package = (
-#          pkgs.mpv-.wrapper {
-#            scripts = with pkgs.mpvScripts; [
-#              easycrop
-#              uosc
-#              sponsorblock
-#            ];
+        # package = (
+        #   pkgs.mpv-.wrapper {
+        #     scripts = with pkgs.mpvScripts; [
+        #       easycrop
+        #       uosc
+        #       sponsorblock
+        #     ];
 
-#            mpv = pkgs.mpv-unwrapped.override {
-#              waylandSupport = true;
-#            };
-#          }
-#        );
+        #     mpv = pkgs.mpv-unwrapped.override {
+        #       waylandSupport = true;
+        #     };
+        #   }
+        # );
       };
 
       kitty = {

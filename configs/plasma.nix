@@ -5,8 +5,8 @@
   lib,
   ...
 }: {
-  nixpkgs.config.permittedInsecurePackages = [
-    "deskflow-1.19.0"
+  imports = [
+    ./user-gui.nix
   ];
 
   programs = {
@@ -28,10 +28,6 @@
   };
 
   environment = {
-    sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      # KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
-    };
     plasma6.excludePackages = with pkgs.kdePackages; [
       plasma-browser-integration
       konsole
@@ -52,7 +48,7 @@
       kdePackages.qtlocation
       kdePackages.qtstyleplugin-kvantum
       kdePackages.sddm-kcm
-      deskflow
+      # deskflow
       hardinfo2
       kdiff3
       kdiskmark
@@ -73,12 +69,8 @@
     displayManager = {
       sddm = {
         enable = true;
-        wayland.enable = true;
       };
-      defaultSession = "plasma";
     };
-
-    libinput.enable = true;
   };
 
   # programs = {

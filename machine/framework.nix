@@ -17,7 +17,7 @@
     ../configs/develop.nix
     ../configs/hardware.nix
     ../configs/libvirtd.nix
-    ../configs/plasma.nix
+    ../configs/plasma-desktop.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     (modulesPath + "/installer/scan/not-detected.nix")
