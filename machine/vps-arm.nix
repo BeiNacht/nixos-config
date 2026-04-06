@@ -191,7 +191,7 @@
       checkReversePath = "loose";
       allowedTCPPorts = [
         53 # adguardhome DNS
-        80 # nginxs
+        80 # nginx
         443 # nginx
         853 # adguardhome DoT
       ];
@@ -293,14 +293,14 @@
         };
 
         "homeassistant.szczepan.ski" = {
-           forceSSL = true;
-           enableACME = true;
-           locations = {
-             "/" = {
-               proxyPass = "http://homeassistant.meteor-altered.ts.net:8123/";
-               proxyWebsockets = true;
-             };
-           };
+          forceSSL = true;
+          enableACME = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://homeassistant.meteor-altered.ts.net:8123/";
+              proxyWebsockets = true;
+            };
+          };
         };
 
         # "frigate.szczepan.ski" = {

@@ -48,11 +48,11 @@
     neededForBoot = true;
   };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/7785-083C";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/7785-083C";
+    fsType = "vfat";
+    options = ["fmask=0022" "dmask=0022"];
+  };
 
   swapDevices = [
     {device = "/dev/disk/by-uuid/ded22b9d-440d-46d8-8246-b52deca7a49c";}

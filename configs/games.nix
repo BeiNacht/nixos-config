@@ -27,9 +27,9 @@
         keyutils
       ];
 
-#      extraCompatPackages = with pkgs; [
-#        proton-ge-bin
-#      ];
+      # extraCompatPackages = with pkgs; [
+      #   proton-ge-bin
+      # ];
     };
   };
 
@@ -45,7 +45,7 @@
       pcsx2
       protontricks
       protonup-qt
-#      shadps4
+      # shadps4
       steamtinkerlaunch
       vkbasalt
       vulkan-tools

@@ -24,7 +24,6 @@
       #   ssl = true;
       # };
 
-
       ensureDatabases = [
         config.services.firefly-iii.settings.DB_DATABASE
       ];
