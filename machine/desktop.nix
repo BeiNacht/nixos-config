@@ -40,26 +40,6 @@
   };
 
   fileSystems = {
-    "/" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/home" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/nix" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/persist" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/var/log" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
     "/boot" = {
       device = "/dev/disk/by-uuid/7061-25CD";
     };
@@ -79,8 +59,6 @@
   environment.etc.crypttab.text = ''
     storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
   '';
-
-  swapDevices = [{device = "/dev/mapper/lvm-swap";}];
 
   nix.settings = {
     system-features = [

@@ -15,12 +15,10 @@
         passCommand = "cat ${config.sops.secrets.borg-key.path}";
       };
       extraCreateArgs = "--stats --verbose --checkpoint-interval=600 --exclude-caches";
-      extraPruneArgs = [
-        "--save-space"
-        "--stats"
-      ];
+      extraPruneArgs = ["--save-space" "--stats" "--verbose"];
       extraCompactArgs = [
         "--cleanup-commits"
+        "--verbose"
       ];
       environment = {
         BORG_RSH = "ssh -i /home/alex/.ssh/id_borg_ed25519";

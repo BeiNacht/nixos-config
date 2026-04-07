@@ -22,36 +22,10 @@
   };
 
   fileSystems = {
-    "/" = {
-      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
-    };
-
-    "/home" = {
-      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
-    };
-
-    "/nix" = {
-      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
-    };
-
-    "/persist" = {
-      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
-    };
-
-    "/var/log" = {
-      device = "/dev/disk/by-uuid/e17d0c3b-bbea-4afb-87bc-d61f6489c323";
-    };
-
     "/boot" = {
       device = "/dev/disk/by-uuid/2906-DD19";
     };
   };
-
-  swapDevices = [
-    {
-      device = "/dev/disk/by-uuid/dcc19b48-b064-4160-af30-20eabb6dde30";
-    }
-  ];
 
   boot = {
     initrd = {

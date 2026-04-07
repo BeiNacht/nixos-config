@@ -1,6 +1,7 @@
 {
   fileSystems = {
     "/" = {
+      device = "/dev/mapper/lvm-root";
       fsType = "btrfs";
       options = [
         "subvol=root"
@@ -12,6 +13,7 @@
     };
 
     "/home" = {
+      device = "/dev/mapper/lvm-root";
       fsType = "btrfs";
       options = [
         "subvol=home"
@@ -23,6 +25,7 @@
     };
 
     "/nix" = {
+      device = "/dev/mapper/lvm-root";
       fsType = "btrfs";
       options = [
         "subvol=nix"
@@ -34,6 +37,7 @@
     };
 
     "/persist" = {
+      device = "/dev/mapper/lvm-root";
       fsType = "btrfs";
       options = [
         "subvol=persist"
@@ -46,6 +50,7 @@
     };
 
     "/var/log" = {
+      device = "/dev/mapper/lvm-root";
       fsType = "btrfs";
       options = [
         "subvol=log"
@@ -62,4 +67,6 @@
       options = ["fmask=0022" "dmask=0022"];
     };
   };
+
+  swapDevices = [{device = "/dev/mapper/lvm-swap";}];
 }

@@ -12,7 +12,6 @@
     ../configs/docker.nix
     ../configs/user.nix
     ../configs/borg.nix
-    ../configs/plasma-desktop.nix
 
     ../configs/services/actual.nix
     ../configs/services/adguardhome.nix
@@ -189,6 +188,7 @@
     firewall = {
       allowPing = true;
       checkReversePath = "loose";
+      trustedInterfaces = ["wg0" "tailscale0"];
       allowedTCPPorts = [
         53 # adguardhome DNS
         80 # nginx
@@ -353,7 +353,7 @@
     };
 
     borgbackup.jobs.all = rec {
-      repo = "ssh://u278697-sub3@u278697.your-storagebox.de:23/./borg";
+      repo = "ssh://alex@homeserver.meteor-altered.ts.net/./homeserver/storage/samba/vps/borg";
       exclude = [
         "/home/alex/mounted"
         "/home/alex/.cache"
