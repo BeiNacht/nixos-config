@@ -21,12 +21,6 @@
     defaultSopsFile = ../secrets/secrets-homeserver.yaml;
   };
 
-  fileSystems = {
-    "/boot" = {
-      device = "/dev/disk/by-uuid/2906-DD19";
-    };
-  };
-
   boot = {
     initrd = {
       availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "igc"];
