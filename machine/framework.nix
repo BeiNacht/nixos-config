@@ -34,27 +34,6 @@
     };
   };
 
-  fileSystems = {
-    "/" = {
-      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
-    };
-    "/home" = {
-      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
-    };
-    "/nix" = {
-      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
-    };
-    "/var/log" = {
-      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
-    };
-    "/persist" = {
-      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
-    };
-    "/boot" = {
-      device = "/dev/disk/by-uuid/427A-97BA";
-    };
-  };
-
   swapDevices = [
     {
       device = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
@@ -256,7 +235,7 @@
   };
 
   systemd = {
-    sleep.extraConfig = "HibernateDelaySec=60m";
+    sleep.settings.Sleep = {HibernateDelaySec = "60m";};
     settings.Manager = {
       DefaultTimeoutStopSec = "10s";
     };

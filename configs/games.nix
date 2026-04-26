@@ -22,7 +22,7 @@
       enable = true;
       extraPackages = with pkgs; [
         gamescope
-        # mangohud_git
+        mangohud
         libkrb5
         keyutils
       ];

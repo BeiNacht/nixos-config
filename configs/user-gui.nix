@@ -61,9 +61,6 @@
       # libreoffice
       # shotcut
 
-      # telegram-desktop
-      # signal-desktop-bin
-
       vorta
       kitty
     ];
@@ -92,7 +89,7 @@
         };
 
         # package = (
-        #   pkgs.mpv-.wrapper {
+        #   pkgs.mpv-unwrapped.wrapper {
         #     scripts = with pkgs.mpvScripts; [
         #       easycrop
         #       uosc
