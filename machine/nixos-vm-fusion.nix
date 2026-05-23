@@ -14,42 +14,6 @@
     ../configs/user-gui.nix
   ];
 
-  # sops = {
-  #   defaultSopsFile = ../secrets/secrets-homeserver.yaml;
-  # };
-
-  fileSystems = {
-    "/" = {
-      device = "/dev/disk/by-uuid/edc684e5-3151-4a2b-ae10-25d82a66a616";
-    };
-
-    "/home" = {
-      device = "/dev/disk/by-uuid/edc684e5-3151-4a2b-ae10-25d82a66a616";
-    };
-
-    "/nix" = {
-      device = "/dev/disk/by-uuid/edc684e5-3151-4a2b-ae10-25d82a66a616";
-    };
-
-    "/persist" = {
-      device = "/dev/disk/by-uuid/edc684e5-3151-4a2b-ae10-25d82a66a616";
-    };
-
-    "/var/log" = {
-      device = "/dev/disk/by-uuid/edc684e5-3151-4a2b-ae10-25d82a66a616";
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-uuid/809F-0613";
-    };
-  };
-
-  # swapDevices = [
-  #   {
-  #     device = "/dev/disk/by-uuid/dcc19b48-b064-4160-af30-20eabb6dde30";
-  #   }
-  # ];
-
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
   };
@@ -60,6 +24,34 @@
     k3s = {
       enable = false;
       role = "server";
+    };
+
+    samba = {
+      enable = true;
+      settings = {
+        global = {
+          workgroup = "WORKGROUP";
+          "server string" = "server";
+          "netbios name" = "server";
+          security = "user";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+          logging = "systemd";
+          "max log size" = 50;
+          "invalid users" = [
+            "root"
+          ];
+          "passwd program" = "/run/wrappers/bin/passwd %u";
+        };
+        storage = {
+          browseable = "yes";
+          "guest ok" = "no";
+          path = "/run/media/alex/storage";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+      };
     };
   };
 

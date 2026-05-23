@@ -49,6 +49,8 @@
       kdePackages.qtstyleplugin-kvantum
       kdePackages.sddm-kcm
       # deskflow
+      qdiskinfo
+      haruna
       hardinfo2
       kdiff3
       kdiskmark

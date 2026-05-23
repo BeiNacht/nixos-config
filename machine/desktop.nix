@@ -139,15 +139,10 @@
       # python311Packages.tkinter
       gimp
       clinfo
-      gparted
       # mission-center
-      resources
       stressapptest
       #ryzen-monitor-ng
-      qdiskinfo
       jdk
-
-      haruna
 
       xmrig
       monero-gui

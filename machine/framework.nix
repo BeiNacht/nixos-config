@@ -210,7 +210,6 @@
       msr-tools
       quota
 
-      gparted
       homebank
 
       powerstat # for measuring power consumption
