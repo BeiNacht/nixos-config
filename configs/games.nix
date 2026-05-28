@@ -51,11 +51,11 @@
       vulkan-tools
       wine
       winetricks
-      (lutris.override {
-        extraLibraries = pkgs: [
-          gamemode
-        ];
-      })
+      # (lutris.override {
+      #   extraLibraries = pkgs: [
+      #     gamemode
+      #   ];
+      # })
     ];
   };
 }

@@ -14,7 +14,7 @@
     ../configs/filesystem.nix
     ../configs/games.nix
     ../configs/hardware.nix
-    ../configs/libvirtd.nix
+    # ../configs/libvirtd.nix
     ../configs/plasma-desktop.nix
     ../configs/printing.nix
     ../configs/user-gui.nix
@@ -39,26 +39,9 @@
     };
   };
 
-  fileSystems = {
-    "/boot" = {
-      device = "/dev/disk/by-uuid/7061-25CD";
-    };
-
-    "/home/alex/shared/storage" = {
-      device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
-      fsType = "btrfs";
-      options = [
-        "autodefrag"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-      ];
-    };
-  };
-
-  environment.etc.crypttab.text = ''
-    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
-  '';
+  # environment.etc.crypttab.text = ''
+  #   storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
+  # '';
 
   nix.settings = {
     system-features = [
@@ -106,18 +89,16 @@
     };
   };
 
-  #  chaotic.mesa-git.enable = true;
-
-  #  systemd = {
-  #    services = {
-  #      monitor = {
-  #        description = "AMDGPU Control Daemon";
-  #        wantedBy = ["multi-user.target"];
-  #        after = ["multi-user.target"];
-  #        serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
-  #      };
-  #    };
-  #  };
+  systemd = {
+    services = {
+      monitor = {
+        description = "AMDGPU Control Daemon";
+        wantedBy = ["multi-user.target"];
+        after = ["multi-user.target"];
+        serviceConfig = {ExecStart = "${pkgs.lact}/bin/lact daemon";};
+      };
+    };
+  };
 
   networking = {
     hostName = "desktop";
@@ -125,10 +106,9 @@
 
   programs = {
     coolercontrol.enable = true;
-    #    corectrl = {
-    #      enable = true;
-    #      # gpuOverclock.enable = true;
-    #    };
+    corectrl = {
+      enable = true;
+    };
   };
 
   environment = {
@@ -163,12 +143,12 @@
     enableRedistributableFirmware = true;
     cpu.amd = {
       updateMicrocode = true;
-      #ryzen-smu.enable = true;
+      ryzen-smu.enable = true;
     };
-    #    amdgpu = {
-    #      overdrive.enable = true;
-    #      initrd.enable = true;
-    #    };
+    amdgpu = {
+      overdrive.enable = true;
+      initrd.enable = true;
+    };
 
     keyboard.qmk.enable = true;
     enableAllFirmware = true;

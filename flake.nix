@@ -29,6 +29,11 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    # apple-fonts = {
+    #   url = "github:Lyndeno/apple-fonts.nix";
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
   };
 
   outputs = {
