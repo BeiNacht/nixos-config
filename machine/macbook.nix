@@ -69,24 +69,34 @@
 
   homebrew = {
     enable = true;
+    enableZshIntegration = true;
     brews = [
-      "gstreamer"
-      "virt-manager"
-      "virt-viewer"
+      # "gstreamer"
+      # "virt-manager"
+      # "virt-viewer"
       "rom-tools"
+      "oven-sh/bun/bun"
+      "mactop"
+      "westpoint-io/dustoff/dustoff"
+      "node"
+      "llama.cpp"
+      "joshavant/tap/clawbox"
+      "borgbackup"
+      "hf"
     ];
     casks = [
       "adobe-acrobat-reader"
+      "antigravity"
       "alt-tab"
       "android-file-transfer"
       "appcleaner"
       "bit-slicer"
       "brave-browser"
+      "claude-code"
       "cog-app"
       "crossover"
       "deskflow"
       "discord"
-      "sozercan/repo/kaset"
       "docker-desktop"
       "easy-move+resize"
       "firefox"
@@ -94,13 +104,13 @@
       "font-roboto-mono-nerd-font"
       "font-sauce-code-pro-nerd-font"
       "font-sf-mono-nerd-font-ligaturized"
-      # "ghostty"
       "handbrake-app"
       "iina"
       "iterm2"
       "keepassxc"
       "keepingyouawake"
       "lulu"
+      "lm-studio"
       "macfuse"
       "macpacker"
       "microsoft-auto-update"
@@ -110,16 +120,33 @@
       "nextcloud"
       "only-switch"
       "pcsx2"
+      "pear-devs/pear/pear-desktop"
       "rectangle"
       "signal"
+      "sozercan/repo/kaset"
       "steam"
       "tailscale-app"
       "tor-browser"
       "visual-studio-code"
       "vorta"
-      "pear-devs/pear/pear-desktop"
+      "betterdisplay"
+      "heroic"
+      "telegram-desktop"
+      "sol"
+      # "ghostty"
     ];
+    onActivation = {
+      cleanup = "zap";
+      # cleanup = "check";
+      autoUpdate = true;
+      upgrade = true;
+      extraFlags = [
+        "--verbose"
+      ];
+    };
     taps = [
+      "sozercan/repo"
+      "pear-devs/pear"
       "mhaeuser/mhaeuser"
       "deskflow/homebrew-tap"
       "jeffreywildman/homebrew-virt-manager"

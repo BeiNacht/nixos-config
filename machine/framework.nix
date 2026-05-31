@@ -34,6 +34,22 @@
     };
   };
 
+<<<<<<< Updated upstream
+=======
+  fileSystems = {
+    "/home/alex/shared/storage" = {
+      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+      fsType = "btrfs";
+      options = [
+        "autodefrag"
+        "compress=zstd"
+        "nodiratime"
+        "noatime"
+      ];
+    };
+  };
+
+>>>>>>> Stashed changes
   swapDevices = [
     {
       device = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
