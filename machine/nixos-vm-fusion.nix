@@ -20,6 +20,13 @@
 
   virtualisation.vmware.guest.enable = true;
 
+  environment = {
+    systemPackages = with pkgs; [
+      snapraid
+      mergerfs
+    ];
+  };
+
   services = {
     k3s = {
       enable = false;
