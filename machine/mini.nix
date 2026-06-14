@@ -76,7 +76,6 @@
     initrd = {
       availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "r8169"];
       kernelModules = ["dm-snapshot"];
-      systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
         enable = true;
         ssh = {

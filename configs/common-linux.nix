@@ -32,42 +32,42 @@
     kernel.sysctl = {"vm.max_map_count" = 262144;};
     supportedFilesystems = ["btrfs"];
 
-    # initrd = {
-    #   systemd.services = {
-    #     restore-root = {
-    #       description = "Restore blank /root subvolume in initrd";
-    #       wantedBy = [ "initrd.target" ];
-    #       script = ''
-    #         mkdir -p /mnt
+    initrd = {
+      systemd.services = {
+        restore-root = {
+          description = "Restore blank /root subvolume in initrd";
+          wantedBy = [ "initrd.target" ];
+          script = ''
+            mkdir -p /mnt
 
-    #         # Mount the btrfs root so we can manipulate subvolumes.
-    #         mount -o subvol=/ /dev/mapper/lvm-root /mnt
+            # Mount the btrfs root so we can manipulate subvolumes.
+            mount -o subvol=/ /dev/mapper/lvm-root /mnt
 
-    #         # Remove subvolumes under /root f irst to allow deleting /root.
-    #         btrfs subvolume list -o /mnt/root |
-    #         cut -f9 -d' ' |
-    #         while read subvolume; do
-    #           echo "deleting /$subvolume subvolume..."
-    #           btrfs subvolume delete "/mnt/$subvolume"
-    #         done &&
-    #         echo "deleting /root subvolume..." &&
-    #         btrfs subvolume delete /mnt/root
+            # Remove subvolumes under /root f irst to allow deleting /root.
+            btrfs subvolume list -o /mnt/root |
+            cut -f9 -d' ' |
+            while read subvolume; do
+              echo "deleting /$subvolume subvolume..."
+              btrfs subvolume delete "/mnt/$subvolume"
+            done &&
+            echo "deleting /root subvolume..." &&
+            btrfs subvolume delete /mnt/root
 
-    #         echo "restoring blank /root subvolume..."
-    #         btrfs subvolume snapshot /mnt/root-blank /mnt/root
+            echo "restoring blank /root subvolume..."
+            btrfs subvolume snapshot /mnt/root-blank /mnt/root
 
-    #         # Unmount and continue boot.
-    #         umount /mnt
-    #       '';
-    #       serviceConfig = {
-    #         Type = "oneshot";
-    #         RemainAfterExit = "yes";
-    #         Environment = "PATH=${lib.makeBinPath [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux]}";
-    #       };
-    #       path = [ pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux ];
-    #     };
-    #   };
-    # };
+            # Unmount and continue boot.
+            umount /mnt
+          '';
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = "yes";
+            # Environment = "PATH=${lib.makeBinPath [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux]}";
+          };
+          path = [ pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux ];
+        };
+      };
+    };
   };
 
   sops = {

@@ -12,6 +12,7 @@
     ../configs/docker.nix
     ../configs/user.nix
     ../configs/borg.nix
+    ../configs/filesystem.nix
 
     ../configs/services/actual.nix
     ../configs/services/adguardhome.nix
@@ -56,50 +57,6 @@
     };
   };
 
-  fileSystems = {
-    "/" = {
-      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
-      fsType = "btrfs";
-      options = ["subvol=root"];
-    };
-
-    "/home" = {
-      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
-      fsType = "btrfs";
-      options = ["subvol=home"];
-    };
-
-    "/nix" = {
-      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
-      fsType = "btrfs";
-      options = ["subvol=nix"];
-    };
-
-    "/persist" = {
-      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
-      fsType = "btrfs";
-      options = ["subvol=persist"];
-      neededForBoot = true;
-    };
-
-    "/var/log" = {
-      device = "/dev/disk/by-uuid/224bc309-572c-4771-b66e-25d5e13c4917";
-      fsType = "btrfs";
-      options = ["subvol=log"];
-      neededForBoot = true;
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-uuid/DE94-E9C1";
-      fsType = "vfat";
-      options = ["fmask=0022" "dmask=0022"];
-    };
-  };
-
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/3c63b075-76ca-403f-bf75-53269b6bf4fa";}
-  ];
-
   nixpkgs.hostPlatform = "aarch64-linux";
 
   boot = {
@@ -113,7 +70,6 @@
         "xhci_pci"
       ];
       kernelModules = ["dm-snapshot"];
-      systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
         enable = true;
         ssh = {
@@ -127,28 +83,6 @@
           ];
           hostKeys = ["/persist/pre_boot_ssh_key"];
         };
-
-        postCommands = let
-          torRc = pkgs.writeText "tor.rc" ''
-            DataDirectory /etc/tor
-            SOCKSPort 127.0.0.1:9050 IsolateDestAddr
-            SOCKSPort 127.0.0.1:9063
-            HiddenServiceDir /etc/tor/onion/bootup
-            HiddenServicePort 22 127.0.0.1:22
-          '';
-        in ''
-          echo "tor: preparing onion folder"
-          # have to do this otherwise tor does not want to start
-          chmod -R 700 /etc/tor
-
-          echo "make sure localhost is up"
-          ip a a 127.0.0.1/8 dev lo
-          ip link set lo up
-
-          echo "tor: starting tor"
-          tor -f ${torRc} --verify-config
-          tor -f ${torRc} &
-        '';
       };
 
       luks.devices = {
@@ -161,10 +95,6 @@
       secrets = {
         "/etc/tor/onion/bootup" = /home/alex/tor/onion; # maybe find a better spot to store this.
       };
-
-      extraUtilsCommands = ''
-        copy_bin_and_libs ${pkgs.tor}/bin/tor
-      '';
     };
   };
 

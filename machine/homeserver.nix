@@ -22,10 +22,11 @@
   };
 
   boot = {
+    kernelModules = ["kvm-intel"];
+    kernelParams = ["ip=dhcp"];
     initrd = {
       availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "igc"];
       kernelModules = ["dm-snapshot"];
-      systemd.users.root.shell = "/bin/cryptsetup-askpass";
       network = {
         enable = true;
         ssh = {
@@ -46,9 +47,6 @@
         };
       };
     };
-    # kernelPackages = pkgs.linuxPackages_6_19;
-    kernelParams = ["ip=dhcp"];
-    kernelModules = ["kvm-intel"];
   };
 
   networking = {
