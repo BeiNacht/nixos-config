@@ -2,7 +2,7 @@
   environment.systemPackages = with pkgs; [
     firefox
     brave
-    librewolf
+    # librewolf
     tor-browser
   ];
 }
