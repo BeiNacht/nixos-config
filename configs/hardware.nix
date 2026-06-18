@@ -7,7 +7,7 @@
   # optional for pipewire
   security.rtkit.enable = true;
   services = {
-    fwupd.enable = true;
+    # fwupd.enable = true;
     power-profiles-daemon.enable = true;
     pipewire = {
       enable = true;
