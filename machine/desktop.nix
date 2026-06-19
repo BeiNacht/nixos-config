@@ -202,11 +202,6 @@
     };
   };
 
-  powerManagement = {
-    enable = true;
-    powertop.enable = true;
-  };
-
   services = {
     # netdata.enable = true;
     # printing.enable = true;

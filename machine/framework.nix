@@ -205,11 +205,6 @@
     };
   };
 
-  powerManagement = {
-    enable = true;
-    powertop.enable = true;
-  };
-
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
   environment = {

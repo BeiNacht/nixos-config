@@ -231,11 +231,5 @@
     };
   };
 
-  powerManagement = {
-    enable = true;
-    powertop.enable = true;
-    # cpuFreqGovernor = "powersave";
-  };
-
   system.stateVersion = "24.05";
 }
