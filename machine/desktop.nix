@@ -19,17 +19,10 @@
     ../configs/printing.nix
     ../configs/user-gui.nix
     ../configs/user.nix
+    (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
   sops = {
-    defaultSopsFile = ../secrets/secrets.yaml;
-    validateSopsFiles = true;
-    age = {
-      sshKeyPaths = ["/persist/etc/ssh/ssh_host_ed25519_key"];
-      keyFile = "/persist/var/lib/sops-nix/key.txt";
-      generateKey = true;
-    };
-
     secrets = {
       borg-key = {
         sopsFile = ../secrets/secrets-desktop.yaml;

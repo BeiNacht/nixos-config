@@ -9,14 +9,14 @@
 }: {
   imports = [
     ../configs/borg.nix
-    ../configs/filesystem.nix
     ../configs/browser.nix
     ../configs/common-linux.nix
-    ../configs/docker.nix
-    ../configs/games.nix
     ../configs/develop.nix
+    ../configs/docker.nix
+    ../configs/filesystem.nix
+    ../configs/games.nix
     ../configs/hardware.nix
-    ../configs/libvirtd.nix
+    # ../configs/libvirtd.nix
     ../configs/plasma-desktop.nix
     ../configs/user-gui.nix
     ../configs/user.nix
@@ -24,32 +24,28 @@
   ];
 
   sops = {
-    defaultSopsFile = ../secrets/secrets-framework.yaml;
-
     secrets = {
       borg-key = {
+        sopsFile = ../secrets/secrets-framework.yaml;
         owner = config.users.users.alex.name;
         group = config.users.users.alex.group;
       };
     };
   };
 
-<<<<<<< Updated upstream
-=======
-  fileSystems = {
-    "/home/alex/shared/storage" = {
-      device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
-      fsType = "btrfs";
-      options = [
-        "autodefrag"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-      ];
-    };
-  };
+  # fileSystems = {
+  #   "/home/alex/shared/storage" = {
+  #     device = "/dev/disk/by-uuid/20780bfe-5714-4c2f-bf53-7296b76cfbdc";
+  #     fsType = "btrfs";
+  #     options = [
+  #       "autodefrag"
+  #       "compress=zstd"
+  #       "nodiratime"
+  #       "noatime"
+  #     ];
+  #   };
+  # };
 
->>>>>>> Stashed changes
   swapDevices = [
     {
       device = "/dev/disk/by-uuid/9f90bae0-287b-480c-9aa1-de108b4b4626";
@@ -203,6 +199,82 @@
         };
       };
     };
+
+    snapraid = {
+      enable = true;
+      dataDisks = {
+        d1 = "/run/media/alex/disk1/";
+        d2 = "/run/media/alex/disk2/";
+        d3 = "/run/media/alex/disk3/";
+      };
+      exclude = [
+        "*.unrecoverable"
+        "/tmp/"
+        "/lost+found/"
+      ];
+      parityFiles = [
+        "/run/media/alex/parity/snapraid.parity"
+      ];
+      contentFiles = [
+        "/run/media/alex/disk1/.snapraid.content"
+        "/run/media/alex/disk2/.snapraid.content"
+        "/run/media/alex/disk3/.snapraid.content"
+        "/home/alex/snapraid.content"
+      ];
+    };
+
+    throttled = {
+      enable = true;
+      extraConfig = "
+        [GENERAL]
+        # Enable or disable the script execution
+        Enabled: True
+        # SYSFS path for checking if the system is running on AC power
+        Sysfs_Power_Path: /sys/class/power_supply/AC*/online
+        # Auto reload config on changes
+        Autoreload: True
+
+        ## Settings to apply while connected to Battery power
+        [BATTERY]
+        # Update the registers every this many seconds
+        Update_Rate_s: 30
+        # Max package power for time window #1
+        PL1_Tdp_W: 15
+        # Time window #1 duration
+        PL1_Duration_s: 28
+        # Max package power for time window #2
+        PL2_Tdp_W: 25
+        # Time window #2 duration
+        PL2_Duration_S: 0.002
+        # Max allowed temperature before throttling
+        Trip_Temp_C: 85
+        # Set cTDP to normal=0, down=1 or up=2 (EXPERIMENTAL)
+        cTDP: 0
+        # Disable BDPROCHOT (EXPERIMENTAL)
+        Disable_BDPROCHOT: False
+
+        ## Settings to apply while connected to AC power
+        [AC]
+        # Update the registers every this many seconds
+        Update_Rate_s: 5
+        # Max package power for time window #1
+        PL1_Tdp_W: 28
+        # Time window #1 duration
+        PL1_Duration_s: 28
+        # Max package power for time window #2
+        PL2_Tdp_W: 44
+        # Time window #2 duration
+        PL2_Duration_S: 0.002
+        # Max allowed temperature before throttling
+        Trip_Temp_C: 95
+        # Set HWP energy performance hints to 'performance' on high load (EXPERIMENTAL)
+        # Uncomment only if you really want to use it
+        # HWP_Mode: False
+        # Set cTDP to normal=0, down=1 or up=2 (EXPERIMENTAL)
+        cTDP: 0
+        # Disable BDPROCHOT (EXPERIMENTAL)
+        Disable_BDPROCHOT: False";
+    };
   };
 
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
@@ -225,6 +297,10 @@
 
       powerstat # for measuring power consumption
       powercap # setting power consumption
+
+      snapraid
+      mergerfs
+      smartmontools
     ];
   };
 
