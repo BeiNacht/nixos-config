@@ -8,7 +8,7 @@
     persistence."/persist" = {
       directories = [
         "/var/lib/postgresql"
-        "/var/lib/postgresql-backup"
+        "/var/lib/backups/postgresql"
       ];
     };
   };
@@ -55,7 +55,7 @@
     postgresqlBackup = {
       enable = true;
       # Directory where the backup files will be saved
-      location = "/var/lib/postgresql-backup";
+      location = "/var/lib/backups/postgresql";
 
       # How often to run the backup (systemd calendar expression)
       # This example runs every day at 1:30 AM
