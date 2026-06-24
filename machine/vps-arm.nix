@@ -288,6 +288,7 @@
         "/home/alex/mounted"
         "/home/alex/.cache"
         "/persist/borg"
+        "/persist/var/lib/postgresql/"
         "/persist/var/lib/private/AdGuardHome/data/querylog.json"
         "/persist/var/lib/private/AdGuardHome/data/querylog.json.1"
       ];
