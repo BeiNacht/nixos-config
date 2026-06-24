@@ -13,35 +13,15 @@
     ../configs/user.nix
   ];
 
+  users.users.alex.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG/tghG2pBTrqYT4+1nF1266lteRBf2bPL+OZAOjyFHL alex@vps-arm"
+  ];
+
   sops = {
     defaultSopsFile = ../secrets/secrets-mini.yaml;
   };
 
   fileSystems = {
-    "/" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/home" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/nix" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/persist" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/var/log" = {
-      device = "/dev/mapper/lvm-root";
-    };
-
-    "/boot" = {
-      device = pkgs.lib.mkForce "/dev/disk/by-uuid/7222-8C3F";
-    };
-
     # "/mnt/disk1" = {
     #   device = "/dev/disk/by-uuid/3c4b5d00-43c0-48be-81b8-c2b3977e015b";
     #   fsType = "ext4";
@@ -65,6 +45,16 @@
     #   fsType = "ext4";
     #   options = ["nofail" "x-systemd.automount"];
     # };
+
+    "/boot" = {
+      device = pkgs.lib.mkForce "/dev/disk/by-uuid/7222-8C3F";
+    };
+
+    "/home/alex/homeserver/storage" = {
+      device = "/dev/disk/by-uuid/8525a64b-4765-468f-8ca9-08544b42fbc7";
+      fsType = "ext4";
+      options = ["nofail" "x-systemd.automount"];
+    };
   };
 
   swapDevices = [{device = "/dev/mapper/lvm-swap";}];
@@ -83,6 +73,7 @@
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN99h5reZdz9+DOyTRh8bPYWO+Dtv7TbkLbMdvi+Beio alex@desktop"
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkURF5v9vRyEPhsK80kUgYh1vsS0APL4XyH4F3Fpyic alex@macbook"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH77R8HUxwajhXf4ibEeKxIBukhjz63nHLM9/1Om5OdM alex@macbook"
           ];
           hostKeys = ["/persist/pre_boot_ssh_key"];
         };
@@ -114,6 +105,11 @@
       snapraid
       mergerfs
     ];
+    persistence."/persist" = {
+      directories = [
+        "/var/lib/samba"
+      ];
+    };
   };
 
   hardware = {
@@ -128,7 +124,7 @@
     };
 
     samba = {
-      enable = false;
+      enable = true;
       settings = {
         global = {
           "workgroup" = "WORKGROUP";
@@ -145,23 +141,31 @@
           "passwd program" = "/run/wrappers/bin/passwd %u";
         };
         storage = {
-          "path" = "/home/alex/mounted/external";
+          "path" = "/home/alex/homeserver/storage";
           "browseable" = "yes";
           "guest ok" = "no";
           "read only" = "no";
           "create mask" = "0644";
           "directory mask" = "0755";
         };
-        # timemachine = {
-        #   "path" = "/home/alex/timemachine";
-        #   "valid users" = "alex";
-        #   "public" = "no";
-        #   "writeable" = "yes";
-        #   "force user" = "alex";
-        #   "fruit:aapl" = "yes";
-        #   "fruit:time machine" = "yes";
-        #   "vfs objects" = "catia fruit streams_xattr";
-        # };
+        homeassistant = {
+          "path" = "/home/alex/homeserver/storage/homeassistant";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+        timemachine = {
+          "path" = "/home/alex/homeserver/storage/timemachine";
+          "valid users" = "alex";
+          "public" = "no";
+          "writeable" = "yes";
+          "force user" = "alex";
+          "fruit:aapl" = "yes";
+          "fruit:time machine" = "yes";
+          "vfs objects" = "catia fruit streams_xattr";
+        };
       };
     };
 
