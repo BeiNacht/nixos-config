@@ -10,14 +10,27 @@
     ../configs/common-linux.nix
     ../configs/docker.nix
     ../configs/filesystem.nix
-    ../configs/plasma-rdp.nix
+    ../configs/plasma-desktop.nix
+    ../configs/games.nix
     ../configs/services/frigate.nix
     ../configs/user.nix
     ../configs/virtualbox.nix
   ];
 
+  users.users.alex.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG/tghG2pBTrqYT4+1nF1266lteRBf2bPL+OZAOjyFHL alex@vps-arm"
+  ];
+
   sops = {
     defaultSopsFile = ../secrets/secrets-homeserver.yaml;
+  };
+
+  fileSystems = {
+    "/home/alex/homeserver/storage" = {
+      device = "/dev/disk/by-uuid/8525a64b-4765-468f-8ca9-08544b42fbc7";
+      fsType = "ext4";
+      options = ["nofail" "x-systemd.automount"];
+    };
   };
 
   boot = {
@@ -73,6 +86,7 @@
         "/var/lib/samba"
         "/var/lib/tor"
         "/var/lib/unifi"
+        "/var/lib/zigbee2mqtt"
       ];
     };
   };
@@ -84,69 +98,9 @@
   };
 
   services = {
-    tor = {
-      enable = true;
-      #   # openFirewall = true;
-    };
-
-    # suricata = {
+    # tor = {
     #   enable = true;
-    #   settings = {
-    #     vars.address-groups.HOME_NET = "192.168.178.0/24";
-    #     outputs = [
-    #       {
-    #         fast = {
-    #           enabled = true;
-    #           filename = "fast.log";
-    #           append = "yes";
-    #         };
-    #       }
-    #       {
-    #         eve-log = {
-    #           enabled = true;
-    #           filetype = "regular";
-    #           filename = "eve.json";
-    #           community-id = true;
-    #           types = [
-    #             {
-    #               alert.tagged-packets = "yes";
-    #             }
-    #           ];
-    #         };
-    #       }
-    #     ];
-    #     af-packet = [
-    #       {
-    #         interface = "br0";
-    #         cluster-id = "99";
-    #         cluster-type = "cluster_flow";
-    #         defrag = "yes";
-    #       }
-    #       {
-    #         interface = "default";
-    #       }
-    #     ];
-    #     af-xdp = [
-    #       {
-    #         interface = "br0";
-    #       }
-    #     ];
-    #     dpdk.interfaces = [
-    #       {
-    #         interface = "br0";
-    #       }
-    #     ];
-    #     pcap = [
-    #       {
-    #         interface = "br0";
-    #       }
-    #     ];
-    #     app-layer.protocols = {
-    #       telnet.enabled = "yes";
-    #       dnp3.enabled = "yes";
-    #       modbus.enabled = "yes";
-    #     };
-    #   };
+    #   #   # openFirewall = true;
     # };
 
     tailscale = {
@@ -160,33 +114,12 @@
     #   mongodbPackage = pkgs.mongodb-ce;
     # };
 
-    # borgbackup.jobs.all = rec {
-    #   # preHook = ''
-    #   #   ${pkgs.libvirt}/bin/virsh shutdown hass
-    #   #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
-    #   # '';
-    #   # postHook = ''
-    #   #   ${pkgs.libvirt}/bin/virsh start hass
-    #   # '';
-    #   repo = "ssh://u278697-sub10@u278697.your-storagebox.de:23/./borg-homeserver";
-    #   exclude = [
-    #     "/home/alex/mounted"
-    #     "/home/alex/.cache"
-    #     "/persist/borg"
-    #     "/var/lib/libvirt/images"
-    #   ];
-    # };
-
     locate = {
       prunePaths = ["/mnt" "/nix"];
     };
 
-    # zigbee2mqtt = {
-    #   enable = true;
-    # };
-
     samba = {
-      enable = false;
+      enable = true;
       settings = {
         global = {
           "workgroup" = "WORKGROUP";
@@ -203,24 +136,64 @@
           "passwd program" = "/run/wrappers/bin/passwd %u";
         };
         storage = {
-          "path" = "/home/alex/mounted/external";
+          "path" = "/home/alex/homeserver/storage";
           "browseable" = "yes";
           "guest ok" = "no";
           "read only" = "no";
           "create mask" = "0644";
           "directory mask" = "0755";
         };
-        # timemachine = {
-        #   "path" = "/home/alex/timemachine";
-        #   "valid users" = "alex";
-        #   "public" = "no";
-        #   "writeable" = "yes";
-        #   "force user" = "alex";
-        #   "fruit:aapl" = "yes";
-        #   "fruit:time machine" = "yes";
-        #   "vfs objects" = "catia fruit streams_xattr";
-        # };
+        homeassistant = {
+          "path" = "/home/alex/homeserver/storage/homeassistant";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+        timemachine = {
+          "path" = "/home/alex/homeserver/storage/timemachine";
+          "valid users" = "alex";
+          "public" = "no";
+          "writeable" = "yes";
+          "force user" = "alex";
+          "fruit:aapl" = "yes";
+          "fruit:time machine" = "yes";
+          "vfs objects" = "catia fruit streams_xattr";
+        };
       };
+    };
+  };
+
+  # powerManagement = {
+  #   enable = true;
+  #   powertop.enable = true;
+  #   # cpuFreqGovernor = "powersave";
+  # };
+
+  # virtualisation = {
+  #   oci-containers = {
+  #     backend = "podman";
+  #     containers.homeassistant = {
+  #       volumes = ["home-assistant:/config"];
+  #       environment.TZ = "Europe/Berlin";
+  #       # Note: The image will not be updated on rebuilds, unless the version label changes
+  #       image = "ghcr.io/home-assistant/home-assistant:stable";
+  #       extraOptions = [
+  #         # Use the host network namespace for all sockets
+  #         "--network=host"
+  #       ];
+  #     };
+  #   };
+  # };
+
+  # Disable systemd targets for sleep and hibernation
+  systemd = {
+    targets = {
+      sleep.enable = false;
+      suspend.enable = false;
+      hibernate.enable = false;
+      hybrid-sleep.enable = false;
     };
   };
 
