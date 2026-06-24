@@ -34,7 +34,6 @@
         monthly = 6;
       };
       exclude = [
-        "/home/alex/mounted"
         "/home/alex/.cache"
         "/home/alex/.config/Nextcloud/logs"
         "/home/alex/.local/share/baloo" # KDE File indexer
@@ -43,8 +42,9 @@
         "/home/alex/.local/share/Trash"
         "/home/alex/Downloads"
         "/home/alex/Games"
+        "/home/alex/mounted"
         "/home/alex/Nextcloud"
-        "/home/alex/NextcloudEncrypted" # Decrypted File from Nextcloud
+        "/home/alex/NextcloudEncrypted" # Decrypted Files from Nextcloud
         "/home/alex/VirtualBox VMs"
         "/home/alex/shared"
 

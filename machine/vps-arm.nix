@@ -283,7 +283,7 @@
     };
 
     borgbackup.jobs.all = rec {
-      repo = "ssh://alex@homeserver.meteor-altered.ts.net/./homeserver/storage/samba/vps/borg";
+      repo = "ssh://alex@mini.meteor-altered.ts.net/./homeserver/storage/samba/vps/borg";
       exclude = [
         "/home/alex/mounted"
         "/home/alex/.cache"
