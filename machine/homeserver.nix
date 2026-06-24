@@ -10,7 +10,6 @@
     ../configs/common-linux.nix
     ../configs/docker.nix
     ../configs/filesystem.nix
-    # ../configs/libvirtd.nix
     ../configs/plasma-rdp.nix
     ../configs/services/frigate.nix
     ../configs/user.nix
@@ -149,12 +148,6 @@
     #     };
     #   };
     # };
-
-    #    netdata = {
-    #      enable = true;
-    #      package = pkgs.netdata.override {withCloudUi = true;};
-    #      claimTokenFile = config.sops.secrets.netdata-token.path;
-    #    };
 
     tailscale = {
       enable = true;

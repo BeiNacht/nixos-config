@@ -7,10 +7,9 @@
 }: {
   imports = [
     ../configs/filesystem.nix
-    ../configs/borg.nix
+    # ../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/docker.nix
-    ../configs/libvirtd.nix
     ../configs/user.nix
   ];
 
@@ -20,27 +19,27 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/home" = {
-      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/nix" = {
-      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/persist" = {
-      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/var/log" = {
-      device = "/dev/disk/by-uuid/01449b4a-4863-47dd-b213-5aefd014cd2d";
+      device = "/dev/mapper/lvm-root";
     };
 
     "/boot" = {
-      device = "/dev/disk/by-uuid/7222-8C3F";
+      device = pkgs.lib.mkForce "/dev/disk/by-uuid/7222-8C3F";
     };
 
     # "/mnt/disk1" = {
@@ -68,11 +67,10 @@
     # };
   };
 
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/e59a0c55-7859-40ad-bf55-345708a67816";}
-  ];
+  swapDevices = [{device = "/dev/mapper/lvm-swap";}];
 
   boot = {
+    kernelModules = ["kvm-intel"];
     initrd = {
       availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "r8169"];
       kernelModules = ["dm-snapshot"];
@@ -97,8 +95,6 @@
       };
     };
     kernelPackages = pkgs.linuxPackages_latest;
-
-    kernelModules = ["kvm-intel"];
     # extraModulePackages = with pkgs.linuxPackages_latest; [rtl88x2bu];
   };
 
@@ -107,14 +103,9 @@
     useDHCP = false;
     firewall = {enable = false;};
     interfaces = {
-      br0 = {
-        useDHCP = true;
-      };
+      enp3s0.useDHCP = true;
     };
-
-    bridges.br0.interfaces = ["enp3s0"];
-
-    nftables.enable = true;
+    nftables.enable = false;
   };
 
   environment = {
@@ -123,13 +114,6 @@
       snapraid
       mergerfs
     ];
-    persistence."/persist" = {
-      directories = [
-        # "/var/lib/docker"
-        "/var/lib/tor"
-        "/var/lib/unifi"
-      ];
-    };
   };
 
   hardware = {
@@ -138,40 +122,65 @@
   };
 
   services = {
-    tor = {
-      enable = true;
-      # openFirewall = true;
-    };
-
-    netdata.enable = true;
-
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
     };
 
-    unifi = {
-      enable = true;
-      unifiPackage = pkgs.unifi8;
-      mongodbPackage = pkgs.mongodb-7_0;
+    samba = {
+      enable = false;
+      settings = {
+        global = {
+          "workgroup" = "WORKGROUP";
+          "server string" = "server";
+          "netbios name" = "server";
+          "security" = "user";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+          "logging" = "systemd";
+          "max log size" = 50;
+          "invalid users" = [
+            "root"
+          ];
+          "passwd program" = "/run/wrappers/bin/passwd %u";
+        };
+        storage = {
+          "path" = "/home/alex/mounted/external";
+          "browseable" = "yes";
+          "guest ok" = "no";
+          "read only" = "no";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+        };
+        # timemachine = {
+        #   "path" = "/home/alex/timemachine";
+        #   "valid users" = "alex";
+        #   "public" = "no";
+        #   "writeable" = "yes";
+        #   "force user" = "alex";
+        #   "fruit:aapl" = "yes";
+        #   "fruit:time machine" = "yes";
+        #   "vfs objects" = "catia fruit streams_xattr";
+        # };
+      };
     };
 
-    borgbackup.jobs.all = rec {
-      # preHook = ''
-      #   ${pkgs.libvirt}/bin/virsh shutdown hass
-      #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
-      # '';
-      # postHook = ''
-      #   ${pkgs.libvirt}/bin/virsh start hass
-      # '';
-      repo = "ssh://u278697-sub8@u278697.your-storagebox.de:23/./borg-backup-mini";
-      exclude = [
-        "/home/alex/mounted"
-        "/home/alex/.cache"
-        "/persist/borg"
-        "/var/lib/libvirt/images"
-      ];
-    };
+    # borgbackup.jobs.all = rec {
+    #   # preHook = ''
+    #   #   ${pkgs.libvirt}/bin/virsh shutdown hass
+    #   #   until ${pkgs.libvirt}/bin/virsh list --all | grep "shut off"; do echo "Waiting for VM to shutdown......................."; sleep 1; done;
+    #   # '';
+    #   # postHook = ''
+    #   #   ${pkgs.libvirt}/bin/virsh start hass
+    #   # '';
+    #   repo = "ssh://u278697-sub8@u278697.your-storagebox.de:23/./borg-backup-mini";
+    #   exclude = [
+    #     "/home/alex/mounted"
+    #     "/home/alex/.cache"
+    #     "/persist/borg"
+    #     "/var/lib/libvirt/images"
+    #   ];
+    # };
 
     locate = {
       prunePaths = ["/mnt" "/nix"];
