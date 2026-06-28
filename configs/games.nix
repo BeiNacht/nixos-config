@@ -33,29 +33,45 @@
     };
   };
 
-  home-manager.users.alex = {
-    config,
-    pkgs,
-    ...
-  }: {
-    home.packages = with pkgs; [
-      gamemode
-      heroic
-      mangohud
-      pcsx2
-      protontricks
-      protonup-qt
-      # shadps4
-      steamtinkerlaunch
-      vkbasalt
-      vulkan-tools
-      wine
-      winetricks
-      # (lutris.override {
-      #   extraLibraries = pkgs: [
-      #     gamemode
-      #   ];
-      # })
-    ];
-  };
+  environment.systemPackages = with pkgs; [
+    proton-cachyos
+    gamemode
+    heroic
+    mangohud
+    pcsx2
+    protontricks
+    protonup-qt
+    # shadps4
+    steamtinkerlaunch
+    vkbasalt
+    vulkan-tools
+    wine
+    winetricks
+  ];
+
+  # home-manager.users.alex = {
+  #   config,
+  #   pkgs,
+  #   ...
+  # }: {
+  #   home.packages = with pkgs; [
+  #     gamemode
+  #     heroic
+  #     mangohud
+  #     pcsx2
+  #     protontricks
+  #     protonup-qt
+  #     # shadps4
+  #     steamtinkerlaunch
+  #     vkbasalt
+  #     vulkan-tools
+  #     wine
+  #     winetricks
+  #     # (lutris.override {
+  #     #   extraLibraries = pkgs: [
+  #     #     gamemode
+  #     #   ];
+  #     # })
+  #   ];
+  # };
 }

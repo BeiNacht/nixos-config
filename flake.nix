@@ -30,6 +30,9 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    # Chaotic Nyx repository for CachyOS goodies
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
     # apple-fonts = {
     #   url = "github:Lyndeno/apple-fonts.nix";
     #   inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -44,6 +47,7 @@
     sops-nix,
     impermanence,
     nix-darwin,
+    chaotic,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -74,6 +78,7 @@
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
           nixos-hardware.nixosModules.common-pc-ssd
           sops-nix.nixosModules.sops
+          chaotic.nixosModules.default
           ./machine/desktop.nix
           home-manager.nixosModules.home-manager
           {
