@@ -19,7 +19,7 @@
     ../configs/printing.nix
     ../configs/user-gui.nix
     ../configs/user.nix
-    (modulesPath + "/installer/scan/not-detected.nix")
+    # (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
   sops = {
