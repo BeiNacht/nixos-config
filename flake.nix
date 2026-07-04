@@ -98,7 +98,9 @@
         modules = [
           impermanence.nixosModules.impermanence
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
+          nixos-hardware.nixosModules.common-pc-ssd
           inputs.sops-nix.nixosModules.sops
+          chaotic.nixosModules.default
           ./machine/framework.nix
           home-manager.nixosModules.home-manager
           {
