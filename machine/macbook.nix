@@ -86,7 +86,6 @@
     ];
     casks = [
       "adobe-acrobat-reader"
-      "antigravity"
       "alt-tab"
       "android-file-transfer"
       "appcleaner"
@@ -98,7 +97,6 @@
       "deskflow"
       "discord"
       "docker-desktop"
-      "easy-move+resize"
       "firefox"
       "font-meslo-lg-nerd-font"
       "font-roboto-mono-nerd-font"
@@ -115,10 +113,8 @@
       "macpacker"
       "microsoft-auto-update"
       "microsoft-teams"
-      "middleclick"
       "monero-wallet"
       "nextcloud"
-      "only-switch"
       "pcsx2"
       "pear-devs/pear/pear-desktop"
       "rectangle"
@@ -133,11 +129,10 @@
       "heroic"
       "telegram-desktop"
       "sol"
-      # "ghostty"
     ];
     onActivation = {
-      cleanup = "zap";
-      # cleanup = "check";
+      # cleanup = "zap";
+      cleanup = "check";
       autoUpdate = true;
       upgrade = true;
       extraFlags = [

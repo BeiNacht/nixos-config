@@ -251,20 +251,38 @@
       };
     };
 
-    darwinConfigurations."MacBook" = nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [
-        ./machine/macbook.nix
-        home-manager.darwinModules.home-manager
-        {
-          users.users.alex.home = /Users/alex;
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            users.alex = import ./configs/home.nix;
-          };
-        }
-      ];
+    darwinConfigurations = {
+      "MacBook" = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./machine/macbook.nix
+          home-manager.darwinModules.home-manager
+          {
+            users.users.alex.home = /Users/alex;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
+        ];
+      };
+
+      "MacBookProM1" = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./machine/macbook.nix
+          home-manager.darwinModules.home-manager
+          {
+            users.users.alex.home = /Users/alex;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.alex = import ./configs/home.nix;
+            };
+          }
+        ];
+      };
     };
   };
 }
