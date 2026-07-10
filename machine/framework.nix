@@ -293,6 +293,8 @@
       msr-tools
       quota
 
+      deskflow
+
       homebank
 
       powerstat # for measuring power consumption
