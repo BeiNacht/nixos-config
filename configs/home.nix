@@ -7,7 +7,7 @@
   home = {
     stateVersion = "24.11";
 
-    sessionPath = ["$HOME/.npm-packages" "$HOME/.bin" "$HOME/.bun/bin"];
+    sessionPath = ["$HOME/.npm-packages" "$HOME/.bin" "$HOME/.bun/bin" "$HOME/.local.bin"];
     file = {
       ".npmrc" = {source = ../home/npmrc;};
       ".bin/git-redate" = {

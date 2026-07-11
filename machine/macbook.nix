@@ -36,6 +36,8 @@
       # AutoFillCreditCardData = false;  # Enable AutoFill for credit cards
       # AutoFillPasswords = false; # Enable AutoFill for passwords
     };
+
+    stateVersion = 5;
   };
 
   # services = {
@@ -47,6 +49,8 @@
   nix = {
     enable = true;
   };
+
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   environment = {
     systemPackages = with pkgs; [
@@ -71,44 +75,46 @@
     enable = true;
     enableZshIntegration = true;
     brews = [
-      # "gstreamer"
-      # "virt-manager"
-      # "virt-viewer"
-      "rom-tools"
-      "oven-sh/bun/bun"
-      "mactop"
-      "westpoint-io/dustoff/dustoff"
-      "node"
-      "llama.cpp"
-      "joshavant/tap/clawbox"
       "borgbackup"
       "hf"
+      # "joshavant/tap/clawbox"
+      "llama.cpp"
+      "mactop"
+      "qwen-code"
+      "hermes-agent"
+      "node"
+      "oven-sh/bun/bun"
+      "rom-tools"
+      "westpoint-io/dustoff/dustoff"
+      "nohajc/anylinuxfs/anylinuxfs"
     ];
     casks = [
-      "adobe-acrobat-reader"
       "alt-tab"
       "android-file-transfer"
       "appcleaner"
+      "betterdisplay"
       "bit-slicer"
       "brave-browser"
       "claude-code"
       "cog-app"
       "crossover"
-      "deskflow"
+      "deskflow/tap/deskflow"
       "discord"
       "docker-desktop"
+      "fenio/tap/anylinuxfs-gui"
       "firefox"
       "font-meslo-lg-nerd-font"
       "font-roboto-mono-nerd-font"
       "font-sauce-code-pro-nerd-font"
       "font-sf-mono-nerd-font-ligaturized"
       "handbrake-app"
+      "heroic"
       "iina"
       "iterm2"
       "keepassxc"
       "keepingyouawake"
-      "lulu"
       "lm-studio"
+      "lulu"
       "macfuse"
       "macpacker"
       "microsoft-auto-update"
@@ -119,33 +125,23 @@
       "pear-devs/pear/pear-desktop"
       "rectangle"
       "signal"
+      "sol"
       "sozercan/repo/kaset"
       "steam"
       "tailscale-app"
+      "telegram-desktop"
       "tor-browser"
       "visual-studio-code"
       "vorta"
-      "betterdisplay"
-      "heroic"
-      "telegram-desktop"
-      "sol"
     ];
     onActivation = {
-      # cleanup = "zap";
-      cleanup = "check";
+      cleanup = "zap";
+      # cleanup = "check";
       autoUpdate = true;
       upgrade = true;
       extraFlags = [
         "--verbose"
       ];
     };
-    taps = [
-      "sozercan/repo"
-      "pear-devs/pear"
-      "mhaeuser/mhaeuser"
-      "deskflow/homebrew-tap"
-      "jeffreywildman/homebrew-virt-manager"
-    ];
   };
-  system.stateVersion = 5;
 }
