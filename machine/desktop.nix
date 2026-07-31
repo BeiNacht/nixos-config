@@ -67,7 +67,6 @@
   };
 
   environment.etc.crypttab.text = ''
-    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
     internal-storage UUID=db454a2d-ebc0-4503-8a76-dcc23c7a79ea /persist/internal-hdd.key
   '';
 
