@@ -16,6 +16,6 @@ while read path; do
   elif [ -d "$path" ]; then
     : # The path is a directory, ignore
   else
-    echo "$path"
+    lsd -lh $path
   fi
 done
