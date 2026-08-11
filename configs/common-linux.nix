@@ -189,7 +189,6 @@
     #   enable = true;
     # };
 
-    nix-index-database.comma.enable = true;
     nix-index = {
       enable = true;
       enableZshIntegration = true;
