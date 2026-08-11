@@ -33,22 +33,6 @@
   };
 
   fileSystems = {
-    # "/home/alex/shared/storage" = {
-    #   device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
-    #   fsType = "btrfs";
-    #   options = [
-    #     "autodefrag"
-    #     "compress=zstd"
-    #     "nodiratime"
-    #     "noatime"
-    #     "noauto" # Don't mount at boot
-    #     "x-systemd.automount" # Enable systemd automounting
-    #     "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
-    #     "x-systemd.device-timeout=5s" # Don't freeze the system if the USB isn't plugged in
-    #     "nofail" # Boot proceeds normally if USB is missing
-    #   ];
-    # };
-
     "/home/alex/shared/internal-storage" = {
       device = "/dev/disk/by-uuid/b6c33623-fc23-47ed-b6f5-e99455d5534a";
       fsType = "btrfs";
