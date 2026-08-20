@@ -34,14 +34,16 @@
   };
 
   environment.systemPackages = with pkgs; [
-    proton-cachyos
+
+    # shadps4
     gamemode
     heroic
+    lutris
     mangohud
     pcsx2
+    proton-cachyos
     protontricks
     protonup-qt
-    # shadps4
     steamtinkerlaunch
     vkbasalt
     vulkan-tools
