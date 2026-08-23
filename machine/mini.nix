@@ -16,9 +16,7 @@ in {
     ../configs/user.nix
   ];
 
-  users.users.alex.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG/tghG2pBTrqYT4+1nF1266lteRBf2bPL+OZAOjyFHL alex@vps-arm"
-  ];
+  users.users.alex.openssh.authorizedKeys.keys = sshKeys.borg;
 
   sops = {
     defaultSopsFile = ../secrets/secrets-mini.yaml;

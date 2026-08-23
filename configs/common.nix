@@ -104,6 +104,11 @@
         hostNames = ["homeserver.meteor-altered.ts.net"];
         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINM6ZhCW90TYDwvbObs3DUF0k0Xb3z60WOOKNi0FaDEP";
       };
+
+      "mini" = {
+        hostNames = ["mini.meteor-altered.ts.net"];
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHezj5PIz0rP6YZCvU+ye409gSkSDC5Ga/lAxeRMfOCf";
+      };
     };
   };
 }

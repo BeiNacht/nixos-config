@@ -10,6 +10,11 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIxdlhkXa8xVZDgZwwnBI1oMzAvIyYQdAZujmnRYIpL Android"
   ];
 
+  borg = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPjxTUEclBMOYixTd457wF/0N5HIZRp0kvAMAT/UK74Z bernd@desktop"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG/tghG2pBTrqYT4+1nF1266lteRBf2bPL+OZAOjyFHL alex@vps-arm"
+  ];
+
   # Subset used to unlock LUKS over SSH in the initrd (no phone key: unlocking
   # disks from a phone isn't a real scenario).
   initrd = [

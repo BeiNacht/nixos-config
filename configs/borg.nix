@@ -40,6 +40,7 @@
         # ".local/share/libvirt/images"
         "/home/alex/.local/share/Steam"
         "/home/alex/.local/share/Trash"
+
         "/home/alex/Downloads"
         "/home/alex/Games"
         "/home/alex/mounted"

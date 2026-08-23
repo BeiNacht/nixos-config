@@ -212,7 +212,7 @@
     };
 
     borgbackup.jobs.all = rec {
-      repo = "ssh://u278697-sub2@u278697.your-storagebox.de:23/./borg";
+      repo = "ssh://alex@mini.meteor-altered.ts.net/./homeserver/storage/samba/desktop/borg";
     };
   };
 
