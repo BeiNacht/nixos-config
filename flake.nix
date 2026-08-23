@@ -64,14 +64,56 @@
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
+
+    # Every host shares the same home-manager wiring (single profile, same
+    # settings) — this factors that boilerplate out so each host below only
+    # has to list what's actually unique to it: system + extra modules.
+    mkNixosHost = {
+      system,
+      hostModules,
+    }:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs outputs;};
+        modules =
+          hostModules
+          ++ [
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = ".nix-backup";
+                users.alex = import ./configs/home.nix;
+              };
+            }
+          ];
+      };
+
+    mkDarwinHost = {hostModules}:
+      nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules =
+          hostModules
+          ++ [
+            home-manager.darwinModules.home-manager
+            {
+              users.users.alex.home = /Users/alex;
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.alex = import ./configs/home.nix;
+              };
+            }
+          ];
+      };
   in {
     overlays = import ./overlays {inherit inputs;};
 
     nixosConfigurations = {
-      desktop = nixpkgs.lib.nixosSystem {
+      desktop = mkNixosHost {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           impermanence.nixosModules.impermanence
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-cpu-amd-pstate
@@ -80,208 +122,95 @@
           sops-nix.nixosModules.sops
           chaotic.nixosModules.default
           ./machine/desktop.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      framework = nixpkgs.lib.nixosSystem {
+      framework = mkNixosHost {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           impermanence.nixosModules.impermanence
           inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
           nixos-hardware.nixosModules.common-pc-ssd
           inputs.sops-nix.nixosModules.sops
           chaotic.nixosModules.default
           ./machine/framework.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      vps-arm = nixpkgs.lib.nixosSystem {
+      vps-arm = mkNixosHost {
         system = "aarch64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           impermanence.nixosModules.impermanence
           inputs.sops-nix.nixosModules.sops
           ./machine/vps-arm.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      thinkpad = nixpkgs.lib.nixosSystem {
+      thinkpad = mkNixosHost {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           impermanence.nixosModules.impermanence
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
           inputs.sops-nix.nixosModules.sops
           ./machine/thinkpad/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      mini = nixpkgs.lib.nixosSystem {
+      mini = mkNixosHost {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           inputs.nixos-hardware.nixosModules.common-cpu-intel
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/mini.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      homeserver = nixpkgs.lib.nixosSystem {
+      homeserver = mkNixosHost {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           inputs.nixos-hardware.nixosModules.common-cpu-intel
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/homeserver.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      nixos-vm = nixpkgs.lib.nixosSystem {
+      nixos-vm = mkNixosHost {
         system = "aarch64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/nixos-vm/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      nixos-virtualbox = nixpkgs.lib.nixosSystem {
+      nixos-virtualbox = mkNixosHost {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/nixos-virtualbox/configuration.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
 
-      nixos-vm-fusion = nixpkgs.lib.nixosSystem {
+      nixos-vm-fusion = mkNixosHost {
         system = "aarch64-linux";
-        specialArgs = {inherit inputs outputs;};
-        modules = [
+        hostModules = [
           inputs.sops-nix.nixosModules.sops
           impermanence.nixosModules.impermanence
           ./machine/nixos-vm-fusion.nix
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = ".nix-backup";
-              users.alex = import ./configs/home.nix;
-            };
-          }
         ];
       };
     };
 
     darwinConfigurations = {
-      "MacBook" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          ./machine/macbook.nix
-          home-manager.darwinModules.home-manager
-          {
-            users.users.alex.home = /Users/alex;
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.alex = import ./configs/home.nix;
-            };
-          }
-        ];
+      "MacBook" = mkDarwinHost {
+        hostModules = [./machine/macbook.nix];
       };
 
-      "MacBookProM1" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          ./machine/macbook.nix
-          home-manager.darwinModules.home-manager
-          {
-            users.users.alex.home = /Users/alex;
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.alex = import ./configs/home.nix;
-            };
-          }
-        ];
+      "MacBookProM1" = mkDarwinHost {
+        hostModules = [./machine/macbook.nix];
       };
     };
   };

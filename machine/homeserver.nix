@@ -4,7 +4,9 @@
   inputs,
   outputs,
   ...
-}: {
+}: let
+  sshKeys = import ../configs/ssh-keys.nix;
+in {
   imports = [
     # ../configs/borg.nix
     ../configs/common-linux.nix
@@ -12,6 +14,7 @@
     ../configs/filesystem.nix
     ../configs/plasma-desktop.nix
     ../configs/games.nix
+    ../configs/samba.nix
     ../configs/services/frigate.nix
     ../configs/user.nix
     ../configs/virtualbox.nix
@@ -44,11 +47,7 @@
         ssh = {
           enable = true;
           port = 22;
-          authorizedKeys = [
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYEaT0gH9yJM2Al0B+VGXdZB/b2qjZK7n01Weq0TcmQ alex@framework"
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN99h5reZdz9+DOyTRh8bPYWO+Dtv7TbkLbMdvi+Beio alex@desktop"
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkURF5v9vRyEPhsK80kUgYh1vsS0APL4XyH4F3Fpyic alex@macbook"
-          ];
+          authorizedKeys = sshKeys.initrd;
           hostKeys = ["/persist/pre_boot_ssh_key"];
         };
       };
@@ -119,22 +118,7 @@
     };
 
     samba = {
-      enable = true;
       settings = {
-        global = {
-          "workgroup" = "WORKGROUP";
-          "server string" = "server";
-          "netbios name" = "server";
-          "security" = "user";
-          "guest account" = "nobody";
-          "map to guest" = "bad user";
-          "logging" = "systemd";
-          "max log size" = 50;
-          "invalid users" = [
-            "root"
-          ];
-          "passwd program" = "/run/wrappers/bin/passwd %u";
-        };
         storage = {
           "path" = "/home/alex/homeserver/storage";
           "browseable" = "yes";

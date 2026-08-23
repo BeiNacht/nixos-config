@@ -17,6 +17,7 @@
     # ../configs/libvirtd.nix
     ../configs/plasma-desktop.nix
     ../configs/printing.nix
+    ../configs/samba.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     # (modulesPath + "/installer/scan/not-detected.nix")
@@ -201,32 +202,13 @@
     # printing.enable = true;
     bpftune.enable = true;
 
-    samba = {
-      enable = true;
-      settings = {
-        global = {
-          workgroup = "WORKGROUP";
-          "server string" = "server";
-          "netbios name" = "server";
-          security = "user";
-          "guest account" = "nobody";
-          "map to guest" = "bad user";
-          logging = "systemd";
-          "max log size" = 50;
-          "invalid users" = [
-            "root"
-          ];
-          "passwd program" = "/run/wrappers/bin/passwd %u";
-        };
-        storage = {
-          browseable = "yes";
-          "guest ok" = "no";
-          path = "/home/alex/shared/storage";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-      };
+    samba.settings.storage = {
+      browseable = "yes";
+      "guest ok" = "no";
+      path = "/home/alex/shared/storage";
+      "read only" = "no";
+      "create mask" = "0644";
+      "directory mask" = "0755";
     };
 
     borgbackup.jobs.all = rec {
