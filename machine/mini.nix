@@ -59,21 +59,21 @@ in {
       options = ["nofail" "x-systemd.automount"];
     };
 
-    "/home/alex/homeserver/share" = {
-      device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
-      fsType = "btrfs";
-      options = [
-        "autodefrag"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-        "noauto" # Don't mount at boot
-        "x-systemd.automount" # Enable systemd automounting
-        "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
-        "x-systemd.device-timeout=5s" # Don't freeze the system if the USB isn't plugged in
-        "nofail" # Boot proceeds normally if USB is missing
-      ];
-    };
+    # "/home/alex/homeserver/share" = {
+    #   device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
+    #   fsType = "btrfs";
+    #   options = [
+    #     "autodefrag"
+    #     "compress=zstd"
+    #     "nodiratime"
+    #     "noatime"
+    #     "noauto" # Don't mount at boot
+    #     "x-systemd.automount" # Enable systemd automounting
+    #     "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
+    #     "x-systemd.device-timeout=5s" # Don't freeze the system if the USB isn't plugged in
+    #     "nofail" # Boot proceeds normally if USB is missing
+    #   ];
+    # };
   };
 
   environment.etc.crypttab.text = ''
