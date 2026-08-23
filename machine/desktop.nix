@@ -171,7 +171,8 @@
     enableRedistributableFirmware = true;
     cpu.amd = {
       updateMicrocode = true;
-      ryzen-smu.enable = true;
+      # because of build error temperoarily disabled
+      # ryzen-smu.enable = true;
     };
     amdgpu = {
       overdrive.enable = true;

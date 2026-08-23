@@ -78,6 +78,8 @@
       stow
       jq
       # mas
+
+      claude-code
     ];
   };
 
