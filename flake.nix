@@ -209,7 +209,7 @@
         hostModules = [./machine/macbook.nix];
       };
 
-      "MacBookProM1" = mkDarwinHost {
+      "MacbookProM1" = mkDarwinHost {
         hostModules = [./machine/macbook.nix];
       };
     };
