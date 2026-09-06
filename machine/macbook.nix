@@ -124,6 +124,7 @@
       "pcsx2"
       "pear-devs/pear/pear-desktop"
       "rectangle"
+      "rustdesk"
       "signal"
       "sol"
       "sozercan/repo/kaset"
