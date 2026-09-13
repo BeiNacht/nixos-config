@@ -75,6 +75,22 @@
     };
   };
 
+  home-manager.users.alex = {
+    imports = [inputs.plasma-manager.homeModules.plasma-manager];
+
+    home.file.".local/share/color-schemes/BreezeBlack.colors".source = ./plasma-colors/BreezeBlack.colors;
+
+    programs.plasma = {
+      enable = true;
+      workspace = {
+        colorScheme = "BreezeBlack";
+        iconTheme = "breeze-dark";
+        cursor.theme = "breeze_cursors";
+        wallpaperPlainColor = "0,0,0";
+      };
+    };
+  };
+
   # programs = {
   #   ssh = {
   #     startAgent = true;

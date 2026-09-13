@@ -103,6 +103,9 @@
       lm_sensors
 
       hdparm
+
+      nodejs
+      claude-code
     ];
 
     persistence."/persist" = {
