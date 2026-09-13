@@ -88,6 +88,36 @@
         cursor.theme = "breeze_cursors";
         wallpaperPlainColor = "0,0,0";
       };
+
+      panels = [
+        {
+          location = "top";
+          widgets = [
+            {
+              kickoff = {
+                icon = "nix-snowflake-white";
+                showButtonsFor = {
+                  custom = ["suspend" "hibernate" "reboot" "shutdown"];
+                };
+              };
+            }
+            "org.kde.plasma.pager"
+            {
+              iconTasks = {
+                launchers = [
+                  "applications:kitty.desktop"
+                  "preferred://filemanager"
+                  "applications:systemsettings.desktop"
+                ];
+              };
+            }
+            "org.kde.plasma.marginsseparator"
+            "org.kde.plasma.systemtray"
+            "org.kde.plasma.digitalclock"
+            "org.kde.plasma.showdesktop"
+          ];
+        }
+      ];
     };
   };
 
