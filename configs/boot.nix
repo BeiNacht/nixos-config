@@ -17,7 +17,9 @@ in {
         configurationLimit = 10;
         enableCryptodisk = true;
         useOSProber = true;
+        splashImage = null;
       };
+      timeout = 30;
     };
 
     tmp = {
