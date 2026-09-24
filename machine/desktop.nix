@@ -65,6 +65,23 @@
         "nofail" # Boot proceeds normally if USB is missing
       ];
     };
+
+    "/home/alex/shared/windows" = {
+      device = "/dev/disk/by-uuid/B2086B10086AD2C1";
+      fsType = "ntfs3";
+      options = [
+        "rw"
+        "uid=1000"
+        "gid=100"
+        "noatime"
+        "force" # Mount even if Windows left the volume marked dirty (e.g. Fast Startup/hibernation)
+        "noauto" # Don't mount at boot
+        "x-systemd.automount" # Enable systemd automounting
+        "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
+        "x-systemd.device-timeout=5s" # Don't freeze the system if the drive isn't available
+        "nofail" # Boot proceeds normally if the partition is missing
+      ];
+    };
   };
 
   environment.etc.crypttab.text = ''
@@ -174,8 +191,7 @@
     enableRedistributableFirmware = true;
     cpu.amd = {
       updateMicrocode = true;
-      # because of build error temperoarily disabled
-      # ryzen-smu.enable = true;
+      ryzen-smu.enable = true;
     };
     amdgpu = {
       overdrive.enable = true;
@@ -189,13 +205,12 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      # doesnt build atm
-      #      extraPackages = with pkgs; [
-      #        clinfo
-      #        rocmPackages.clr.icd
-      #        rocmPackages.rocminfo
-      #        rocmPackages.rocm-runtime
-      #      ];
+      extraPackages = with pkgs; [
+        clinfo
+        rocmPackages.clr.icd
+        rocmPackages.rocminfo
+        rocmPackages.rocm-runtime
+      ];
     };
   };
 
