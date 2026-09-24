@@ -259,7 +259,7 @@
       };
     };
 
-    journald = {extraConfig = "SystemMaxUse=500M";};
+    journald = {settings.Journal.SystemMaxUse = "500M";};
   };
 
   # The notion of "online" is a broken concept
