@@ -8,11 +8,11 @@
     meld # diff tool
     dbeaver-bin # db viewer
 
-    pgadmin4-desktopmode
-
     # rust
     cargo
     nodejs
+
+    claude-code
 
     # harlequin # tui sql client
   ];

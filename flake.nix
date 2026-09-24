@@ -158,7 +158,7 @@
           impermanence.nixosModules.impermanence
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
           inputs.sops-nix.nixosModules.sops
-          ./machine/thinkpad/configuration.nix
+          ./machine/thinkpad.nix
         ];
       };
 

@@ -48,3 +48,8 @@ creation_rules:
     - age:
       - *alex
       - *homeserver
+  - path_regex: secrets-thinkpad.yaml$
+    key_groups:
+    - age:
+      - *alex
+      - *thinkpad

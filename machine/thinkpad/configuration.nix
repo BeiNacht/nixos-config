@@ -48,7 +48,7 @@
     wireless = {
       enable = true;
       networks.Skynet-mobil.psk = "***";
-      interfaces = ["wlp0s20f3"];
+      interfaces = [ "wlp0s20f3" ];
     };
   };
 

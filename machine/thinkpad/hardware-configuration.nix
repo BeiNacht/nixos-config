@@ -16,47 +16,47 @@
   boot.initrd.kernelModules = ["dm-snapshot"];
   boot.kernelModules = ["kvm-intel"];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
-    fsType = "btrfs";
-    options = ["subvol=root"];
-  };
+  # fileSystems."/" = {
+  #   device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
+  #   fsType = "btrfs";
+  #   options = ["subvol=root"];
+  # };
 
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
-    fsType = "btrfs";
-    options = ["subvol=home"];
-  };
+  # fileSystems."/home" = {
+  #   device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
+  #   fsType = "btrfs";
+  #   options = ["subvol=home"];
+  # };
 
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
-    fsType = "btrfs";
-    options = ["subvol=nix"];
-  };
+  # fileSystems."/nix" = {
+  #   device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
+  #   fsType = "btrfs";
+  #   options = ["subvol=nix"];
+  # };
 
-  fileSystems."/persist" = {
-    device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
-    fsType = "btrfs";
-    options = ["subvol=persist"];
-    neededForBoot = true;
-  };
+  # fileSystems."/persist" = {
+  #   device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
+  #   fsType = "btrfs";
+  #   options = ["subvol=persist"];
+  #   neededForBoot = true;
+  # };
 
-  fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
-    fsType = "btrfs";
-    options = ["subvol=log"];
-    neededForBoot = true;
-  };
+  # fileSystems."/var/log" = {
+  #   device = "/dev/disk/by-uuid/6de51510-623b-4ae4-b0ba-a319057eb6ea";
+  #   fsType = "btrfs";
+  #   options = ["subvol=log"];
+  #   neededForBoot = true;
+  # };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/7785-083C";
-    fsType = "vfat";
-    options = ["fmask=0022" "dmask=0022"];
-  };
+  # fileSystems."/boot" = {
+  #   device = "/dev/disk/by-uuid/7785-083C";
+  #   fsType = "vfat";
+  #   options = ["fmask=0022" "dmask=0022"];
+  # };
 
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/ded22b9d-440d-46d8-8246-b52deca7a49c";}
-  ];
+  # swapDevices = [
+  #   {device = "/dev/disk/by-uuid/ded22b9d-440d-46d8-8246-b52deca7a49c";}
+  # ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

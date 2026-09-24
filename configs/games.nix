@@ -41,7 +41,7 @@
     lutris
     mangohud
     pcsx2
-    proton-cachyos
+    #proton-cachyos
     protontricks
     protonup-qt
     steamtinkerlaunch
