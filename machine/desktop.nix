@@ -144,6 +144,8 @@
     systemPackages = with pkgs; [
       lact
       amdgpu_top
+      # Reads zenpower (CPU) + amdgpu_top (GPU) sensors, both desktop-only.
+      (writeShellScriptBin "power-draw" (builtins.readFile ../home/bin/power-draw))
       # python3
       # python311Packages.tkinter
       gimp

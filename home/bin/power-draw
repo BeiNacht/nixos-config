@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Current CPU + GPU power draw for this machine (AMD CPU via zenpower,
+# AMD GPU via amdgpu_top). Run with -w/--watch to refresh once a second.
+
+show() {
+    cpu_json=$(sensors -j 2>/dev/null | jq '[.[] | select(has("SVI2_P_Core") and has("SVI2_P_SoC"))][0]')
+
+    if [ -z "$cpu_json" ] || [ "$cpu_json" = "null" ]; then
+        echo "CPU power: unavailable (zenpower sensor not found)" >&2
+    else
+        core=$(echo "$cpu_json" | jq -r '.SVI2_P_Core.power1_input')
+        soc=$(echo "$cpu_json" | jq -r '.SVI2_P_SoC.power2_input')
+        awk -v core="$core" -v soc="$soc" \
+            'BEGIN {printf "CPU power: %.1f W  (core %.1f W + SoC %.1f W)\n", core + soc, core, soc}'
+    fi
+
+    gpu_json=$(mktemp)
+    timeout 1.5 amdgpu_top -J >"$gpu_json" 2>/dev/null
+
+    gpu_power=$(jq -r '.devices[0].Sensors["Average Power"].value // empty' "$gpu_json" 2>/dev/null)
+    gpu_name=$(jq -r '.devices[0].Info.DeviceName // empty' "$gpu_json" 2>/dev/null)
+    rm -f "$gpu_json"
+
+    if [ -z "$gpu_power" ]; then
+        echo "GPU power: unavailable (amdgpu_top read failed)" >&2
+    else
+        printf 'GPU power: %s W  (%s)\n' "$gpu_power" "$gpu_name"
+    fi
+}
+
+if [ "$1" = "-w" ] || [ "$1" = "--watch" ]; then
+    while true; do
+        clear
+        show
+        sleep 1
+    done
+else
+    show
+fi
