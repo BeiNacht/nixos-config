@@ -49,6 +49,7 @@
     vulkan-tools
     wine
     winetricks
+    lutris
   ];
 
   # home-manager.users.alex = {
