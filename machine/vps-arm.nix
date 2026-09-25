@@ -23,6 +23,7 @@ in {
     ../configs/services/gitea.nix
     ../configs/services/goaccess.nix
     ../configs/services/immich.nix
+    ../configs/services/kokoro.nix
     ../configs/services/nextcloud.nix
     ../configs/services/paperless.nix
     ../configs/services/aniworld.nix
