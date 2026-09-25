@@ -87,7 +87,7 @@
     nvidia = {
       modesetting.enable = true;
       open = false; # Pascal (GP107) isn't supported by the open kernel module
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
       prime = {
         offload = {
           enable = true;
