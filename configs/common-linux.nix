@@ -36,7 +36,7 @@
       systemd.services = {
         restore-root = {
           description = "Restore blank /root subvolume in initrd";
-          wantedBy = [ "initrd.target" ];
+          wantedBy = ["initrd.target"];
           script = ''
             mkdir -p /mnt
 
@@ -64,7 +64,7 @@
             RemainAfterExit = "yes";
             # Environment = "PATH=${lib.makeBinPath [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux]}";
           };
-          path = [ pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux ];
+          path = [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux];
         };
       };
     };
@@ -259,7 +259,7 @@
       };
     };
 
-    journald = {settings.Journal.SystemMaxUse = "500M";};
+    journald = {settings.Journal.SystemMaxUse = lib.mkDefault "500M";};
   };
 
   # The notion of "online" is a broken concept

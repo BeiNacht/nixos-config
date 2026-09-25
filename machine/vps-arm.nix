@@ -293,7 +293,7 @@ in {
       ];
     };
 
-    journald = {extraConfig = "SystemMaxUse=10G";};
+    journald = {settings.Journal.SystemMaxUse = "10G";};
 
     samba = {
       settings = {
