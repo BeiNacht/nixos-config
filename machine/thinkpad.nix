@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-     ./thinkpad/hardware-configuration.nix
+    ./thinkpad/hardware-configuration.nix
     # ../../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/develop.nix
@@ -72,6 +72,12 @@
     };
   };
 
+  # Build btop with the driver runpath so it can dlopen libnvidia-ml and
+  # show NVIDIA GPU usage.
+  nixpkgs.overlays = [
+    (final: prev: {btop = prev.btop.override {cudaSupport = true;};})
+  ];
+
   hardware = {
     enableAllFirmware = true;
 
@@ -104,6 +110,58 @@
 
     locate = {
       prunePaths = ["/mnt" "/nix"];
+    };
+
+    # Quieter fan curve than the EC's "auto" mode, which spins both fans up
+    # to ~4400 RPM already at ~70°C. Letting the CPU sit in the high 70s is
+    # fine; the EC takes back over (level auto) above 82°C as a safety net.
+    # Sensors default to /proc/acpi/ibm/thermal (max of CPU and GPU).
+    thinkfan = {
+      enable = true;
+      levels = [
+        [0 0 55]
+        [1 50 64]
+        [2 60 70]
+        [3 66 74]
+        [4 71 77]
+        [5 74 80]
+        [7 77 84]
+        ["level auto" 82 32767]
+      ];
+    };
+
+    # Cap CPU package power (stock firmware limits are PL1 55 W / PL2 78 W)
+    # so sustained load produces less heat for the fans to deal with.
+    # throttled re-applies the limits periodically, since the X1 Extreme
+    # firmware resets them (e.g. on AC plug/unplug or resume).
+    throttled = {
+      enable = true;
+      extraConfig = ''
+        [GENERAL]
+        Enabled: True
+        Sysfs_Power_Path: /sys/class/power_supply/AC*/online
+        Autoreload: True
+
+        [BATTERY]
+        Update_Rate_s: 30
+        PL1_Tdp_W: 25
+        PL1_Duration_s: 28
+        PL2_Tdp_W: 35
+        PL2_Duration_S: 0.002
+        Trip_Temp_C: 85
+        cTDP: 0
+        Disable_BDPROCHOT: False
+
+        [AC]
+        Update_Rate_s: 5
+        PL1_Tdp_W: 35
+        PL1_Duration_s: 28
+        PL2_Tdp_W: 45
+        PL2_Duration_S: 0.002
+        Trip_Temp_C: 90
+        cTDP: 0
+        Disable_BDPROCHOT: False
+      '';
     };
   };
 

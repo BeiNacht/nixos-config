@@ -187,6 +187,12 @@
     };
   };
 
+  # Build btop with rocm-smi in its runpath so it can dlopen librocm_smi64
+  # and show AMD GPU usage.
+  nixpkgs.overlays = [
+    (final: prev: {btop = prev.btop.override {rocmSupport = true;};})
+  ];
+
   hardware = {
     enableRedistributableFirmware = true;
     cpu.amd = {
