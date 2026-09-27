@@ -14,6 +14,7 @@
     ../configs/filesystem.nix
     ../configs/games.nix
     ../configs/plasma-desktop.nix
+    ../configs/sunshine.nix
     ../configs/user.nix
   ];
 
