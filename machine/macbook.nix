@@ -98,6 +98,8 @@
       "claude-code"
       "cog-app"
       "crossover"
+      "claude"
+      "maxinchun5/community-cask/tomatobar"
       "deskflow/tap/deskflow"
       "discord"
       "docker-desktop"

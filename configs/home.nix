@@ -35,6 +35,29 @@
       };
     };
 
+    rclone = {
+      enable = true;
+      remotes = let
+        # Windows OpenSSH hosts: shell out to ssh so ~/.ssh/config and the
+        # agent apply. Bare "ssh" resolves via PATH, so this works on both
+        # Darwin (/usr/bin/ssh) and NixOS (pkgs.openssh).
+        winSftp = target: {
+          config = {
+            type = "sftp";
+            ssh = "ssh ${target}";
+            shell_type = "cmd";
+            known_hosts_file = "none";
+            md5sum_command = "none";
+            sha1sum_command = "none";
+          };
+        };
+      in {
+        winbox = winSftp "alex@windows-vm";
+        winbox2 = winSftp "alex@desktop-3evm5nb.meteor-altered.ts.net";
+        windesktop = winSftp "alex@desktop-windows.meteor-altered.ts.net";
+      };
+    };
+
     ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -67,8 +90,8 @@
       signing.format = "openpgp";
       settings = {
         user = {
-          name = "Alexander Szczepanski";
-          email = "alexander@szczepan.ski";
+          name = "BeiNacht";
+          email = "git@beinacht.org";
         };
         core = {autocrlf = false;};
         color = {ui = "auto";};
