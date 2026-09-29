@@ -20,8 +20,9 @@ sudo nixos-rebuild switch --flake .#desktop
 # macOS hosts (MacBook, MacBookProM1)
 darwin-rebuild switch --flake .#MacBook
 
-# Build without switching (useful to check a config evaluates/builds)
-sudo nixos-rebuild build --flake .#<hostname>
+# Build without switching (useful to check a config evaluates/builds).
+# Use --no-link so no ./result symlink is left in the repo.
+nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel --no-link
 
 # Format Nix files (alejandra is the project formatter, installed in configs/common.nix)
 alejandra .

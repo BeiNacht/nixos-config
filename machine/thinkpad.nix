@@ -79,6 +79,15 @@
     (final: prev: {btop = prev.btop.override {cudaSupport = true;};})
   ];
 
+  # Let btop read the root-only RAPL energy counters (CPU package watts) and
+  # Intel iGPU stats without sudo, matching upstream's `make setcap`.
+  security.wrappers.btop = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_perfmon,cap_dac_read_search+ep";
+    source = "${pkgs.btop}/bin/btop";
+  };
+
   hardware = {
     enableAllFirmware = true;
 
@@ -165,6 +174,12 @@
       '';
     };
   };
+
+  # Sunshine captures via KMS; when a fullscreen PRIME-offloaded game gets
+  # direct-scanned-out, the captured framebuffer switches to the NVIDIA
+  # buffer, Sunshine reinitializes its VAAPI encoder and segfaults tearing
+  # the old one down. Keep KWin compositing so the framebuffer never changes.
+  environment.sessionVariables.KWIN_DRM_NO_DIRECT_SCANOUT = "1";
 
   powerManagement = {
     enable = true;
