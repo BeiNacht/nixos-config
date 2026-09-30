@@ -18,6 +18,7 @@
     ../configs/plasma-desktop.nix
     ../configs/printing.nix
     ../configs/samba.nix
+    ../configs/sunshine.nix
     ../configs/user-gui.nix
     ../configs/user.nix
     # (modulesPath + "/installer/scan/not-detected.nix")
@@ -183,6 +184,11 @@
         "/etc/coolercontrol"
         "/var/lib/samba"
         "/var/lib/systemd/rfkill"
+        {
+          directory = "/var/lib/private";
+          mode = "0700";
+        }
+        # "/var/lib/open-webui"   # if you enable open-webui
       ];
     };
   };
@@ -237,6 +243,19 @@
     borgbackup.jobs.all = rec {
       repo = "ssh://alex@mini.meteor-altered.ts.net/./homeserver/storage/samba/desktop/borg";
     };
+
+    udev.extraRules = ''
+      SUBSYSTEM=="powercap", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chmod o+r /sys%p/energy_uj"
+    '';
+
+    ollama = {
+      enable = true;
+      package = pkgs.ollama-rocm; # ROCm build; use pkgs.ollama-vulkan if ROCm gives you trouble
+      # rocmOverrideGfx = "12.0.1"; # only if it doesn't detect the GPU (gfx1201)
+      # host = "0.0.0.0"; openFirewall = true;  # only if other machines should reach it
+    };
+    # Optional ChatGPT-style web UI at http://localhost:8080
+    # open-webui.enable = true;
   };
 
   system.stateVersion = "25.11";
