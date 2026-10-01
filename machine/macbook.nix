@@ -75,18 +75,22 @@
     enable = true;
     enableZshIntegration = true;
     brews = [
+      "asitop"
       "borgbackup"
+      "hermes-agent"
       "hf"
-      # "joshavant/tap/clawbox"
       "llama.cpp"
       "mactop"
-      "qwen-code"
-      "hermes-agent"
       "node"
+      "nohajc/anylinuxfs/anylinuxfs"
       "oven-sh/bun/bun"
+      "pnpm"
+      "qwen-code"
+      "rclone"
       "rom-tools"
       "westpoint-io/dustoff/dustoff"
-      "nohajc/anylinuxfs/anylinuxfs"
+      "youssofal/mtplx/mtplx"
+      # "joshavant/tap/clawbox"
     ];
     casks = [
       "alt-tab"
@@ -96,10 +100,9 @@
       "bit-slicer"
       "brave-browser"
       "claude-code"
+      "claude"
       "cog-app"
       "crossover"
-      "claude"
-      "maxinchun5/community-cask/tomatobar"
       "deskflow/tap/deskflow"
       "discord"
       "docker-desktop"
@@ -119,9 +122,11 @@
       "lulu"
       "macfuse"
       "macpacker"
+      "maxinchun5/community-cask/tomatobar"
       "microsoft-auto-update"
       "microsoft-teams"
       "monero-wallet"
+      "moonlight"
       "nextcloud"
       "pcsx2"
       "pear-devs/pear/pear-desktop"
@@ -138,8 +143,8 @@
       "vorta"
     ];
     onActivation = {
-      cleanup = "zap";
-      # cleanup = "check";
+      # cleanup = "zap";
+      cleanup = "check";
       autoUpdate = true;
       upgrade = true;
       extraFlags = [
