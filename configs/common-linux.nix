@@ -160,7 +160,6 @@
   };
 
   nix = {
-    nixPath = ["nixpkgs=${inputs.nixpkgs-unstable}"];
     channel.enable = false;
     settings = {
       auto-optimise-store = true;
@@ -170,6 +169,7 @@
       max-free = 3000 * 1024 * 1024;
       min-free = 512 * 1024 * 1024;
       builders-use-substitutes = true;
+      nix-path = ["nixpkgs=${inputs.nixpkgs-unstable}"];
     };
 
     daemonCPUSchedPolicy = "batch";

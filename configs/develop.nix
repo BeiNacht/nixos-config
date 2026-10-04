@@ -13,8 +13,10 @@
     nodejs
 
     claude-code
+    codegraph # pre-indexed code knowledge graph for AI coding agents
 
-    # harlequin # tui sql client
+    harlequin # tui sql client
+    python313
   ];
 
   # programs = {
