@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+# Safely hot-swap the desktop's LUKS data drives.
+#
+#   storage-hotswap status
+#   storage-hotswap rescan                 # probe SATA ports for a newly inserted drive
+#   storage-hotswap mount <name>           # unlock + mount now
+#   storage-hotswap eject <name>           # unmount, lock, spin down, detach -> safe to pull
+#
+# <name> is "storage" (USB), "internal-storage" (SATA), one of the ext4 backup set
+# "disk1" "disk2" "disk3" "parity", or "backup" for the whole backup set
+# (data disks are pooled by mergerfs at /home/alex/shared/backup).
+set -euo pipefail
+
+backup_disks=(disk1 disk2 disk3 parity)
+pool=/home/alex/shared/backup
+
+mountpoint_for() {
+  case "$1" in
+    storage | internal-storage | disk1 | disk2 | disk3 | parity) echo "/home/alex/shared/$1" ;;
+    *)
+      echo "unknown drive: $1 (expected storage, internal-storage, disk1-3, parity or backup)" >&2
+      exit 1
+      ;;
+  esac
+}
+
+# Expand "backup" into the individual drives.
+drives_for() {
+  if [[ "$1" == backup ]]; then
+    echo "${backup_disks[@]}"
+  else
+    mountpoint_for "$1" >/dev/null
+    echo "$1"
+  fi
+}
+
+need_root() {
+  if [[ $EUID -ne 0 ]]; then
+    exec sudo "$0" "$@"
+  fi
+}
+
+cmd="${1:-status}"
+case "$cmd" in
+  status)
+    lsblk -o NAME,TYPE,SIZE,FSTYPE,MOUNTPOINTS,TRAN,HOTPLUG,MODEL
+    echo
+    systemctl list-units --all --no-pager --plain --no-legend \
+      'systemd-cryptsetup@storage.service' 'systemd-cryptsetup@internal\x2dstorage.service' \
+      'home-alex-shared-storage.*' 'home-alex-shared-internal\x2dstorage.*' \
+      'home-alex-shared-disk*' 'home-alex-shared-parity.*' 'home-alex-shared-backup.*'
+    ;;
+
+  rescan)
+    need_root "$@"
+    for scan in /sys/class/scsi_host/host*/scan; do
+      echo "- - -" >"$scan"
+    done
+    udevadm settle
+    lsblk -o NAME,SIZE,FSTYPE,TRAN,MODEL
+    ;;
+
+  mount)
+    name="${2:?usage: storage-hotswap mount <name>}"
+    read -ra drives <<<"$(drives_for "$name")"
+    need_root "$@"
+    for d in "${drives[@]}"; do
+      mp="$(mountpoint_for "$d")"
+      case "$d" in
+        storage | internal-storage) systemctl start "systemd-cryptsetup@$(systemd-escape "$d").service" ;;
+      esac
+      systemctl start "$(systemd-escape --path --suffix=mount "$mp")"
+      findmnt "$mp"
+    done
+    if [[ "$name" == backup ]]; then
+      systemctl start "$(systemd-escape --path --suffix=mount "$pool")"
+      findmnt "$pool"
+    fi
+    ;;
+
+  eject)
+    name="${2:?usage: storage-hotswap eject <name>}"
+    read -ra drives <<<"$(drives_for "$name")"
+    need_root "$@"
+
+    sync
+    # The mergerfs pool sits on disk1-3; take it down before any of them.
+    if [[ " ${backup_disks[*]} " == *" ${drives[0]} "* ]]; then
+      systemctl stop "$(systemd-escape --path --suffix=mount "$pool")"
+    fi
+
+    for d in "${drives[@]}"; do
+      mp="$(mountpoint_for "$d")"
+
+      # Find the physical disk before unmounting: behind the LUKS mapping for
+      # storage/internal-storage, or the mounted partition for the ext4 set.
+      disk=""
+      if [[ -e "/dev/mapper/$d" ]]; then
+        backing="$(cryptsetup status "$d" | awk '/device:/ {print $2}')"
+      else
+        backing="$(findmnt -no SOURCE "$mp" || true)"
+      fi
+      if [[ -n "$backing" ]]; then
+        disk="$(lsblk -no PKNAME "$backing" | head -n1)"
+        [[ -z "$disk" ]] && disk="$(basename "$backing")"
+      fi
+
+      # Stop only the .mount; the .automount stays armed for the next insert.
+      systemctl stop "$(systemd-escape --path --suffix=mount "$mp")"
+      if [[ -e "/dev/mapper/$d" ]]; then
+        systemctl stop "systemd-cryptsetup@$(systemd-escape "$d").service"
+      fi
+
+      if [[ -n "$disk" && -e "/sys/block/$disk/device/delete" ]]; then
+        echo "Spinning down and detaching /dev/$disk"
+        echo 1 >"/sys/block/$disk/device/delete"
+      fi
+      echo "$d ejected - safe to remove."
+    done
+    ;;
+
+  *)
+    echo "usage: storage-hotswap status|rescan|mount <name>|eject <name>" >&2
+    exit 1
+    ;;
+esac

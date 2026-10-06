@@ -1,10 +1,21 @@
 {
   config,
+  lib,
   pkgs,
   inputs,
   outputs,
   ...
-}: {
+}: let
+  # Unencrypted ext4 SnapRAID set (USB), by filesystem UUID.
+  backupDiskUuids = {
+    disk1 = "3c4b5d00-43c0-48be-81b8-c2b3977e015b";
+    disk2 = "98a75e01-fa80-469e-820c-1e1e275937b8";
+    disk3 = "0301db98-264f-4b18-9423-15691063f73d";
+    parity = "6cce037c-d2d4-4940-bb69-6d2b84fd41aa";
+  };
+  backupDataDisks = ["disk1" "disk2" "disk3"];
+  backupDisks = builtins.attrNames backupDiskUuids;
+in {
   imports = [
     ../configs/borg.nix
     ../configs/browser.nix
@@ -34,61 +45,67 @@
     };
   };
 
-  fileSystems = {
-    "/home/alex/shared/storage" = {
-      device = "/dev/disk/by-uuid/9a85d05a-2d26-47e9-803a-f10740d9eafa";
+  # Hot-swappable drives: LUKS "storage" (USB) and "internal-storage" (SATA),
+  # plus the plain ext4 backup set disk1-3 + parity (SnapRAID, data disks
+  # pooled by mergerfs). None is required for boot (nofail). Plugging a LUKS
+  # drive in unlocks it via udev; the first access to a mount point mounts it
+  # via automount. Use `sudo storage-hotswap eject <name>` before pulling one.
+  fileSystems = let
+    hotswapOptions = [
+      "noatime"
+      "noauto" # Don't mount at boot
+      "x-systemd.automount" # Mount on first access
+      "x-systemd.idle-timeout=10min" # Unmount after 10 mins of silence
+      "x-systemd.device-timeout=10s" # Fail fast if the drive isn't plugged in
+      "nofail" # Boot proceeds normally if the drive is missing
+    ];
+    hotswapBtrfs = mapper: {
+      device = "/dev/mapper/${mapper}"; # pulls in systemd-cryptsetup@<mapper>.service
       fsType = "btrfs";
-      options = [
-        "autodefrag"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-        "noauto" # Don't mount at boot
-        "x-systemd.automount" # Enable systemd automounting
-        "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
-        "x-systemd.device-timeout=5s" # Don't freeze the system if the USB isn't plugged in
-        "nofail" # Boot proceeds normally if USB is missing
-      ];
+      options = ["autodefrag" "compress=zstd" "nodiratime"] ++ hotswapOptions;
     };
-
-    "/home/alex/shared/internal-storage" = {
-      device = "/dev/disk/by-uuid/b6c33623-fc23-47ed-b6f5-e99455d5534a";
-      fsType = "btrfs";
-      options = [
-        "autodefrag"
-        "compress=zstd"
-        "nodiratime"
-        "noatime"
-        "noauto" # Don't mount at boot
-        "x-systemd.automount" # Enable systemd automounting
-        "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
-        "x-systemd.device-timeout=5s" # Don't freeze the system if the USB isn't plugged in
-        "nofail" # Boot proceeds normally if USB is missing
-      ];
+    hotswapExt4 = uuid: {
+      device = "/dev/disk/by-uuid/${uuid}";
+      fsType = "ext4";
+      options = hotswapOptions;
     };
-
-    "/home/alex/shared/windows" = {
-      device = "/dev/disk/by-uuid/B2086B10086AD2C1";
-      fsType = "ntfs3";
-      options = [
-        "rw"
-        "uid=1000"
-        "gid=100"
-        "noatime"
-        "force" # Mount even if Windows left the volume marked dirty (e.g. Fast Startup/hibernation)
-        "noauto" # Don't mount at boot
-        "x-systemd.automount" # Enable systemd automounting
-        "x-systemd.idle-timeout=10min" # Optional: auto-unmount/lock after 10 mins of silence
-        "x-systemd.device-timeout=5s" # Don't freeze the system if the drive isn't available
-        "nofail" # Boot proceeds normally if the partition is missing
-      ];
+  in
+    {
+      "/home/alex/shared/storage" = hotswapBtrfs "storage";
+      # "/home/alex/shared/internal-storage" = hotswapBtrfs "internal-storage";
+    }
+    // lib.mapAttrs' (d: uuid: lib.nameValuePair "/home/alex/shared/${d}" (hotswapExt4 uuid)) backupDiskUuids
+    // {
+      # mergerfs pool over disk1-3. Accessing it mounts all three data disks
+      # first (requires-mounts-for); if one is missing the pool fails to mount.
+      "/home/alex/shared/backup" = {
+        device = lib.concatMapStringsSep ":" (d: "/home/alex/shared/${d}") backupDataDisks;
+        fsType = "fuse.mergerfs";
+        options =
+          [
+            "noauto"
+            "x-systemd.automount"
+            "x-systemd.idle-timeout=10min"
+            "nofail"
+            "fsname=backup"
+            "allow_other"
+            "cache.files=off"
+            "category.create=mfs" # new files go to the disk with the most free space
+            "moveonenospc=true"
+            "minfreespace=100G"
+            "dropcacheonclose=true"
+          ]
+          ++ map (d: "x-systemd.requires-mounts-for=/home/alex/shared/${d}") backupDataDisks;
+      };
     };
-  };
+  system.fsPackages = [pkgs.mergerfs];
 
   environment.etc.crypttab.text = ''
-    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key
-    internal-storage UUID=db454a2d-ebc0-4503-8a76-dcc23c7a79ea /persist/internal-hdd.key
+    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key nofail,x-systemd.device-timeout=10s
+    internal-storage UUID=db454a2d-ebc0-4503-8a76-dcc23c7a79ea /persist/internal-hdd.key nofail,x-systemd.device-timeout=10s
   '';
+
+  systemd.tmpfiles.rules = ["d /persist/snapraid 0700 root root -"];
 
   nix.settings = {
     system-features = [
@@ -136,8 +153,22 @@
     };
   };
 
+  # powertop --auto-tune (enabled in configs/hardware.nix for the laptop) saves
+  # only a few watts here, but autosuspends USB input devices (laggy wireless
+  # mouse) and runtime-suspends SATA ports (hot-swap bays miss inserted drives).
+  powerManagement.powertop.enable = lib.mkForce false;
+
   systemd = {
     services = {
+      # Manual-only: no timers, and make sure every disk is mounted first.
+      snapraid-sync = {
+        startAt = lib.mkForce [];
+        unitConfig.RequiresMountsFor = map (d: "/home/alex/shared/${d}") backupDisks;
+      };
+      snapraid-scrub = {
+        startAt = lib.mkForce [];
+        unitConfig.RequiresMountsFor = map (d: "/home/alex/shared/${d}") backupDisks;
+      };
       monitor = {
         description = "AMDGPU Control Daemon";
         wantedBy = ["multi-user.target"];
@@ -178,6 +209,12 @@
 
       snapraid
       mergerfs
+
+      (writeShellApplication {
+        name = "storage-hotswap";
+        runtimeInputs = [coreutils util-linux systemd cryptsetup];
+        text = builtins.readFile ../home/bin/storage-hotswap;
+      })
     ];
     persistence."/persist" = {
       directories = [
@@ -231,6 +268,20 @@
     # printing.enable = true;
     bpftune.enable = true;
 
+    snapraid = {
+      enable = true;
+      dataDisks = lib.genAttrs backupDataDisks (d: "/home/alex/shared/${d}/");
+      parityFiles = ["/home/alex/shared/parity/snapraid.parity"];
+      contentFiles =
+        map (d: "/home/alex/shared/${d}/.snapraid.content") backupDataDisks
+        ++ ["/persist/snapraid/snapraid.content"];
+      exclude = [
+        "*.unrecoverable"
+        "/tmp/"
+        "/lost+found/"
+      ];
+    };
+
     samba.settings.storage = {
       browseable = "yes";
       "guest ok" = "no";
@@ -246,6 +297,11 @@
 
     udev.extraRules = ''
       SUBSYSTEM=="powercap", ACTION=="add", RUN+="${pkgs.coreutils}/bin/chmod o+r /sys%p/energy_uj"
+      # Keep SATA ports awake so hot-inserted drives are detected (see sata-hotplug)
+      SUBSYSTEM=="ata_port", ACTION=="add", TEST=="device/power/control", ATTR{device/power/control}="on"
+      # Unlock hot-plugged LUKS drives as soon as they appear
+      SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@storage.service"
+      SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="db454a2d-ebc0-4503-8a76-dcc23c7a79ea", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@internal\x2dstorage.service"
     '';
 
     ollama = {
