@@ -6,13 +6,17 @@
   outputs,
   ...
 }: let
-  # Unencrypted ext4 SnapRAID set (USB), by filesystem UUID.
+  # ext4 SnapRAID set (USB), by ext4 filesystem UUID. Being converted in place
+  # to LUKS2 with scripts/encrypt-backup-disk.sh; once a disk is done, add it
+  # to encryptedBackupDisks so it's unlocked (label <disk>-crypt) and mounted
+  # from /dev/mapper/<disk>.
   backupDiskUuids = {
     disk1 = "3c4b5d00-43c0-48be-81b8-c2b3977e015b";
     disk2 = "98a75e01-fa80-469e-820c-1e1e275937b8";
     disk3 = "0301db98-264f-4b18-9423-15691063f73d";
     parity = "6cce037c-d2d4-4940-bb69-6d2b84fd41aa";
   };
+  encryptedBackupDisks = [];
   backupDataDisks = ["disk1" "disk2" "disk3"];
   backupDisks = builtins.attrNames backupDiskUuids;
 in {
@@ -46,8 +50,8 @@ in {
   };
 
   # Hot-swappable drives: LUKS "storage" (USB) and "internal-storage" (SATA),
-  # plus the plain ext4 backup set disk1-3 + parity (SnapRAID, data disks
-  # pooled by mergerfs). None is required for boot (nofail). Plugging a LUKS
+  # plus the ext4 backup set disk1-3 + parity (SnapRAID, data disks pooled by
+  # mergerfs, LUKS where listed in encryptedBackupDisks). None is required for boot (nofail). Plugging a LUKS
   # drive in unlocks it via udev; the first access to a mount point mounts it
   # via automount. Use `sudo storage-hotswap eject <name>` before pulling one.
   fileSystems = let
@@ -64,8 +68,11 @@ in {
       fsType = "btrfs";
       options = ["autodefrag" "compress=zstd" "nodiratime"] ++ hotswapOptions;
     };
-    hotswapExt4 = uuid: {
-      device = "/dev/disk/by-uuid/${uuid}";
+    hotswapExt4 = d: uuid: {
+      device =
+        if lib.elem d encryptedBackupDisks
+        then "/dev/mapper/${d}"
+        else "/dev/disk/by-uuid/${uuid}";
       fsType = "ext4";
       options = hotswapOptions;
     };
@@ -74,7 +81,7 @@ in {
       "/home/alex/shared/storage" = hotswapBtrfs "storage";
       # "/home/alex/shared/internal-storage" = hotswapBtrfs "internal-storage";
     }
-    // lib.mapAttrs' (d: uuid: lib.nameValuePair "/home/alex/shared/${d}" (hotswapExt4 uuid)) backupDiskUuids
+    // lib.mapAttrs' (d: uuid: lib.nameValuePair "/home/alex/shared/${d}" (hotswapExt4 d uuid)) backupDiskUuids
     // {
       # mergerfs pool over disk1-3. Accessing it mounts all three data disks
       # first (requires-mounts-for); if one is missing the pool fails to mount.
@@ -103,7 +110,7 @@ in {
   environment.etc.crypttab.text = ''
     storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key nofail,x-systemd.device-timeout=10s
     internal-storage UUID=db454a2d-ebc0-4503-8a76-dcc23c7a79ea /persist/internal-hdd.key nofail,x-systemd.device-timeout=10s
-  '';
+    ${lib.concatMapStrings (d: "${d} LABEL=${d}-crypt /persist/backup-hdd.key nofail,x-systemd.device-timeout=10s\n") encryptedBackupDisks}'';
 
   systemd.tmpfiles.rules = ["d /persist/snapraid 0700 root root -"];
 
@@ -208,6 +215,7 @@ in {
       monero-gui
 
       snapraid
+      smartmontools
       mergerfs
 
       (writeShellApplication {
@@ -302,7 +310,7 @@ in {
       # Unlock hot-plugged LUKS drives as soon as they appear
       SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@storage.service"
       SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="db454a2d-ebc0-4503-8a76-dcc23c7a79ea", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@internal\x2dstorage.service"
-    '';
+      ${lib.concatMapStrings (d: ''SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}=="crypto_LUKS", ENV{ID_FS_LABEL}=="${d}-crypt", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@${d}.service"'' + "\n") encryptedBackupDisks}'';
 
     ollama = {
       enable = true;
