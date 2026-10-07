@@ -98,10 +98,12 @@ case "$cmd" in
       if [[ -e "/dev/mapper/$d" ]]; then
         backing="$(cryptsetup status "$d" | awk '/device:/ {print $2}')"
       else
-        backing="$(findmnt -no SOURCE "$mp" || true)"
+        # -t noautofs: when the drive isn't mounted, only the autofs trigger
+        # ("systemd-1") sits on the mount point - that's not a block device.
+        backing="$(findmnt -no SOURCE -t noautofs "$mp" || true)"
       fi
       if [[ -n "$backing" ]]; then
-        disk="$(lsblk -no PKNAME "$backing" | head -n1)"
+        disk="$(lsblk -no PKNAME "$backing" 2>/dev/null | head -n1 || true)"
         [[ -z "$disk" ]] && disk="$(basename "$backing")"
       fi
 
