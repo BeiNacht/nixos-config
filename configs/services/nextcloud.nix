@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   imports = [
     ./postgres.nix
   ];
@@ -34,14 +36,8 @@
           enableACME = true;
         };
 
-        ${config.services.collabora-online.settings.server_name} = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            proxyPass = "http://[::1]:${toString config.services.collabora-online.port}";
-            proxyWebsockets = true; # collabora uses websockets
-          };
-        };
+        ${config.services.collabora-online.settings.server_name} =
+          vhosts.proxy "http://[::1]:${toString config.services.collabora-online.port}";
       };
     };
 

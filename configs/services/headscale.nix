@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   environment = {
     systemPackages = with pkgs; [headscale];
     persistence."/persist" = {
@@ -16,16 +18,7 @@
   services = {
     nginx = {
       virtualHosts = {
-        "headscale.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://127.0.0.1:8088/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        "headscale.szczepan.ski" = vhosts.proxy "http://127.0.0.1:8088/";
       };
     };
 

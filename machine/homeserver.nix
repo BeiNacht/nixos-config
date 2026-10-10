@@ -5,13 +5,14 @@
   outputs,
   ...
 }: let
-  sshKeys = import ../configs/ssh-keys.nix;
+  shares = import ../configs/samba-shares.nix;
 in {
   imports = [
     # ../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/docker.nix
     ../configs/filesystem.nix
+    ../configs/lan-server.nix
     ../configs/plasma-desktop.nix
     ../configs/games.nix
     ../configs/samba.nix
@@ -42,15 +43,6 @@ in {
     initrd = {
       availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "igc"];
       kernelModules = ["dm-snapshot"];
-      network = {
-        enable = true;
-        ssh = {
-          enable = true;
-          port = 22;
-          authorizedKeys = sshKeys.initrd;
-          hostKeys = ["/persist/pre_boot_ssh_key"];
-        };
-      };
       luks.devices = {
         root = {
           device = "/dev/disk/by-uuid/f6809a64-d23d-4940-a0e7-c256ce7a2e90";
@@ -62,12 +54,9 @@ in {
 
   networking = {
     hostName = "homeserver";
-    useDHCP = false;
-    firewall = {enable = false;};
     interfaces = {
       enp1s0.useDHCP = true;
     };
-    nftables.enable = false;
   };
 
   environment = {
@@ -102,49 +91,17 @@ in {
     #   #   # openFirewall = true;
     # };
 
-    tailscale = {
-      enable = true;
-      useRoutingFeatures = "both";
-    };
-
     # unifi = {
     #   enable = true;
     #   unifiPackage = pkgs.unifi;
     #   mongodbPackage = pkgs.mongodb-ce;
     # };
 
-    locate = {
-      prunePaths = ["/mnt" "/nix"];
-    };
-
     samba = {
       settings = {
-        storage = {
-          "path" = "/home/alex/homeserver/storage";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        homeassistant = {
-          "path" = "/home/alex/homeserver/storage/homeassistant";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        timemachine = {
-          "path" = "/home/alex/homeserver/storage/timemachine";
-          "valid users" = "alex";
-          "public" = "no";
-          "writeable" = "yes";
-          "force user" = "alex";
-          "fruit:aapl" = "yes";
-          "fruit:time machine" = "yes";
-          "vfs objects" = "catia fruit streams_xattr";
-        };
+        storage = shares.share "/home/alex/homeserver/storage";
+        homeassistant = shares.share "/home/alex/homeserver/storage/homeassistant";
+        timemachine = shares.timeMachine "/home/alex/homeserver/storage/timemachine";
       };
     };
   };

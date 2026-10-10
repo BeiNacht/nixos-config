@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   environment = {
     persistence."/persist" = {
       directories = [
@@ -16,16 +18,7 @@
   services = {
     nginx = {
       virtualHosts = {
-        "immich.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://[::1]:2283/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        "immich.szczepan.ski" = vhosts.proxy "http://[::1]:2283/";
       };
     };
 

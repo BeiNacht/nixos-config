@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   services = {
     uptime-kuma = {
       enable = true;
@@ -15,11 +17,7 @@
 
     nginx = {
       virtualHosts = {
-        "uptime.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {"/" = {proxyPass = "http://127.0.0.1:4000/";};};
-        };
+        "uptime.szczepan.ski" = vhosts.proxy "http://127.0.0.1:4000/";
       };
     };
   };

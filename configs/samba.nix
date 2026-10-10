@@ -1,6 +1,7 @@
 # Shared samba server settings used by every host that exposes shares
-# (desktop, mini, homeserver, vps-arm, framework). Hosts only need to import
-# this and then set their own `services.samba.settings.<share>` blocks.
+# (desktop, mini, homeserver, vps-arm, framework, nixos-vm-fusion). Hosts only
+# need to import this and then set their own `services.samba.settings.<share>`
+# blocks, usually via the presets in samba-shares.nix.
 {...}: {
   services.samba = {
     enable = true;

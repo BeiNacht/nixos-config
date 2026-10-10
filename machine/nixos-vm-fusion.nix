@@ -4,12 +4,15 @@
   lib,
   outputs,
   ...
-}: {
+}: let
+  shares = import ../configs/samba-shares.nix;
+in {
   imports = [
     ../configs/common-linux.nix
     ../configs/docker.nix
     ../configs/filesystem.nix
     ../configs/plasma-desktop.nix
+    ../configs/samba.nix
     ../configs/user.nix
     ../configs/user-gui.nix
   ];
@@ -72,35 +75,7 @@
       role = "server";
     };
 
-    samba = {
-      enable = true;
-      settings = {
-        global = {
-          workgroup = "WORKGROUP";
-          # "disable netbios" = "yes";
-          # "smb ports" = "445";
-          # "server min protocol" = "SMB2";
-          "server string" = "server";
-          security = "user";
-          "guest account" = "nobody";
-          "map to guest" = "bad user";
-          logging = "systemd";
-          "max log size" = 50;
-          "invalid users" = [
-            "root"
-          ];
-          "passwd program" = "/run/wrappers/bin/passwd %u";
-        };
-        storage = {
-          browseable = "yes";
-          "guest ok" = "no";
-          path = "/home/alex/shared/storage";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-      };
-    };
+    samba.settings.storage = shares.share "/home/alex/shared/storage";
 
     udev.extraRules = ''
       ACTION=="add", SUBSYSTEM=="block", ENV{ID_FS_UUID}=="fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1", TAG+="systemd", ENV{SYSTEMD_WANTS}+="decrypt-external-hdd.service"

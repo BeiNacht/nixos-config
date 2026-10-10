@@ -1,4 +1,6 @@
-{
+let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   environment = {
     persistence."/persist" = {
       directories = [
@@ -10,16 +12,7 @@
   services = {
     nginx = {
       virtualHosts = {
-        "audiobookshelf.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://127.0.0.1:3006/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        "audiobookshelf.szczepan.ski" = vhosts.proxy "http://127.0.0.1:3006/";
       };
     };
 

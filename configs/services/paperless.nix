@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   environment = {
     persistence."/persist" = {
       directories = [
@@ -38,16 +40,7 @@
 
     nginx = {
       virtualHosts = {
-        "paperless.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://127.0.0.1:28981/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        "paperless.szczepan.ski" = vhosts.proxy "http://127.0.0.1:28981/";
       };
     };
   };

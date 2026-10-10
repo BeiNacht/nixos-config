@@ -5,10 +5,12 @@
   outputs,
   ...
 }: let
+  shares = import ../configs/samba-shares.nix;
   sshKeys = import ../configs/ssh-keys.nix;
 in {
   imports = [
     ../configs/filesystem.nix
+    ../configs/lan-server.nix
     # ../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/docker.nix
@@ -85,15 +87,6 @@ in {
     initrd = {
       availableKernelModules = ["ahci" "xhci_pci" "usbhid" "usb_storage" "sd_mod" "sr_mod" "r8169"];
       kernelModules = ["dm-snapshot"];
-      network = {
-        enable = true;
-        ssh = {
-          enable = true;
-          port = 22;
-          authorizedKeys = sshKeys.initrd;
-          hostKeys = ["/persist/pre_boot_ssh_key"];
-        };
-      };
       luks.devices = {
         root = {
           device = "/dev/disk/by-uuid/9287df9c-ec3c-4cd8-af3a-d253f9418f7b";
@@ -107,12 +100,9 @@ in {
 
   networking = {
     hostName = "mini";
-    useDHCP = false;
-    firewall = {enable = false;};
     interfaces = {
       enp3s0.useDHCP = true;
     };
-    nftables.enable = false;
   };
 
   environment = {
@@ -134,47 +124,12 @@ in {
   };
 
   services = {
-    tailscale = {
-      enable = true;
-      useRoutingFeatures = "both";
-    };
-
     samba = {
       settings = {
-        storage = {
-          "path" = "/home/alex/homeserver/storage";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        share = {
-          "path" = "/home/alex/homeserver/share";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        homeassistant = {
-          "path" = "/home/alex/homeserver/storage/homeassistant";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        timemachine = {
-          "path" = "/home/alex/homeserver/storage/timemachine";
-          "valid users" = "alex";
-          "public" = "no";
-          "writeable" = "yes";
-          "force user" = "alex";
-          "fruit:aapl" = "yes";
-          "fruit:time machine" = "yes";
-          "vfs objects" = "catia fruit streams_xattr";
-        };
+        storage = shares.share "/home/alex/homeserver/storage";
+        share = shares.share "/home/alex/homeserver/share";
+        homeassistant = shares.share "/home/alex/homeserver/storage/homeassistant";
+        timemachine = shares.timeMachine "/home/alex/homeserver/storage/timemachine";
       };
     };
 
@@ -194,10 +149,6 @@ in {
     #     "/var/lib/libvirt/images"
     #   ];
     # };
-
-    locate = {
-      prunePaths = ["/mnt" "/nix"];
-    };
   };
 
   # systemd = {

@@ -3,7 +3,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   imports = [
     ./postgres.nix
   ];
@@ -29,11 +31,7 @@
   services = {
     nginx = {
       virtualHosts = {
-        ${config.services.gitea.settings.server.DOMAIN} = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {"/" = {proxyPass = "http://127.0.0.1:3001/";};};
-        };
+        ${config.services.gitea.settings.server.DOMAIN} = vhosts.proxy "http://127.0.0.1:3001/";
       };
     };
 

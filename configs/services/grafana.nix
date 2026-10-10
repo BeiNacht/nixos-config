@@ -3,21 +3,13 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   services = {
     nginx = {
       virtualHosts = {
-        "grafana.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
-              proxyWebsockets = true;
-              recommendedProxySettings = true;
-            };
-          };
-        };
+        "grafana.szczepan.ski" = vhosts.proxy "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
       };
     };
 

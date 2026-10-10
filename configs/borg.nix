@@ -2,6 +2,7 @@
   sops = {
     secrets = {
       borg-key = {
+        sopsFile = ../secrets/secrets-${config.networking.hostName}.yaml;
         owner = config.users.users.alex.name;
       };
     };

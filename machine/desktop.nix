@@ -6,6 +6,11 @@
   outputs,
   ...
 }: let
+  shares = import ../configs/samba-shares.nix;
+  # Hot-swap LUKS drives, by LUKS header UUID: "storage" (USB) and
+  # "internal-storage" (SATA). Used for crypttab and the udev unlock rules.
+  storageLuksUuid = "fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1";
+  internalStorageLuksUuid = "db454a2d-ebc0-4503-8a76-dcc23c7a79ea";
   # ext4 SnapRAID set (USB), by ext4 filesystem UUID. Being converted in place
   # to LUKS2 with scripts/encrypt-backup-disk.sh; once a disk is done, add it
   # to encryptedBackupDisks so it's unlocked (label <disk>-crypt) and mounted
@@ -38,16 +43,6 @@ in {
     ../configs/user.nix
     # (modulesPath + "/installer/scan/not-detected.nix")
   ];
-
-  sops = {
-    secrets = {
-      borg-key = {
-        sopsFile = ../secrets/secrets-desktop.yaml;
-        owner = config.users.users.alex.name;
-        group = config.users.users.alex.group;
-      };
-    };
-  };
 
   # Hot-swappable drives: LUKS "storage" (USB) and "internal-storage" (SATA),
   # plus the ext4 backup set disk1-3 + parity (SnapRAID, data disks pooled by
@@ -108,8 +103,8 @@ in {
   system.fsPackages = [pkgs.mergerfs];
 
   environment.etc.crypttab.text = ''
-    storage UUID=fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1 /persist/hdd.key nofail,x-systemd.device-timeout=10s
-    internal-storage UUID=db454a2d-ebc0-4503-8a76-dcc23c7a79ea /persist/internal-hdd.key nofail,x-systemd.device-timeout=10s
+    storage UUID=${storageLuksUuid} /persist/hdd.key nofail,x-systemd.device-timeout=10s
+    internal-storage UUID=${internalStorageLuksUuid} /persist/internal-hdd.key nofail,x-systemd.device-timeout=10s
     ${lib.concatMapStrings (d: "${d} LABEL=${d}-crypt /persist/backup-hdd.key nofail,x-systemd.device-timeout=10s\n") encryptedBackupDisks}'';
 
   systemd.tmpfiles.rules = ["d /persist/snapraid 0700 root root -"];
@@ -290,14 +285,7 @@ in {
       ];
     };
 
-    samba.settings.storage = {
-      browseable = "yes";
-      "guest ok" = "no";
-      path = "/home/alex/shared/storage";
-      "read only" = "no";
-      "create mask" = "0644";
-      "directory mask" = "0755";
-    };
+    samba.settings.storage = shares.share "/home/alex/shared/storage";
 
     borgbackup.jobs.all = rec {
       repo = "ssh://alex@mini.meteor-altered.ts.net/./homeserver/storage/samba/desktop/borg";
@@ -308,8 +296,8 @@ in {
       # Keep SATA ports awake so hot-inserted drives are detected (see sata-hotplug)
       SUBSYSTEM=="ata_port", ACTION=="add", TEST=="device/power/control", ATTR{device/power/control}="on"
       # Unlock hot-plugged LUKS drives as soon as they appear
-      SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="fbaa39cb-ff4b-43d0-9ff2-1e9b189a07f1", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@storage.service"
-      SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="db454a2d-ebc0-4503-8a76-dcc23c7a79ea", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@internal\x2dstorage.service"
+      SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="${storageLuksUuid}", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@storage.service"
+      SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_UUID}=="${internalStorageLuksUuid}", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@internal\x2dstorage.service"
       ${lib.concatMapStrings (d: ''SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}=="crypto_LUKS", ENV{ID_FS_LABEL}=="${d}-crypt", TAG+="systemd", ENV{SYSTEMD_WANTS}+="systemd-cryptsetup@${d}.service"'' + "\n") encryptedBackupDisks}'';
 
     ollama = {

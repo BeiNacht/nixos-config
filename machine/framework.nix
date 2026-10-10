@@ -6,7 +6,9 @@
   inputs,
   modulesPath,
   ...
-}: {
+}: let
+  shares = import ../configs/samba-shares.nix;
+in {
   imports = [
     ../configs/borg.nix
     ../configs/browser.nix
@@ -23,16 +25,6 @@
     ../configs/user.nix
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
-
-  sops = {
-    secrets = {
-      borg-key = {
-        sopsFile = ../secrets/secrets-framework.yaml;
-        owner = config.users.users.alex.name;
-        group = config.users.users.alex.group;
-      };
-    };
-  };
 
   # fileSystems = {
   #   "/home/alex/shared/storage" = {
@@ -172,14 +164,7 @@
       repo = "ssh://alex@mini.meteor-altered.ts.net/./homeserver/storage/samba/framework/borg";
     };
 
-    samba.settings.shares = {
-      browseable = "yes";
-      "guest ok" = "no";
-      path = "/home/alex/shared/storage";
-      "read only" = "no";
-      "create mask" = "0644";
-      "directory mask" = "0755";
-    };
+    samba.settings.shares = shares.share "/home/alex/shared/storage";
 
     snapraid = {
       enable = true;
@@ -206,7 +191,7 @@
 
     throttled = {
       enable = true;
-      extraConfig = "
+      extraConfig = ''
         [GENERAL]
         # Enable or disable the script execution
         Enabled: True
@@ -254,7 +239,8 @@
         # Set cTDP to normal=0, down=1 or up=2 (EXPERIMENTAL)
         cTDP: 0
         # Disable BDPROCHOT (EXPERIMENTAL)
-        Disable_BDPROCHOT: False";
+        Disable_BDPROCHOT: False
+      '';
     };
   };
 

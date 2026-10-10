@@ -71,9 +71,10 @@
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
 
-    # Every host shares the same home-manager wiring (single profile, same
-    # settings) — this factors that boilerplate out so each host below only
-    # has to list what's actually unique to it: system + extra modules.
+    # Every host shares sops-nix, impermanence and the same home-manager
+    # wiring (single profile, same settings) — this factors that boilerplate
+    # out so each host below only has to list what's actually unique to it:
+    # system + hardware profiles + its machine file.
     mkNixosHost = {
       system,
       hostModules,
@@ -84,6 +85,8 @@
         modules =
           hostModules
           ++ [
+            sops-nix.nixosModules.sops
+            impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -120,12 +123,10 @@
       desktop = mkNixosHost {
         system = "x86_64-linux";
         hostModules = [
-          impermanence.nixosModules.impermanence
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-cpu-amd-pstate
           nixos-hardware.nixosModules.common-cpu-amd-zenpower
           nixos-hardware.nixosModules.common-pc-ssd
-          sops-nix.nixosModules.sops
           chaotic.nixosModules.default
           ./machine/desktop.nix
         ];
@@ -134,10 +135,8 @@
       framework = mkNixosHost {
         system = "x86_64-linux";
         hostModules = [
-          impermanence.nixosModules.impermanence
-          inputs.nixos-hardware.nixosModules.framework-12th-gen-intel
+          nixos-hardware.nixosModules.framework-12th-gen-intel
           nixos-hardware.nixosModules.common-pc-ssd
-          inputs.sops-nix.nixosModules.sops
           chaotic.nixosModules.default
           ./machine/framework.nix
         ];
@@ -146,8 +145,6 @@
       vps-arm = mkNixosHost {
         system = "aarch64-linux";
         hostModules = [
-          impermanence.nixosModules.impermanence
-          inputs.sops-nix.nixosModules.sops
           ./machine/vps-arm.nix
         ];
       };
@@ -155,9 +152,7 @@
       thinkpad = mkNixosHost {
         system = "x86_64-linux";
         hostModules = [
-          impermanence.nixosModules.impermanence
-          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
-          inputs.sops-nix.nixosModules.sops
+          nixos-hardware.nixosModules.lenovo-thinkpad-x1-extreme
           ./machine/thinkpad.nix
         ];
       };
@@ -165,9 +160,7 @@
       mini = mkNixosHost {
         system = "x86_64-linux";
         hostModules = [
-          inputs.nixos-hardware.nixosModules.common-cpu-intel
-          inputs.sops-nix.nixosModules.sops
-          impermanence.nixosModules.impermanence
+          nixos-hardware.nixosModules.common-cpu-intel
           ./machine/mini.nix
         ];
       };
@@ -175,9 +168,7 @@
       homeserver = mkNixosHost {
         system = "x86_64-linux";
         hostModules = [
-          inputs.nixos-hardware.nixosModules.common-cpu-intel
-          inputs.sops-nix.nixosModules.sops
-          impermanence.nixosModules.impermanence
+          nixos-hardware.nixosModules.common-cpu-intel
           ./machine/homeserver.nix
         ];
       };
@@ -185,8 +176,6 @@
       nixos-vm = mkNixosHost {
         system = "aarch64-linux";
         hostModules = [
-          inputs.sops-nix.nixosModules.sops
-          impermanence.nixosModules.impermanence
           ./machine/nixos-vm/configuration.nix
         ];
       };
@@ -194,8 +183,6 @@
       nixos-virtualbox = mkNixosHost {
         system = "x86_64-linux";
         hostModules = [
-          inputs.sops-nix.nixosModules.sops
-          impermanence.nixosModules.impermanence
           ./machine/nixos-virtualbox/configuration.nix
         ];
       };
@@ -203,8 +190,6 @@
       nixos-vm-fusion = mkNixosHost {
         system = "aarch64-linux";
         hostModules = [
-          inputs.sops-nix.nixosModules.sops
-          impermanence.nixosModules.impermanence
           ./machine/nixos-vm-fusion.nix
         ];
       };

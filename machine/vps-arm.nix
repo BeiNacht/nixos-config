@@ -7,7 +7,8 @@
   modulesPath,
   ...
 }: let
-  sshKeys = import ../configs/ssh-keys.nix;
+  vhosts = import ../configs/nginx-vhosts.nix;
+  shares = import ../configs/samba-shares.nix;
 in {
   imports = [
     ../configs/common-linux.nix
@@ -15,6 +16,7 @@ in {
     ../configs/user.nix
     ../configs/borg.nix
     ../configs/filesystem.nix
+    ../configs/initrd-ssh.nix
     ../configs/samba.nix
 
     ../configs/services/actual.nix
@@ -74,15 +76,6 @@ in {
         "xhci_pci"
       ];
       kernelModules = ["dm-snapshot"];
-      network = {
-        enable = true;
-        ssh = {
-          enable = true;
-          port = 22;
-          authorizedKeys = sshKeys.initrd;
-          hostKeys = ["/persist/pre_boot_ssh_key"];
-        };
-      };
 
       luks.devices = {
         root = {
@@ -150,16 +143,6 @@ in {
         "/var/www/alexander.szczepan.ski"
       ];
     };
-
-    etc = {
-      # Adapted failregex for syslogs
-      "fail2ban/filter.d/nextcloud.local".text = pkgs.lib.mkDefault (pkgs.lib.mkAfter ''
-        [Definition]
-        failregex = ^.*"remoteAddr":"&lt;HOST&gt;".*"message":"Login failed:
-                    ^.*"remoteAddr":"&lt;HOST&gt;".*"message":"Two-factor challenge failed:
-                    ^.*"remoteAddr":"&lt;HOST&gt;".*"message":"Trusted domain error.
-      '');
-    };
   };
 
   programs = {
@@ -221,16 +204,7 @@ in {
           };
         };
 
-        "homeassistant.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "http://homeassistant.meteor-altered.ts.net:8123/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        "homeassistant.szczepan.ski" = vhosts.proxy "http://homeassistant.meteor-altered.ts.net:8123/";
 
         # "frigate.szczepan.ski" = {
         #   forceSSL = true;
@@ -265,19 +239,6 @@ in {
             enabled = true;
           };
         };
-        # nextcloud.settings = {
-        #   # START modification to work with syslog instead of logile
-        #   backend = "systemd";
-        #   journalmatch = "SYSLOG_IDENTIFIER=Nextcloud";
-        #   # END modification to work with syslog instead of logile
-        #   enabled = true;
-        #   port = 443;
-        #   protocol = "tcp";
-        #   filter = "nextcloud";
-        #   maxretry = 3;
-        #   bantime = 86400;
-        #   findtime = 43200;
-        # };
       };
     };
 
@@ -297,40 +258,10 @@ in {
 
     samba = {
       settings = {
-        storage = {
-          "path" = "/home/alex/storage";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        homeassistant = {
-          "path" = "/home/alex/homeassistant";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        paperless = {
-          "path" = "/var/lib/paperless/consume";
-          "browseable" = "yes";
-          "guest ok" = "no";
-          "read only" = "no";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-        };
-        timemachine = {
-          "path" = "/home/alex/timemachine";
-          "valid users" = "alex";
-          "public" = "no";
-          "writeable" = "yes";
-          "force user" = "alex";
-          "fruit:aapl" = "yes";
-          "fruit:time machine" = "yes";
-          "vfs objects" = "catia fruit streams_xattr";
-        };
+        storage = shares.share "/home/alex/storage";
+        homeassistant = shares.share "/home/alex/homeassistant";
+        paperless = shares.share "/var/lib/paperless/consume";
+        timemachine = shares.timeMachine "/home/alex/timemachine";
       };
     };
 

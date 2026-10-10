@@ -3,17 +3,13 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  vhosts = import ../nginx-vhosts.nix;
+in {
   services = {
     nginx = {
       virtualHosts = {
-        "atuin.szczepan.ski" = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {proxyPass = "http://127.0.0.1:8888/";};
-          };
-        };
+        "atuin.szczepan.ski" = vhosts.proxy "http://127.0.0.1:8888/";
       };
     };
 

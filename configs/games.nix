@@ -34,7 +34,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-
     # shadps4
     gamemode
     heroic

@@ -4,6 +4,7 @@
   lib,
   ...
 }: let
+  vhosts = import ../nginx-vhosts.nix;
   dns-domain = "dns.szczepan.ski";
 in {
   security.acme.certs.${dns-domain}.postRun = ''
@@ -16,16 +17,7 @@ in {
   services = {
     nginx = {
       virtualHosts = {
-        ${dns-domain} = {
-          forceSSL = true;
-          enableACME = true;
-          locations = {
-            "/" = {
-              proxyPass = "https://127.0.0.1:3004/";
-              proxyWebsockets = true;
-            };
-          };
-        };
+        ${dns-domain} = vhosts.proxy "https://127.0.0.1:3004/";
       };
     };
 
