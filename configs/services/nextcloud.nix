@@ -58,7 +58,7 @@ in {
       hostName = "nextcloud.szczepan.ski";
 
       # Need to manually increment with every major upgrade.
-      package = pkgs.nextcloud33;
+      package = pkgs.nextcloud35;
 
       # Let NixOS install and configure the database automatically.
       database.createLocally = true;
