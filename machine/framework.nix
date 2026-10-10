@@ -161,7 +161,6 @@
   services = {
     colord.enable = true;
     fprintd.enable = false;
-    cpupower-gui.enable = true;
 
     # btrfs.autoScrub = {
     #   enable = true;
@@ -261,6 +260,22 @@
 
   # systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 40960;
 
+  security.sudo.extraRules = [
+    {
+      users = ["alex"];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/gw1-power-profile apply";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "/run/current-system/sw/bin/gw1-power-profile restore";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
+
   environment = {
     sessionVariables = {LIBVA_DRIVER_NAME = "iHD";}; # Force intel-media-driver
     systemPackages = with pkgs; [
@@ -285,6 +300,51 @@
       snapraid
       mergerfs
       smartmontools
+
+      # Guild Wars 1 is iGPU-bound on this laptop, not CPU-bound. While it
+      # runs, cap CPU cores hard (they only need ~6.5W here) and trim the
+      # overall package power ceiling below throttled's normal AC caps
+      # (28W/44W), so the package stays further from TjMax without starving
+      # the iGPU of power. throttled.service is paused so its own PL1/PL2
+      # loop doesn't fight this.
+      (writeShellApplication {
+        name = "gw1-power-profile";
+        runtimeInputs = [systemd];
+        text = ''
+          PKG=/sys/class/powercap/intel-rapl:0
+          CORE=/sys/class/powercap/intel-rapl:0:0
+
+          case "''${1:-}" in
+            apply)
+              systemctl stop throttled.service
+              echo 15000000 > "$PKG/constraint_0_power_limit_uw"  # PL1 sustained -> 22W
+              echo 25000000 > "$PKG/constraint_1_power_limit_uw"  # PL2 burst -> 36W
+              echo 8000000  > "$CORE/constraint_0_power_limit_uw" # cores-only cap -> 4W, rest goes to iGPU (uncore has no cap of its own)
+              echo 15000000 > "$CORE/constraint_0_time_window_us"
+              ;;
+            restore)
+              echo 0 > "$CORE/constraint_0_power_limit_uw" # 0 = unset/uncapped on this driver
+              systemctl start throttled.service
+              ;;
+            *)
+              echo "usage: gw1-power-profile {apply|restore}" >&2
+              exit 1
+              ;;
+          esac
+        '';
+      })
+
+      # Launches Guild Wars 1 under the reduced power profile above, and
+      # restores throttled's normal caps afterward (even if killed).
+      (writeShellApplication {
+        name = "gw1";
+        text = ''
+          sudo gw1-power-profile apply
+          trap 'sudo gw1-power-profile restore' EXIT
+
+          env WINEPREFIX="/home/alex/Games/gw/prefix" wine "C:\users\Public\Desktop\Guild Wars.lnk"
+        '';
+      })
     ];
   };
 
