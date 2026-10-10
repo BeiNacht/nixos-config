@@ -12,6 +12,7 @@
 
   borg = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPjxTUEclBMOYixTd457wF/0N5HIZRp0kvAMAT/UK74Z bernd@desktop"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICDjrE6zN4uc6fLFaYrY/HxffSpyuKYdcV+AWohUrUaC framework@beinacht.org"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG/tghG2pBTrqYT4+1nF1266lteRBf2bPL+OZAOjyFHL alex@vps-arm"
   ];
 
