@@ -7,6 +7,7 @@
 }: {
   imports = [
     ./thinkpad/hardware-configuration.nix
+    ../configs/backup-disks.nix
     # ../../configs/borg.nix
     ../configs/common-linux.nix
     ../configs/develop.nix

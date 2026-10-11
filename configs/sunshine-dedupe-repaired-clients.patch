@@ -1,0 +1,17 @@
+--- a/src/nvhttp.cpp	2026-10-07 23:44:25.108190232 +0200
++++ b/src/nvhttp.cpp	2026-10-07 23:44:25.131190478 +0200
+@@ -450,6 +450,14 @@
+     named_cert.uuid = uuid_util::uuid_t::generate().string();
+ 
+     std::lock_guard lock {client_auth_mutex()};
++    // Re-pairing an already paired client must replace its old record:
++    // is_client_enabled() rejects certificates that match more than one entry.
++    if (auto new_certificate = crypto::x509(named_cert.cert); new_certificate) {
++      std::erase_if(client_root.named_devices, [&](const named_cert_t &existing) {
++        auto existing_certificate = crypto::x509(existing.cert);
++        return existing_certificate && X509_cmp(existing_certificate.get(), new_certificate.get()) == 0;
++      });
++    }
+     client_root.named_devices.emplace_back(std::move(named_cert));
+     rebuild_client_cert_chain();
+ 

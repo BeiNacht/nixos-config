@@ -26,6 +26,7 @@
   backupDisks = builtins.attrNames backupDiskUuids;
 in {
   imports = [
+    ../configs/backup-disks.nix
     ../configs/borg.nix
     ../configs/browser.nix
     ../configs/common-linux.nix
@@ -43,6 +44,16 @@ in {
     ../configs/user.nix
     # (modulesPath + "/installer/scan/not-detected.nix")
   ];
+
+  sops = {
+    secrets = {
+      borg-key = {
+        sopsFile = ../secrets/secrets-desktop.yaml;
+        owner = config.users.users.alex.name;
+        group = config.users.users.alex.group;
+      };
+    };
+  };
 
   # Hot-swappable drives: LUKS "storage" (USB) and "internal-storage" (SATA),
   # plus the ext4 backup set disk1-3 + parity (SnapRAID, data disks pooled by
@@ -63,44 +74,10 @@ in {
       fsType = "btrfs";
       options = ["autodefrag" "compress=zstd" "nodiratime"] ++ hotswapOptions;
     };
-    hotswapExt4 = d: uuid: {
-      device =
-        if lib.elem d encryptedBackupDisks
-        then "/dev/mapper/${d}"
-        else "/dev/disk/by-uuid/${uuid}";
-      fsType = "ext4";
-      options = hotswapOptions;
-    };
-  in
-    {
-      "/home/alex/shared/storage" = hotswapBtrfs "storage";
-      # "/home/alex/shared/internal-storage" = hotswapBtrfs "internal-storage";
-    }
-    // lib.mapAttrs' (d: uuid: lib.nameValuePair "/home/alex/shared/${d}" (hotswapExt4 d uuid)) backupDiskUuids
-    // {
-      # mergerfs pool over disk1-3. Accessing it mounts all three data disks
-      # first (requires-mounts-for); if one is missing the pool fails to mount.
-      "/home/alex/shared/backup" = {
-        device = lib.concatMapStringsSep ":" (d: "/home/alex/shared/${d}") backupDataDisks;
-        fsType = "fuse.mergerfs";
-        options =
-          [
-            "noauto"
-            "x-systemd.automount"
-            "x-systemd.idle-timeout=10min"
-            "nofail"
-            "fsname=backup"
-            "allow_other"
-            "cache.files=off"
-            "category.create=mfs" # new files go to the disk with the most free space
-            "moveonenospc=true"
-            "minfreespace=100G"
-            "dropcacheonclose=true"
-          ]
-          ++ map (d: "x-systemd.requires-mounts-for=/home/alex/shared/${d}") backupDataDisks;
-      };
-    };
-  system.fsPackages = [pkgs.mergerfs];
+  in {
+    "/home/alex/shared/storage" = hotswapBtrfs "storage";
+    # "/home/alex/shared/internal-storage" = hotswapBtrfs "internal-storage";
+  };
 
   environment.etc.crypttab.text = ''
     storage UUID=${storageLuksUuid} /persist/hdd.key nofail,x-systemd.device-timeout=10s
@@ -162,15 +139,6 @@ in {
 
   systemd = {
     services = {
-      # Manual-only: no timers, and make sure every disk is mounted first.
-      snapraid-sync = {
-        startAt = lib.mkForce [];
-        unitConfig.RequiresMountsFor = map (d: "/home/alex/shared/${d}") backupDisks;
-      };
-      snapraid-scrub = {
-        startAt = lib.mkForce [];
-        unitConfig.RequiresMountsFor = map (d: "/home/alex/shared/${d}") backupDisks;
-      };
       monitor = {
         description = "AMDGPU Control Daemon";
         wantedBy = ["multi-user.target"];
@@ -208,16 +176,6 @@ in {
 
       xmrig
       monero-gui
-
-      snapraid
-      smartmontools
-      mergerfs
-
-      (writeShellApplication {
-        name = "storage-hotswap";
-        runtimeInputs = [coreutils util-linux systemd cryptsetup];
-        text = builtins.readFile ../home/bin/storage-hotswap;
-      })
     ];
     persistence."/persist" = {
       directories = [
@@ -271,19 +229,8 @@ in {
     # printing.enable = true;
     bpftune.enable = true;
 
-    snapraid = {
-      enable = true;
-      dataDisks = lib.genAttrs backupDataDisks (d: "/home/alex/shared/${d}/");
-      parityFiles = ["/home/alex/shared/parity/snapraid.parity"];
-      contentFiles =
-        map (d: "/home/alex/shared/${d}/.snapraid.content") backupDataDisks
-        ++ ["/persist/snapraid/snapraid.content"];
-      exclude = [
-        "*.unrecoverable"
-        "/tmp/"
-        "/lost+found/"
-      ];
-    };
+    # Extra copy of the SnapRAID state off the backup disks.
+    snapraid.contentFiles = ["/persist/snapraid/snapraid.content"];
 
     samba.settings.storage = shares.share "/home/alex/shared/storage";
 

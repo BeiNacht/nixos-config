@@ -10,6 +10,7 @@
   shares = import ../configs/samba-shares.nix;
 in {
   imports = [
+    ../configs/backup-disks.nix
     ../configs/borg.nix
     ../configs/browser.nix
     ../configs/common-linux.nix

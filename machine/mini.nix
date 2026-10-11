@@ -9,6 +9,7 @@
   sshKeys = import ../configs/ssh-keys.nix;
 in {
   imports = [
+    ../configs/backup-disks.nix
     ../configs/filesystem.nix
     ../configs/lan-server.nix
     # ../configs/borg.nix
@@ -108,8 +109,6 @@ in {
   environment = {
     systemPackages = with pkgs; [
       nyx
-      snapraid
-      mergerfs
     ];
     persistence."/persist" = {
       directories = [
