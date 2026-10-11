@@ -10,6 +10,7 @@
 # a copy of /persist/backup-hdd.key. SnapRAID state lives on the data disks
 # (.snapraid.content), so `snapraid sync` works from whichever host has them.
 {
+  config,
   lib,
   pkgs,
   ...
@@ -90,7 +91,16 @@ in {
       unitConfig.RequiresMountsFor = map mountpoint backupDisks;
     };
   in {
-    snapraid-sync = manual;
+    snapraid-sync = lib.recursiveUpdate manual {
+      # Upstream lists the parity *file* in ReadWritePaths, so the unit fails
+      # at namespace setup until a first sync has created it. Allow its
+      # directory instead (plus the content-file dirs and data disks, as upstream).
+      serviceConfig.ReadWritePaths = lib.mkForce (lib.unique (
+        lib.attrValues config.services.snapraid.dataDisks
+        ++ map dirOf config.services.snapraid.parityFiles
+        ++ map dirOf config.services.snapraid.contentFiles
+      ));
+    };
     snapraid-scrub = manual;
   };
 
