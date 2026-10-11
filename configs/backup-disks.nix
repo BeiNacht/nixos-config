@@ -85,6 +85,8 @@ in {
   };
 
   systemd.services = let
+    inherit (config.services) snapraid;
+    stateDirs = lib.unique (map dirOf (snapraid.parityFiles ++ snapraid.contentFiles));
     # Manual-only: no timers, and make sure every disk is mounted first.
     manual = {
       startAt = lib.mkForce [];
@@ -92,14 +94,25 @@ in {
     };
   in {
     snapraid-sync = lib.recursiveUpdate manual {
-      # Upstream lists the parity *file* in ReadWritePaths, so the unit fails
-      # at namespace setup until a first sync has created it. Allow its
-      # directory instead (plus the content-file dirs and data disks, as upstream).
-      serviceConfig.ReadWritePaths = lib.mkForce (lib.unique (
-        lib.attrValues config.services.snapraid.dataDisks
-        ++ map dirOf config.services.snapraid.parityFiles
-        ++ map dirOf config.services.snapraid.contentFiles
-      ));
+      serviceConfig = {
+        User = "alex";
+        Group = "users";
+        # Freshly formatted disks (and state left by an earlier root sync) are
+        # root-owned: hand the parity/content dirs and files to alex first.
+        # (Upstream's `snapraid touch` pre-step, if enabled, runs after it.)
+        ExecStartPre = lib.mkForce ([
+            "+${pkgs.writeShellScript "snapraid-sync-chown" ''
+              for f in ${lib.escapeShellArgs (stateDirs ++ snapraid.parityFiles ++ snapraid.contentFiles)}; do
+                if [ -e "$f" ]; then ${pkgs.coreutils}/bin/chown alex:users "$f"; fi
+              done
+            ''}"
+          ]
+          ++ lib.optional snapraid.touchBeforeSync "${pkgs.snapraid}/bin/snapraid touch");
+        # Upstream lists the parity *file* in ReadWritePaths, so the unit fails
+        # at namespace setup until a first sync has created it. Allow its
+        # directory instead (plus the data disks, as upstream).
+        ReadWritePaths = lib.mkForce (lib.unique (lib.attrValues snapraid.dataDisks ++ stateDirs));
+      };
     };
     snapraid-scrub = manual;
   };

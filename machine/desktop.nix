@@ -84,7 +84,7 @@ in {
     internal-storage UUID=${internalStorageLuksUuid} /persist/internal-hdd.key nofail,x-systemd.device-timeout=10s
     ${lib.concatMapStrings (d: "${d} LABEL=${d}-crypt /persist/backup-hdd.key nofail,x-systemd.device-timeout=10s\n") encryptedBackupDisks}'';
 
-  systemd.tmpfiles.rules = ["d /persist/snapraid 0700 root root -"];
+  systemd.tmpfiles.rules = ["d /persist/snapraid 0700 alex users -"];
 
   nix.settings = {
     system-features = [
