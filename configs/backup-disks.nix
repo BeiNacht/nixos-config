@@ -87,6 +87,15 @@ in {
   systemd.services = let
     inherit (config.services) snapraid;
     stateDirs = lib.unique (map dirOf (snapraid.parityFiles ++ snapraid.contentFiles));
+    # snapraid redraws its progress line with \r, which the journal stores as
+    # one unreadable "[48K blob data]" entry at a time. Split on \r and keep one
+    # progress line per minute, so `journalctl -fu snapraid-sync` is readable.
+    snapraidLogged = pkgs.writeShellScript "snapraid-logged" ''
+      set -o pipefail
+      ${pkgs.snapraid}/bin/snapraid "$@" | ${pkgs.gawk}/bin/gawk -v RS='[\r\n]' '
+        /^[0-9]+%, / { if (systime() - last < 60) next; last = systime() }
+        NF { print; fflush() }'
+    '';
     # Manual-only: no timers, and make sure every disk is mounted first.
     manual = {
       startAt = lib.mkForce [];
@@ -95,6 +104,7 @@ in {
   in {
     snapraid-sync = lib.recursiveUpdate manual {
       serviceConfig = {
+        ExecStart = lib.mkForce "${snapraidLogged} sync";
         User = "alex";
         Group = "users";
         # Freshly formatted disks (and state left by an earlier root sync) are
@@ -114,7 +124,9 @@ in {
         ReadWritePaths = lib.mkForce (lib.unique (lib.attrValues snapraid.dataDisks ++ stateDirs));
       };
     };
-    snapraid-scrub = manual;
+    snapraid-scrub = lib.recursiveUpdate manual {
+      serviceConfig.ExecStart = lib.mkForce "${snapraidLogged} scrub -p ${toString snapraid.scrub.plan} -o ${toString snapraid.scrub.olderThan}";
+    };
   };
 
   environment.systemPackages = with pkgs; [
