@@ -142,7 +142,9 @@
     };
 
     # Cap CPU package power (stock firmware limits are PL1 55 W / PL2 78 W)
-    # so sustained load produces less heat for the fans to deal with.
+    # so sustained load produces less heat for the fans to deal with. AC uses
+    # the same 25/35 W as battery: at 35 W, sustained multi-client GW load kept
+    # the package at 83-86 °C, above thinkfan's 82 °C "level auto" handover.
     # throttled re-applies the limits periodically, since the X1 Extreme
     # firmware resets them (e.g. on AC plug/unplug or resume).
     throttled = {
@@ -165,9 +167,9 @@
 
         [AC]
         Update_Rate_s: 5
-        PL1_Tdp_W: 35
+        PL1_Tdp_W: 25
         PL1_Duration_s: 28
-        PL2_Tdp_W: 45
+        PL2_Tdp_W: 35
         PL2_Duration_S: 0.002
         Trip_Temp_C: 90
         cTDP: 0
