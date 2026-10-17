@@ -82,6 +82,9 @@ in {
       "/tmp/"
       "/lost+found/"
     ];
+    # Save the content files every 100 GB processed, so an interrupted sync
+    # resumes from there instead of starting over.
+    extraConfig = "autosave 100";
   };
 
   systemd.services = let
@@ -90,16 +93,25 @@ in {
     # snapraid redraws its progress line with \r, which the journal stores as
     # one unreadable "[48K blob data]" entry at a time. Split on \r and keep one
     # progress line per minute, so `journalctl -fu snapraid-sync` is readable.
+    # snapraid stays the main process (exec), so with KillMode=mixed a stop
+    # signals only snapraid and gawk keeps logging while it saves its state.
+    # gawk ignores SIGTERM so it isn't killed with output still unflushed; it
+    # exits on EOF once snapraid does.
     snapraidLogged = pkgs.writeShellScript "snapraid-logged" ''
-      set -o pipefail
-      ${pkgs.snapraid}/bin/snapraid "$@" | ${pkgs.gawk}/bin/gawk -v RS='[\r\n]' '
+      exec ${pkgs.snapraid}/bin/snapraid "$@" > >(trap "" TERM; exec ${pkgs.gawk}/bin/gawk -v RS='[\r\n]' '
         /^[0-9]+%, / { if (systime() - last < 60) next; last = systime() }
-        NF { print; fflush() }'
+        NF { print; fflush() }')
     '';
     # Manual-only: no timers, and make sure every disk is mounted first.
     manual = {
       startAt = lib.mkForce [];
       unitConfig.RequiresMountsFor = map mountpoint backupDisks;
+      serviceConfig = {
+        KillMode = "mixed";
+        # On stop, snapraid saves the content files before exiting, which can
+        # take minutes on the USB disks: don't SIGKILL it halfway through.
+        TimeoutStopSec = "15min";
+      };
     };
   in {
     snapraid-sync = lib.recursiveUpdate manual {
