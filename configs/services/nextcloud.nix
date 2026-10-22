@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   vhosts = import ../nginx-vhosts.nix;
@@ -59,6 +60,10 @@ in {
 
       # Need to manually increment with every major upgrade.
       package = pkgs.nextcloud35;
+
+      # TEMPORARY: PHP 8.4.27 from nixpkgs master for PHP2Shell
+      # (CVE-2026-109618/109619). Drop once nixos-unstable has php84 >= 8.4.27.
+      phpPackage = inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.php84;
 
       # Let NixOS install and configure the database automatically.
       database.createLocally = true;

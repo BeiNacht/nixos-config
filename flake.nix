@@ -2,6 +2,10 @@
   inputs = {
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # TEMPORARY: only used for Nextcloud's PHP (8.4.27, fixes PHP2Shell
+    # CVE-2026-109618/109619) until it reaches nixos-unstable. Remove then.
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
+
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
 

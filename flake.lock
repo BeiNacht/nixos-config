@@ -210,6 +210,22 @@
         "url": "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1792703435,
+        "narHash": "sha256-s0LGQKsJhwrk/w7EZ1rKdEsz0963391E038gv9ZBxSM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "734eb336c57165fda96bf120678f39f389ec01de",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1791048980,
@@ -287,6 +303,7 @@
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
         "sops-nix": "sops-nix"

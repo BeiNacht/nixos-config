@@ -28,7 +28,7 @@ in {
     ../configs/services/kokoro.nix
     ../configs/services/nextcloud.nix
     ../configs/services/paperless.nix
-    ../configs/services/aniworld.nix
+#    ../configs/services/aniworld.nix
     ../configs/services/uptime-kuma.nix
 
     # ../configs/services/frigate.nix
@@ -204,7 +204,8 @@ in {
           };
         };
 
-        "homeassistant.szczepan.ski" = vhosts.proxy "http://homeassistant.meteor-altered.ts.net:8123/";
+        # TEMPORARILY disabled (2026-10-22, PHP2Shell incident response).
+        # "homeassistant.szczepan.ski" = vhosts.proxy "http://homeassistant.meteor-altered.ts.net:8123/";
 
         # "frigate.szczepan.ski" = {
         #   forceSSL = true;
