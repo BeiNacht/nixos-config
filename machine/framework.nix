@@ -80,7 +80,6 @@ in {
         root = {
           device = "/dev/disk/by-uuid/eddab069-d369-4b26-8b4e-f3b907ba6f6c";
           allowDiscards = true;
-          preLVM = true;
         };
       };
     };

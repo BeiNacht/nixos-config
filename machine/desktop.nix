@@ -126,7 +126,6 @@ in {
         root = {
           device = "/dev/disk/by-uuid/ad6eaac3-97e1-46cf-83df-ddcc5004dfc0";
           allowDiscards = true;
-          preLVM = true;
         };
       };
     };

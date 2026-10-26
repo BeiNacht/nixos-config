@@ -119,8 +119,6 @@ in {
 
       config = {
         dbtype = "pgsql";
-        adminuser = "alex";
-        adminpassFile = config.sops.secrets.nextcloud-password.path;
       };
     };
 

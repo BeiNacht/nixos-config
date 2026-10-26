@@ -7,6 +7,16 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
+    # HandBrake's ffmpeg patch set (contrib/ffmpeg/A*.patch) targets ffmpeg 8.1.2;
+    # A15 (pgssubdec graphic plane) no longer applies to 8.1.3. Drop once
+    # nixpkgs' handbrake builds against the current ffmpeg_8-full again.
+    handbrake = prev.handbrake.override {
+      ffmpeg_8-full = prev.ffmpeg_8-full.override {
+        version = "8.1.2";
+        hash = "sha256-wJ3c8VVo/tK84K7bKYs/UWcln4mSO+tf/w5NLNjKhiI=";
+      };
+    };
+
     # pythonPackagesExtensions =
     #   prev.pythonPackagesExtensions
     #   ++ [

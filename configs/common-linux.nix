@@ -3,8 +3,16 @@
   pkgs,
   lib,
   inputs,
+  utils,
   ...
-}: {
+}: let
+  rootFs = config.fileSystems."/";
+  rootDeviceUnit = "${utils.escapeSystemdPath rootFs.device}.device";
+  rollbackRoot =
+    rootFs.fsType
+    == "btrfs"
+    && builtins.elem "subvol=root" rootFs.options;
+in {
   imports = [
     ./common.nix
   ];
@@ -32,42 +40,50 @@
     kernel.sysctl = {"vm.max_map_count" = 262144;};
     supportedFilesystems = ["btrfs"];
 
-    #    initrd = {
-    ##      systemd.services = {
-    #        restore-root = {
-    #          description = "Restore blank /root subvolume in initrd";
-    #          wantedBy = [ "initrd.target" ];
-    #          script = ''
-    #            mkdir -p /mnt
+    # Roll / back to the blank snapshot on every boot (impermanence). Runs only
+    # on hosts whose / is a btrfs "root" subvolume and that have a "root-blank"
+    # snapshot next to it; everything else must be listed under /persist.
+    initrd.systemd.services.restore-root = lib.mkIf rollbackRoot {
+      description = "Restore blank /root subvolume in initrd";
+      wantedBy = ["initrd.target"];
+      requires = [rootDeviceUnit];
+      after = [rootDeviceUnit];
+      before = ["sysroot.mount"];
+      unitConfig.DefaultDependencies = "no";
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = "yes";
+      };
+      path = [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux];
+      script = ''
+        mkdir -p /mnt
 
-    # Mount the btrfs root so we can manipulate subvolumes.
-    #            mount -o subvol=/ /dev/mapper/lvm-root /mnt
+        # Mount the btrfs top level so we can manipulate subvolumes.
+        mount -t btrfs -o subvol=/ ${rootFs.device} /mnt
 
-    # Remove subvolumes under /root f irst to allow deleting /root.
-    #            btrfs subvolume list -o /mnt/root |
-    #            cut -f9 -d' ' |
-    #            while read subvolume; do
-    #              echo "deleting /$subvolume subvolume..."
-    #              btrfs subvolume delete "/mnt/$subvolume"
-    #            done &&
-    #            echo "deleting /root subvolume..." &&
-    #            btrfs subvolume delete /mnt/root
-    #
-    #            echo "restoring blank /root subvolume..."
-    #            btrfs subvolume snapshot /mnt/root-blank /mnt/root
+        if [ ! -d /mnt/root-blank ]; then
+          echo "no root-blank snapshot found, skipping rollback"
+          umount /mnt
+          exit 0
+        fi
 
-    # Unmount and continue boot.
-    #            umount /mnt
-    #          '';
-    #          serviceConfig = {
-    #            Type = "oneshot";
-    #            RemainAfterExit = "yes";
-    # Environment = "PATH=${lib.makeBinPath [pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux]}";
-    #          };
-    #          path = [ pkgs.btrfs-progs pkgs.coreutils pkgs.util-linux ];
-    #        };
-    #      };
-    #    };
+        # Remove subvolumes under /root first to allow deleting /root.
+        btrfs subvolume list -o /mnt/root |
+        cut -f9 -d' ' |
+        while read subvolume; do
+          echo "deleting /$subvolume subvolume..."
+          btrfs subvolume delete "/mnt/$subvolume"
+        done &&
+        echo "deleting /root subvolume..." &&
+        btrfs subvolume delete /mnt/root
+
+        echo "restoring blank /root subvolume..."
+        btrfs subvolume snapshot /mnt/root-blank /mnt/root
+
+        # Unmount and continue boot.
+        umount /mnt
+      '';
+    };
   };
 
   sops = {

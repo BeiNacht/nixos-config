@@ -2,10 +2,12 @@
   config,
   pkgs,
   inputs,
+  outputs,
   home-manager,
   ...
 }: {
   imports = [inputs.home-manager.nixosModules.home-manager];
+  nixpkgs.overlays = [outputs.overlays.modifications];
   networking = {
     firewall.enable = false;
     networkmanager = {enable = true;};

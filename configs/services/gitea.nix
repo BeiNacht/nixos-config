@@ -31,7 +31,7 @@ in {
   services = {
     nginx = {
       virtualHosts = {
-        ${config.services.gitea.settings.server.DOMAIN} = vhosts.proxy "http://127.0.0.1:3001/";
+        "git.szczepan.ski" = vhosts.proxy "http://127.0.0.1:3001/";
       };
     };
 
@@ -56,7 +56,6 @@ in {
       };
       settings = {
         server = {
-          DOMAIN = "git.szczepan.ski";
           ROOT_URL = "https://git.szczepan.ski/";
           HTTP_PORT = 3001;
           HTTP_ADDR = "127.0.0.1";

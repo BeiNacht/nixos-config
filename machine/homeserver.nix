@@ -46,7 +46,6 @@ in {
       luks.devices = {
         root = {
           device = "/dev/disk/by-uuid/f6809a64-d23d-4940-a0e7-c256ce7a2e90";
-          preLVM = true;
         };
       };
     };
