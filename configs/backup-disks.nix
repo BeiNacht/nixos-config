@@ -102,9 +102,22 @@ in {
         /^[0-9]+%, / { if (systime() - last < 60) next; last = systime() }
         NF { print; fflush() }')
     '';
+    # snapraid keeps the parity file (and large data files) open inside its
+    # sandbox's mount namespace, where the host's autofs can't see it: after
+    # x-systemd.idle-timeout the mount looks idle, systemd unmounts it and,
+    # via RequiresMountsFor, stops the running sync/scrub with it. Hold an fd
+    # on every disk in the host namespace while one runs, so the mounts stay
+    # busy; StopWhenUnneeded releases them (and the idle timeout) afterwards.
+    holdMounts = pkgs.writeShellScript "snapraid-hold-mounts" ''
+      for mp in ${lib.escapeShellArgs (map mountpoint backupDisks)}; do
+        exec {fd}<"$mp"
+      done
+      exec ${pkgs.coreutils}/bin/sleep infinity
+    '';
     # Manual-only: no timers, and make sure every disk is mounted first.
     manual = {
       startAt = lib.mkForce [];
+      wants = ["snapraid-hold-mounts.service"];
       unitConfig.RequiresMountsFor = map mountpoint backupDisks;
       serviceConfig = {
         KillMode = "mixed";
@@ -114,6 +127,16 @@ in {
       };
     };
   in {
+    snapraid-hold-mounts = {
+      description = "Keep the SnapRAID disks mounted during sync/scrub";
+      # Ordering lives here: upstream already sets snapraid-scrub's After=.
+      before = ["snapraid-sync.service" "snapraid-scrub.service"];
+      unitConfig = {
+        StopWhenUnneeded = true;
+        RequiresMountsFor = map mountpoint backupDisks;
+      };
+      serviceConfig.ExecStart = holdMounts;
+    };
     snapraid-sync = lib.recursiveUpdate manual {
       serviceConfig = {
         ExecStart = lib.mkForce "${snapraidLogged} sync";
